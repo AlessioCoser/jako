@@ -4,24 +4,53 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class Select<T>(private val connection: Connection, private val table: String) {
-    private val joins = mutableListOf<String>()
+class Where(vararg val conditions: Condition) {
+    fun text(): String {
+        if(conditions.isEmpty()) {
+            return ""
+        }
+
+        return "WHERE true ${conditions.joinToString(separator = " ") { "${it.type()} ${it.text}" }}"
+    }
+
+    fun params(): List<Any> {
+        return conditions.flatMap { it.params.toList() }
+    }
+}
+
+interface Condition {
+    val text: String
+    val params: Array<out Any>
+
+    fun type() = "AND"
+}
+
+class And(override val text: String, override vararg val params: Any): Condition {
+
+}
+
+fun <T> Connection.select(
+        table: String,
+        where: Where = Where(),
+        orderBy: String? = null,
+        onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+): Select<T> = Select(this, table, where, orderBy, onEmpty)
+
+class Select<T>(
+        private val connection: Connection,
+        private val table: String,
+        private val where: Where = Where(),
+        private val orderBy: String? = null,
+        private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+) {
+    private var joins = mutableListOf<String>()
     private var joinsParams = mutableListOf<Any?>()
-    private val leftJoins = mutableListOf<String>()
-    private var whereCondition = "true"
-    private val andConditions = mutableListOf<String>()
-    private var orderBy: String = ""
+    private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
     private var fields: Array<out String> = arrayOf("*")
-    private var onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 
     fun fields(vararg values: String): Select<T> {
         fields = values
-        return this
-    }
-
-    fun orderBy(value: String): Select<T> {
-        orderBy = "ORDER BY $value"
         return this
     }
 
@@ -34,23 +63,6 @@ class Select<T>(private val connection: Connection, private val table: String) {
     fun leftJoin(join: String): Select<T> {
         leftJoins.add(join)
         joinsParams = joinsParams.plus(params).toMutableList()
-        return this
-    }
-
-    fun where(condition: String, vararg params: Any): Select<T> {
-        this.whereCondition = condition
-        this.params = params.toMutableList()
-        return this
-    }
-
-    fun and(condition: String, vararg params: Any?): Select<T> {
-        this.andConditions.add(condition)
-        this.params = this.params.plus(params.toList()).toMutableList()
-        return this
-    }
-
-    fun onEmpty(doSomething: () -> T): Select<T> {
-        this.onEmpty = doSomething
         return this
     }
 
@@ -75,13 +87,6 @@ class Select<T>(private val connection: Connection, private val table: String) {
         return results
     }
 
-    private fun joinAnds(): String {
-        if (andConditions.isEmpty()) {
-            return ""
-        }
-        return andConditions.joinToString(separator = " AND ", prefix = "AND ")
-    }
-
     private fun joinJoins(): String {
         if (joins.isEmpty()) {
             return ""
@@ -102,11 +107,19 @@ class Select<T>(private val connection: Connection, private val table: String) {
 
     private fun query(limit: String = ""): ResultSet {
         val query = """
-            SELECT ${joinFields()} FROM $table ${joinJoins()} ${joinLeftJoins()} WHERE $whereCondition ${joinAnds()} $orderBy $limit
+            SELECT ${joinFields()} FROM $table ${joinJoins()} ${joinLeftJoins()} ${where.text()} ${orderByPart()} $limit
         """
         return connection.prepareStatement(query)
-                .setParameters(*(joinsParams + params).toTypedArray())
+                .setParameters(*(joinsParams + where.params()).toTypedArray())
                 .executeQuery()
+    }
+
+    private fun orderByPart(): String {
+        if(orderBy.isNullOrBlank()) {
+            return ""
+        }
+
+        return "ORDER BY $orderBy"
     }
 }
 

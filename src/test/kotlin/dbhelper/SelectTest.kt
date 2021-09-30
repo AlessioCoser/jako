@@ -15,15 +15,32 @@ class SelectTest {
     }
 
     @Test
-    fun name() {
+    fun `select with where`() {
         connect().use { connection ->
-            val user = Select<User>(connection, """"users"""")
-                .fields(""""email"""", """"full_name"""", """"city"""", """"age"""")
-                .where(""""city" = ?""", "Milano")
-                .and(""""age" > ?""", 18)
-                .first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+            val user = connection.select(
+                    table = "users",
+                    where = Where(
+                            And("city = ?", "Milano"),
+                            And("age > ?", 18)
+                    ),
+                    onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
+            ).first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
 
             assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
+        }
+    }
+
+    @Test
+    fun `select with on empty`() {
+        connect().use { connection ->
+            val user = connection.select(
+                    table = "users",
+                    where = Where(And("city = ?", "Palermo")),
+                    onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
+            )
+                .first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+
+            assertThat(user).isEqualTo(User("stra@ng.er", "stranger", "nowhere", 0))
         }
     }
 
