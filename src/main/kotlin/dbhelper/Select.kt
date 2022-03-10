@@ -10,7 +10,7 @@ class Where(vararg val conditions: Condition) {
             return ""
         }
 
-        return "WHERE true ${conditions.joinToString(separator = " ") { "${it.type()} ${it.text}" }}"
+        return " WHERE true ${conditions.joinToString(separator = " ") { "${it.type()} ${it.text}" }}"
     }
 
     fun params(): List<Any> {
@@ -39,6 +39,14 @@ fun <T> Connection.select(
     onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ): Select<T> = Select(this, table, map, fields, where, limit, orderBy, onEmpty)
 
+open class Join(val text: String) {
+    open fun type() = "INNER JOIN"
+}
+
+class LeftJoin(text: String): Join(text) {
+    override fun type() = "LEFT JOIN"
+}
+
 class Select<T>(
     private val connection: Connection,
     private val table: String,
@@ -49,20 +57,16 @@ class Select<T>(
     private val orderBy: String? = null,
     private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
-    private var joins = mutableListOf<String>()
+    private var joins = mutableListOf<Join>()
     private var joinsParams = mutableListOf<Any?>()
-    private var leftJoins = mutableListOf<String>()
-    private var params = mutableListOf<Any?>()
 
-    fun join(join: String, vararg params: Any): Select<T> {
-        joins.add(join)
-        joinsParams = joinsParams.plus(params.toList()).toMutableList()
+    fun join(text: String): Select<T> {
+        joins.add(Join(text))
         return this
     }
 
     fun leftJoin(join: String): Select<T> {
-        leftJoins.add(join)
-        joinsParams = joinsParams.plus(params).toMutableList()
+        joins.add(LeftJoin(join))
         return this
     }
 
@@ -91,14 +95,8 @@ class Select<T>(
         if (joins.isEmpty()) {
             return ""
         }
-        return joins.joinToString(separator = " JOIN ", prefix = "JOIN ")
-    }
 
-    private fun joinLeftJoins(): String {
-        if (leftJoins.isEmpty()) {
-            return ""
-        }
-        return leftJoins.joinToString(separator = " LEFT JOIN ", prefix = "LEFT JOIN ")
+        return joins.joinToString(separator = " ", prefix = " ") { "${it.type()} ${it.text}" }
     }
 
     private fun joinFields(): String {
@@ -107,8 +105,9 @@ class Select<T>(
 
     private fun query(limit: Int?): ResultSet {
         val query = """
-            SELECT ${joinFields()} FROM $table ${joinJoins()} ${joinLeftJoins()} ${where.text()} ${orderByPart()} ${limitPart(limit)}
+            SELECT ${joinFields()} FROM $table${joinJoins()}${where.text()}${orderByPart()}${limitPart(limit)}
         """
+        println("query = $query")
         return connection.prepareStatement(query)
                 .setParameters(*(joinsParams + where.params()).toTypedArray())
                 .executeQuery()
@@ -118,7 +117,7 @@ class Select<T>(
         if(limit == null) {
             return ""
         }
-        return "LIMIT $limit"
+        return " LIMIT $limit"
     }
 
     private fun orderByPart(): String {
@@ -126,7 +125,7 @@ class Select<T>(
             return ""
         }
 
-        return "ORDER BY $orderBy"
+        return " ORDER BY $orderBy"
     }
 }
 
