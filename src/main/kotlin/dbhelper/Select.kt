@@ -22,11 +22,11 @@ interface Condition {
     val text: String
     val params: Array<out Any>
 
-    fun type() = "AND"
+    fun type(): String
 }
 
 class And(override val text: String, override vararg val params: Any): Condition {
-
+    override fun type() = "AND"
 }
 
 fun <T> Connection.select(
@@ -44,6 +44,7 @@ class Select<T>(
         private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
     private var joins = mutableListOf<String>()
+    private var limit: Int? = null
     private var joinsParams = mutableListOf<Any?>()
     private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
@@ -51,6 +52,11 @@ class Select<T>(
 
     fun fields(vararg values: String): Select<T> {
         fields = values
+        return this
+    }
+
+    fun limit(value: Int): Select<T> {
+        limit = value
         return this
     }
 
@@ -67,7 +73,7 @@ class Select<T>(
     }
 
     fun first(builder: (ResultSet) -> T): T {
-        val resultSet = query("LIMIT 1")
+        val resultSet = query(1)
 
         if (resultSet.next()) {
             return builder(resultSet)
@@ -77,7 +83,7 @@ class Select<T>(
     }
 
     fun all(builder: (ResultSet) -> T): List<T> {
-        val resultSet = query()
+        val resultSet = query(limit)
 
         val results = mutableListOf<T>()
         while (resultSet.next()) {
@@ -105,13 +111,20 @@ class Select<T>(
         return fields.joinToString(separator = ", ")
     }
 
-    private fun query(limit: String = ""): ResultSet {
+    private fun query(limit: Int?): ResultSet {
         val query = """
-            SELECT ${joinFields()} FROM $table ${joinJoins()} ${joinLeftJoins()} ${where.text()} ${orderByPart()} $limit
+            SELECT ${joinFields()} FROM $table ${joinJoins()} ${joinLeftJoins()} ${where.text()} ${orderByPart()} ${limitPart(limit)}
         """
         return connection.prepareStatement(query)
                 .setParameters(*(joinsParams + where.params()).toTypedArray())
                 .executeQuery()
+    }
+
+    private fun limitPart(limit: Int?): String {
+        if(limit == null) {
+            return ""
+        }
+        return "LIMIT $limit"
     }
 
     private fun orderByPart(): String {
