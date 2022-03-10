@@ -64,6 +64,21 @@ class SelectTest {
         }
     }
 
+    @Test
+    fun `select only one field`() {
+        connect().use { connection ->
+            val userEmail = connection.select(
+                table = "users",
+                fields = listOf("email"),
+                where = Where(And("city = ?", "Lucca")),
+                limit = 2,
+                map = { it.getString("email") }
+            ).first()
+
+            assertThat(userEmail).isEqualTo("luigi@verdi.it")
+        }
+    }
+
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
 }
 

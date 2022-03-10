@@ -30,33 +30,29 @@ class And(override val text: String, override vararg val params: Any): Condition
 }
 
 fun <T> Connection.select(
-        table: String,
-        map: (ResultSet) -> T,
-        where: Where = Where(),
-        limit: Int? = null,
-        orderBy: String? = null,
-        onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
-): Select<T> = Select(this, table, map, where, limit, orderBy, onEmpty)
+    table: String,
+    map: (ResultSet) -> T,
+    fields: List<String> = listOf("*"),
+    where: Where = Where(),
+    limit: Int? = null,
+    orderBy: String? = null,
+    onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+): Select<T> = Select(this, table, map, fields, where, limit, orderBy, onEmpty)
 
 class Select<T>(
-        private val connection: Connection,
-        private val table: String,
-        private val map: (ResultSet) -> T,
-        private val where: Where = Where(),
-        private val limit: Int? = null,
-        private val orderBy: String? = null,
-        private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+    private val connection: Connection,
+    private val table: String,
+    private val map: (ResultSet) -> T,
+    private val fields: List<String> = listOf("*"),
+    private val where: Where = Where(),
+    private val limit: Int? = null,
+    private val orderBy: String? = null,
+    private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
     private var joins = mutableListOf<String>()
     private var joinsParams = mutableListOf<Any?>()
     private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
-    private var fields: Array<out String> = arrayOf("*")
-
-    fun fields(vararg values: String): Select<T> {
-        fields = values
-        return this
-    }
 
     fun join(join: String, vararg params: Any): Select<T> {
         joins.add(join)
