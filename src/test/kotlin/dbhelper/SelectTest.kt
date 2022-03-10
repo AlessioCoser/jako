@@ -97,31 +97,7 @@ class SelectTest {
             )
         }
     }
-
-    @Test
-    @Disabled
-    fun `select join`() {
-        connect().use { connection ->
-            val users = connection.select(
-                table = "users",
-                where = Where(And("(city = ? OR city = ?)", "Firenze", "Lucca")),
-                limit = 3,
-                orderBy = "email",
-                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
-            ).join("table ON table.test = users.id")
-                .leftJoin("table2 ON table2.test = users.email")
-                .all()
-
-            assertThat(users).isEqualTo(
-                listOf(
-                    User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
-                    User(email = "luigi@verdi.it", fullName = "Luigi Verdi", city = "Lucca", age = 28),
-                    User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6)
-                )
-            )
-        }
-    }
-
+    
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
 }
 
