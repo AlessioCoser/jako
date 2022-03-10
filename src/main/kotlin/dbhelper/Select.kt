@@ -31,26 +31,27 @@ class And(override val text: String, override vararg val params: Any): Condition
 
 fun <T> Connection.select(
         table: String,
+        map: (ResultSet) -> T,
         where: Where = Where(),
         limit: Int? = null,
         orderBy: String? = null,
-        map: (ResultSet) -> T = { throw NotImplementedError("Cannot transform sql result") }
-): Select<T> = Select(this, table, where, limit, orderBy, map)
+        onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+): Select<T> = Select(this, table, map, where, limit, orderBy, onEmpty)
 
 class Select<T>(
         private val connection: Connection,
         private val table: String,
+        private val map: (ResultSet) -> T,
         private val where: Where = Where(),
         private val limit: Int? = null,
         private val orderBy: String? = null,
-        private val map: (ResultSet) -> T = { throw NotImplementedError("Cannot transform sql result") }
+        private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
     private var joins = mutableListOf<String>()
     private var joinsParams = mutableListOf<Any?>()
     private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
     private var fields: Array<out String> = arrayOf("*")
-    private var onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 
     fun fields(vararg values: String): Select<T> {
         fields = values
@@ -66,11 +67,6 @@ class Select<T>(
     fun leftJoin(join: String): Select<T> {
         leftJoins.add(join)
         joinsParams = joinsParams.plus(params).toMutableList()
-        return this
-    }
-
-    fun onEmpty(onEmpty: () -> T): Select<T> {
-        this.onEmpty = onEmpty
         return this
     }
 

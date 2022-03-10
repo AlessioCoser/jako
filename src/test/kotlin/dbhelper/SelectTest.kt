@@ -37,10 +37,9 @@ class SelectTest {
                 table = "users",
                 where = Where(And("city = ?", "Palermo")),
                 limit = 1,
-                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
-            )
-                .onEmpty { User("stra@ng.er", "stranger", "nowhere", 0) }
-                .first()
+                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) },
+                onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
+            ).first()
 
             assertThat(user).isEqualTo(User("stra@ng.er", "stranger", "nowhere", 0))
         }
