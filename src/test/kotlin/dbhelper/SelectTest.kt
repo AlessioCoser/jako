@@ -17,13 +17,14 @@ class SelectTest {
     @Test
     fun `select with where`() {
         connect().use { connection ->
-            val user = connection.select<User>(
+            val user = connection.select(
                     table = "users",
                     where = Where(
                             And("city = ?", "Milano"),
                             And("age > ?", 18)
-                    )
-            ).first { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+                    ),
+                    map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+            ).first()
 
             assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
         }
@@ -32,13 +33,14 @@ class SelectTest {
     @Test
     fun `select with on empty`() {
         connect().use { connection ->
-            val user = connection.select<User>(
+            val user = connection.select(
                 table = "users",
                 where = Where(And("city = ?", "Palermo")),
-                limit = 1
+                limit = 1,
+                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             )
                 .onEmpty { User("stra@ng.er", "stranger", "nowhere", 0) }
-                .first { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+                .first()
 
             assertThat(user).isEqualTo(User("stra@ng.er", "stranger", "nowhere", 0))
         }
@@ -47,12 +49,12 @@ class SelectTest {
     @Test
     fun `select all`() {
         connect().use { connection ->
-            val user = connection.select<User>(
+            val user = connection.select(
                 table = "users",
                 where = Where(And("city = ?", "Firenze")),
-                limit = 2
-            )
-                .all { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+                limit = 2,
+                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+            ).all()
 
             assertThat(user).isEqualTo(listOf(
                 User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),

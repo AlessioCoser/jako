@@ -33,15 +33,17 @@ fun <T> Connection.select(
         table: String,
         where: Where = Where(),
         limit: Int? = null,
-        orderBy: String? = null
-): Select<T> = Select(this, table, where, limit, orderBy)
+        orderBy: String? = null,
+        map: (ResultSet) -> T = { throw NotImplementedError("Cannot transform sql result") }
+): Select<T> = Select(this, table, where, limit, orderBy, map)
 
 class Select<T>(
         private val connection: Connection,
         private val table: String,
         private val where: Where = Where(),
         private val limit: Int? = null,
-        private val orderBy: String? = null
+        private val orderBy: String? = null,
+        private val map: (ResultSet) -> T = { throw NotImplementedError("Cannot transform sql result") }
 ) {
     private var joins = mutableListOf<String>()
     private var joinsParams = mutableListOf<Any?>()
@@ -72,7 +74,7 @@ class Select<T>(
         return this
     }
 
-    fun first(map: (ResultSet) -> T): T {
+    fun first(): T {
         val resultSet = query(1)
 
         if (resultSet.next()) {
@@ -82,12 +84,12 @@ class Select<T>(
         return onEmpty()
     }
 
-    fun all(builder: (ResultSet) -> T): List<T> {
+    fun all(): List<T> {
         val resultSet = query(limit)
 
         val results = mutableListOf<T>()
         while (resultSet.next()) {
-            results.add(builder(resultSet))
+            results.add(map(resultSet))
         }
 
         return results
