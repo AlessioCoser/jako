@@ -33,23 +33,22 @@ fun <T> Connection.select(
         table: String,
         where: Where = Where(),
         limit: Int? = null,
-        orderBy: String? = null,
-        onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
-): Select<T> = Select(this, table, where, limit, orderBy, onEmpty)
+        orderBy: String? = null
+): Select<T> = Select(this, table, where, limit, orderBy)
 
 class Select<T>(
         private val connection: Connection,
         private val table: String,
         private val where: Where = Where(),
         private val limit: Int? = null,
-        private val orderBy: String? = null,
-        private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
+        private val orderBy: String? = null
 ) {
     private var joins = mutableListOf<String>()
     private var joinsParams = mutableListOf<Any?>()
     private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
     private var fields: Array<out String> = arrayOf("*")
+    private var onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 
     fun fields(vararg values: String): Select<T> {
         fields = values
@@ -68,11 +67,16 @@ class Select<T>(
         return this
     }
 
-    fun first(builder: (ResultSet) -> T): T {
+    fun onEmpty(onEmpty: () -> T): Select<T> {
+        this.onEmpty = onEmpty
+        return this
+    }
+
+    fun first(map: (ResultSet) -> T): T {
         val resultSet = query(1)
 
         if (resultSet.next()) {
-            return builder(resultSet)
+            return map(resultSet)
         }
 
         return onEmpty()

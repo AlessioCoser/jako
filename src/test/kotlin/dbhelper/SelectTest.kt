@@ -17,14 +17,13 @@ class SelectTest {
     @Test
     fun `select with where`() {
         connect().use { connection ->
-            val user = connection.select(
+            val user = connection.select<User>(
                     table = "users",
                     where = Where(
                             And("city = ?", "Milano"),
                             And("age > ?", 18)
-                    ),
-                    onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
-            ).first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+                    )
+            ).first { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
 
             assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
         }
@@ -36,10 +35,10 @@ class SelectTest {
             val user = connection.select<User>(
                 table = "users",
                 where = Where(And("city = ?", "Palermo")),
-                limit = 1,
-                onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
+                limit = 1
             )
-                .first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+                .onEmpty { User("stra@ng.er", "stranger", "nowhere", 0) }
+                .first { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
 
             assertThat(user).isEqualTo(User("stra@ng.er", "stranger", "nowhere", 0))
         }
@@ -53,7 +52,7 @@ class SelectTest {
                 where = Where(And("city = ?", "Firenze")),
                 limit = 2
             )
-                .all { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+                .all { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
 
             assertThat(user).isEqualTo(listOf(
                 User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
