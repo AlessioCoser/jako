@@ -33,14 +33,32 @@ class SelectTest {
     @Test
     fun `select with on empty`() {
         connect().use { connection ->
-            val user = connection.select(
-                    table = "users",
-                    where = Where(And("city = ?", "Palermo")),
-                    onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
+            val user = connection.select<User>(
+                table = "users",
+                where = Where(And("city = ?", "Palermo")),
+                limit = 1,
+                onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
             )
                 .first { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
 
             assertThat(user).isEqualTo(User("stra@ng.er", "stranger", "nowhere", 0))
+        }
+    }
+
+    @Test
+    fun `select all`() {
+        connect().use { connection ->
+            val user = connection.select<User>(
+                table = "users",
+                where = Where(And("city = ?", "Firenze")),
+                limit = 2
+            )
+                .all { User(it.getString("email"), it.getString("full_name"), it.getString("city"), it.getInt("age")) }
+
+            assertThat(user).isEqualTo(listOf(
+                User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
+                User(email="paolo@bianchi.it", fullName="Paolo Bianchi", city="Firenze", age=6)
+            ))
         }
     }
 

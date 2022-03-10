@@ -32,19 +32,20 @@ class And(override val text: String, override vararg val params: Any): Condition
 fun <T> Connection.select(
         table: String,
         where: Where = Where(),
+        limit: Int? = null,
         orderBy: String? = null,
         onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
-): Select<T> = Select(this, table, where, orderBy, onEmpty)
+): Select<T> = Select(this, table, where, limit, orderBy, onEmpty)
 
 class Select<T>(
         private val connection: Connection,
         private val table: String,
         private val where: Where = Where(),
+        private val limit: Int? = null,
         private val orderBy: String? = null,
         private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
     private var joins = mutableListOf<String>()
-    private var limit: Int? = null
     private var joinsParams = mutableListOf<Any?>()
     private var leftJoins = mutableListOf<String>()
     private var params = mutableListOf<Any?>()
@@ -52,11 +53,6 @@ class Select<T>(
 
     fun fields(vararg values: String): Select<T> {
         fields = values
-        return this
-    }
-
-    fun limit(value: Int): Select<T> {
-        limit = value
         return this
     }
 
