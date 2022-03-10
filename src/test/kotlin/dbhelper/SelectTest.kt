@@ -18,12 +18,12 @@ class SelectTest {
     fun `select with where`() {
         connect().use { connection ->
             val user = connection.select(
-                    table = "users",
-                    where = Where(
-                            And("city = ?", "Milano"),
-                            And("age > ?", 18)
-                    ),
-                    map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+                table = "users",
+                where = Where(
+                    And("city = ?", "Milano"),
+                    And("age > ?", 18)
+                ),
+                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).first()
 
             assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
@@ -56,10 +56,12 @@ class SelectTest {
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).all()
 
-            assertThat(user).isEqualTo(listOf(
-                User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
-                User(email="paolo@bianchi.it", fullName="Paolo Bianchi", city="Firenze", age=6)
-            ))
+            assertThat(user).isEqualTo(
+                listOf(
+                    User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
+                    User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6)
+                )
+            )
         }
     }
 
