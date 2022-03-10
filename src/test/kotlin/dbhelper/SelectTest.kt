@@ -1,5 +1,6 @@
 package dbhelper
 
+import dbhelper.dsl.Database
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -120,6 +121,41 @@ class SelectTest {
                 )
             )
         }
+    }
+
+    @Test
+    fun name() {
+        val db = Database.connect()
+
+        val all: List<User> = db.all {
+            select("email", "name", "city", "age")
+            from("users")
+            forEach { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+        }
+
+        assertThat(all).isEqualTo(
+            listOf(
+                User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
+                User(email = "luigi@verdi.it", fullName = "Luigi Verdi", city = "Lucca", age = 28),
+                User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6),
+                User(email = "matteo@renzi.it", fullName = "Matteo Renzi", city = "Firenze", age = 45),
+                User(email = "marco@verdi.it", fullName = "Marco Verdi", city = "Milano", age = 13),
+                User(email = "vittorio@gialli.it", fullName = "Vittorio Gialli", city = "Milano", age = 64)
+            )
+        )
+    }
+
+    @Test
+    fun first() {
+        val db = Database.connect()
+
+        val user: User = db.first {
+            select("email", "name", "city", "age")
+            from("users")
+            forEach { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+        }
+
+        assertThat(user).isEqualTo(User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35))
     }
 
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
