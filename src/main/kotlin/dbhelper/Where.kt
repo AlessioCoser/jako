@@ -6,7 +6,15 @@ class Where(vararg val conditions: Condition) {
             return ""
         }
 
-        return " WHERE true ${conditions.joinToString(separator = " ") { "${it.type()} ${it.text}" }}"
+        val string = conditions.mapIndexed { index, condition ->
+            if (index > 0) {
+                "${condition.type()} ${condition.text}"
+            } else {
+                condition.text
+            }
+        }.joinToString(separator = " ")
+
+        return " WHERE $string"
     }
 
     fun params(): List<Any> {
