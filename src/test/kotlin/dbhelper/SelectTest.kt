@@ -48,14 +48,14 @@ class SelectTest {
     @Test
     fun `select all`() {
         connect().use { connection ->
-            val user = connection.select(
+            val users = connection.select(
                 table = "users",
                 where = Where(And("city = ?", "Firenze")),
                 limit = 2,
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).all()
 
-            assertThat(user).isEqualTo(
+            assertThat(users).isEqualTo(
                 listOf(
                     User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
                     User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6)
@@ -76,6 +76,26 @@ class SelectTest {
             ).first()
 
             assertThat(userEmail).isEqualTo("luigi@verdi.it")
+        }
+    }
+
+    @Test
+    fun `select multiple cities`() {
+        connect().use { connection ->
+            val users = connection.select(
+                table = "users",
+                where = Where(And("(city = ? OR city = ?)", "Firenze", "Lucca")),
+                limit = 3,
+                map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
+            ).all()
+
+            assertThat(users).isEqualTo(
+                listOf(
+                    User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
+                    User(email = "luigi@verdi.it", fullName = "Luigi Verdi", city = "Lucca", age = 28),
+                    User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6)
+                )
+            )
         }
     }
 
