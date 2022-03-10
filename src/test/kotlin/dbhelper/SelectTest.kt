@@ -1,7 +1,9 @@
 package dbhelper
 
 import dbhelper.dsl.Database
+import dbhelper.dsl.Query
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -99,6 +101,7 @@ class SelectTest {
     }
 
     @Test
+    @Disabled
     fun `select join`() {
         connect().use { connection ->
             val users = connection.select(
@@ -126,12 +129,10 @@ class SelectTest {
     @Test
     fun name() {
         val db = Database.connect()
-
-        val all: List<User> = db.all {
-            select("email", "name", "city", "age")
+        val all: List<User> = db.select {
+            fields("email", "name", "city", "age")
             from("users")
-            forEach { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
-        }
+        }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
         assertThat(all).isEqualTo(
             listOf(
@@ -148,12 +149,10 @@ class SelectTest {
     @Test
     fun first() {
         val db = Database.connect()
-
-        val user: User = db.first {
-            select("email", "name", "city", "age")
+        val user: User = db.select {
+            fields("email", "name", "city", "age")
             from("users")
-            forEach { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
-        }
+        }.first { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
         assertThat(user).isEqualTo(User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35))
     }
