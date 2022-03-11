@@ -1,6 +1,8 @@
 package dbhelper.dsl
 
-class Database(private val manager: ConnectionManager) {
+class Database(jdbc: String, user: String, password: String) {
+    private val manager = SessionManager(jdbc, user, password)
+
     fun select(prepare: Query.Builder.() -> Unit): QueryExecutor {
         val queryBuilder = Query.Builder()
         prepare(queryBuilder)
@@ -9,12 +11,5 @@ class Database(private val manager: ConnectionManager) {
 
     fun select(queryBuilder: Query.Builder): QueryExecutor {
         return QueryExecutor(manager, queryBuilder)
-    }
-
-    companion object {
-        @JvmStatic
-        fun connect(): Database {
-            return Database(ConnectionManager("jdbc:postgresql://localhost:5432/tests", "user", "password"))
-        }
     }
 }

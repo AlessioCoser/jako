@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import java.sql.DriverManager.getConnection
 import java.sql.ResultSet
 
 @Testcontainers
@@ -19,13 +18,13 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
+    private val db = Database("jdbc:postgresql://localhost:5432/tests", "user", "password")
+
     @Test
     fun `select with where`() {
-        val db = Database.connect()
         val user: User = db.select {
             from("users")
             where(("city" eq "Milano") and ("age" gt 18))
-
         }.first { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
         assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
@@ -33,7 +32,6 @@ class SelectTest {
 
     @Test
     fun `select all`() {
-        val db = Database.connect()
         val users: List<User> = db.select {
             from("users")
             where("city" eq "Firenze")
@@ -50,7 +48,6 @@ class SelectTest {
 
     @Test
     fun `select only one field`() {
-        val db = Database.connect()
         val userEmail = db.select {
             from("users")
             fields("email")
@@ -62,7 +59,6 @@ class SelectTest {
 
     @Test
     fun `select multiple cities`() {
-        val db = Database.connect()
         val users = db.select {
             from("users")
             where(("city" eq "Firenze") or ("city" eq "Lucca"))
@@ -76,12 +72,10 @@ class SelectTest {
                 User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6)
             )
         )
-
     }
 
     @Test
     fun join() {
-        val db = Database.connect()
         val all: List<UserPetsCount> = db.select {
             fields("users.name", "count(pets.name) as count")
             from("users")
@@ -97,8 +91,6 @@ class SelectTest {
 
     @Test
     fun allJavaSyntax() {
-        val db = Database.connect()
-
         val all: List<UserPetsCount> = db.select(Query.builder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
@@ -120,8 +112,6 @@ class SelectTest {
 
     @Test
     fun firstJavaSyntax() {
-        val db = Database.connect()
-
         val user: UserPetsCount = db.select(Query.builder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
@@ -141,8 +131,7 @@ class SelectTest {
 
     @Test
     fun leftJoin() {
-        val db = Database.connect()
-        val all: List<UserPetsCount> = db.select {
+        val all = db.select {
             fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
@@ -159,8 +148,7 @@ class SelectTest {
 
     @Test
     fun `query raw`() {
-        val db = Database.connect()
-        val all: List<User> = db.select {
+        val all = db.select {
             raw("""SELECT * FROM users WHERE city = 'Firenze';""")
         }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
@@ -170,8 +158,6 @@ class SelectTest {
             User(email="matteo@renzi.it", fullName="Matteo Renzi", city="Firenze", age=45)
         ))
     }
-
-    private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
 }
 
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
