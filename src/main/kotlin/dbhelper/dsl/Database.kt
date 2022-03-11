@@ -4,6 +4,10 @@ class Database(private val manager: ConnectionManager) {
     fun select(prepare: QueryBuilder.() -> Unit): QueryExecutor {
         val queryBuilder = QueryBuilder()
         prepare(queryBuilder)
+        return select(queryBuilder)
+    }
+
+    fun select(queryBuilder: QueryBuilder): QueryExecutor {
         return QueryExecutor(manager, queryBuilder)
     }
 

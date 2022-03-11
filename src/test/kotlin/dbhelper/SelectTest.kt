@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.sql.DriverManager.getConnection
+import java.sql.ResultSet
 
 @Testcontainers
 class SelectTest {
@@ -126,21 +127,12 @@ class SelectTest {
     @Test
     fun name() {
         val db = Database.connect()
-        val all: List<User> = db.select {
+        val user: User = db.select {
             fields("email", "name", "city", "age")
             from("users")
-        }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+        }.first { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
-        assertThat(all).isEqualTo(
-            listOf(
-                User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
-                User(email = "luigi@verdi.it", fullName = "Luigi Verdi", city = "Lucca", age = 28),
-                User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6),
-                User(email = "matteo@renzi.it", fullName = "Matteo Renzi", city = "Firenze", age = 45),
-                User(email = "marco@verdi.it", fullName = "Marco Verdi", city = "Milano", age = 13),
-                User(email = "vittorio@gialli.it", fullName = "Vittorio Gialli", city = "Milano", age = 64)
-            )
-        )
+        assertThat(user).isEqualTo(User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35))
     }
 
     @Test
@@ -160,22 +152,45 @@ class SelectTest {
     }
 
     @Test
-    fun joinJavaSyntax() {
+    fun allJavaSyntax() {
         val db = Database.connect()
-        val all: List<UserPetsCount> = db.select {
-            fields("users.name", "count(pets.name) as count")
-            from("users")
-            where(Or(
-                And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
-                Eq("users.age", 28)
-            ))
-            join(GenericJoin("pets", Eq("pets.owner", "users.email")))
-            groupBy("email")
-        }.all { UserPetsCount(getString("name"), getInt("count")) }
+
+        val all: List<UserPetsCount> = db.select(QueryBuilder()
+            .fields("users.name", "count(pets.name) as count")
+            .from("users")
+            .where(
+                Or(
+                    And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                    Eq("users.age", 28)
+                )
+            )
+            .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
+            .groupBy("email")
+        ).all(UserPetsCountParser())
 
         assertThat(all).isEqualTo(listOf(
             UserPetsCount(fullName="Luigi Verdi", pets=2)
         ))
+    }
+
+    @Test
+    fun firstJavaSyntax() {
+        val db = Database.connect()
+
+        val user: UserPetsCount = db.select(QueryBuilder()
+            .fields("users.name", "count(pets.name) as count")
+            .from("users")
+            .where(
+                Or(
+                    And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                    Eq("users.age", 28)
+                )
+            )
+            .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
+            .groupBy("email")
+        ).first(UserPetsCountParser())
+
+        assertThat(user).isEqualTo(UserPetsCount(fullName="Luigi Verdi", pets=2))
     }
 
     @Test
@@ -222,3 +237,9 @@ class SelectTest {
 
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
+
+class UserPetsCountParser: QueryResultParser<UserPetsCount> {
+    override fun parse(resultSet: ResultSet): UserPetsCount {
+        return UserPetsCount(resultSet.getString("name"), resultSet.getInt("count"))
+    }
+}
