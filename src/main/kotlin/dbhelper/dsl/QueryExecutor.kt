@@ -1,14 +1,12 @@
 package dbhelper.dsl
 
-import java.sql.ResultSet
-
 class QueryExecutor(private val manager: SessionManager, private val queryBuilder: Query.Builder) {
 
     fun <T> all(parser: QueryRowParser<T>): List<T> {
         return all { parser.parse(this) }
     }
 
-    fun <T> all(parseRow: ResultSet.() -> T): List<T> {
+    fun <T> all(parseRow: Row.() -> T): List<T> {
         val query = queryBuilder.build()
         return manager.session { execute(query, parseRow) }
     }
@@ -17,7 +15,7 @@ class QueryExecutor(private val manager: SessionManager, private val queryBuilde
         return first { parser.parse(this) }
     }
 
-    fun <T> first(parseRow: ResultSet.() -> T): T {
+    fun <T> first(parseRow: Row.() -> T): T {
         val query = queryBuilder.limit(1).build()
         return manager.session {
             val rows = execute(query, parseRow)
