@@ -1,7 +1,7 @@
 package dbhelper.dsl
 
-import dbhelper.setParameters
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class QueryExecutor(private val manager: ConnectionManager, private val queryBuilder: Query.Builder) {
@@ -39,5 +39,10 @@ class QueryExecutor(private val manager: ConnectionManager, private val queryBui
         }
 
         return results.toList()
+    }
+
+    private fun PreparedStatement.setParameters(vararg params: Any?): PreparedStatement {
+        params.forEachIndexed { index, param -> setObject(index + 1, param) }
+        return this
     }
 }
