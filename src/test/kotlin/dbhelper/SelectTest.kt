@@ -103,9 +103,9 @@ class SelectTest {
             val users = connection.select(
                 table = "users",
                 where = ("city" eq "Firenze") or ("city" eq "Lucca"),
-                joins = Joins(
-                    LeftJoin("table2 ON table2.test = users.email"),
-                    InnerJoin("table ON table.test = users.id")
+                joins = listOf(
+                    LeftJoin("table2" on ("table2.test" eq "users.email")),
+                    InnerJoin("table" on ("table.test" eq "users.id"))
                 ),
                 limit = 3,
                 orderBy = "email",
@@ -176,11 +176,25 @@ class SelectTest {
     }
 
     @Test
-    fun test() {
-        val str = "? in ? in ? in ? in ?"
-        val values = listOf("1", "2", "3", 5, 5.6)
+    fun `join params style`() {
+        connect().use { connection ->
+            val all = connection.select(
+                fields = listOf("users.name", "count(pets.name) as count"),
+                table = "users",
+                where = (("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28),
+                limit = 3,
+                joins = listOf(
+                    LeftJoin("pets" on ("pets.owner" eq "users.email"))
+                ),
+                groupBy = "email",
+                map = { UserPetsCount(it.getString("name"), it.getInt("count")) }
+            ).all()
 
-        println(values.fold(str) { acc, value -> acc.replaceFirst("?", value.toString()) })
+            assertThat(all).isEqualTo(listOf(
+                UserPetsCount(fullName="Luigi Verdi", pets=2),
+                UserPetsCount(fullName="Mario Rossi", pets=0)
+            ))
+        }
     }
 
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")

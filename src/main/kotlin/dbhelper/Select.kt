@@ -1,6 +1,7 @@
 package dbhelper
 
 import dbhelper.dsl.Empty
+import dbhelper.dsl.Join
 import dbhelper.dsl.WhereCondition
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -11,11 +12,12 @@ fun <T> Connection.select(
     map: (ResultSet) -> T,
     fields: List<String> = listOf("*"),
     where: WhereCondition = Empty(),
-    joins: Joins = Joins(),
+    joins: List<Join> = emptyList(),
     limit: Int? = null,
+    groupBy: String? = null,
     orderBy: String? = null,
     onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
-): Select<T> = Select(this, table, map, fields, where, joins, limit, orderBy, onEmpty)
+): Select<T> = Select(this, table, map, fields, where, joins, limit, groupBy, orderBy, onEmpty)
 
 class Select<T>(
     private val connection: Connection,
@@ -23,8 +25,9 @@ class Select<T>(
     private val forEach: (ResultSet) -> T,
     private val fields: List<String> = listOf("*"),
     private val where: WhereCondition = Empty(),
-    private val joins: Joins = Joins(),
+    private val joins: List<Join> = emptyList(),
     private val limit: Int? = null,
+    private val groupBy: String? = null,
     private val orderBy: String? = null,
     private val onEmpty: () -> T = { throw RuntimeException("No records found in $table") }
 ) {
@@ -55,13 +58,16 @@ class Select<T>(
 
     private fun query(limit: Int?): ResultSet {
         val whereStatement = " WHERE ${where.statement()}"
-        val query = "SELECT ${joinFields()} FROM $table${joins.text()}$whereStatement${orderByPart()}${limitPart(limit)}"
+        val query = "SELECT ${joinFields()} FROM $table${joinJoins()}$whereStatement${orderByPart()}${groupByPart()}${limitPart(limit)}"
         println("query = $query")
-        val parameters = joins.params() + where.params()
-        println("parameters = $parameters")
+        println("parameters = ${where.params()}")
         return connection.prepareStatement(query)
-            .setParameters(*parameters.toTypedArray())
+            .setParameters(*where.params().toTypedArray())
             .executeQuery()
+    }
+
+    private fun joinJoins(): String {
+        return joins.joinToString(separator = " ", prefix = " ") { it.statement() }
     }
 
     private fun limitPart(limit: Int?): String {
@@ -77,6 +83,14 @@ class Select<T>(
         }
 
         return " ORDER BY $orderBy"
+    }
+
+    private fun groupByPart(): String {
+        if (groupBy.isNullOrBlank()) {
+            return ""
+        }
+
+        return " GROUP BY $groupBy"
     }
 }
 
