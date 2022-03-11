@@ -143,10 +143,6 @@ class SelectTest {
     fun leftJoin() {
         val db = Database.connect()
         val all: List<UserPetsCount> = db.select {
-//            where2 = (("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28)
-//            fields2 = listOf("users.name", "count(pets.name) as count")
-//            from2 = "users"
-
             fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))

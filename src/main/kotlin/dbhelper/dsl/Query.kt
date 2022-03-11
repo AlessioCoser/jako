@@ -5,10 +5,6 @@ import dbhelper.dsl.conditions.Empty
 
 data class Query(val statement: String, val params: List<Any?>) {
     class Builder {
-        var from2: String = ""
-        var fields2: List<String> = listOf("*")
-        var where2: Condition = Empty()
-
         private var from: String = ""
         private var fields: List<String> = listOf("*")
         private var where: Condition = Empty()
