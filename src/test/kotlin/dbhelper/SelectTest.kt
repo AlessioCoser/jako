@@ -149,6 +149,7 @@ class SelectTest {
             fields("email", "name", "city", "age")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("age" eq 13))
+//            join("other_table" on ("user_id" eq "user.id"))
         }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
         assertThat(all).isEqualTo(listOf(
