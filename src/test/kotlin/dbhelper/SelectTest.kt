@@ -1,10 +1,7 @@
 package dbhelper
 
 import dbhelper.dsl.*
-import dbhelper.dsl.conditions.and
-import dbhelper.dsl.conditions.eq
-import dbhelper.dsl.conditions.gt
-import dbhelper.dsl.conditions.or
+import dbhelper.dsl.conditions.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -154,6 +151,25 @@ class SelectTest {
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
             join("pets" on ("pets.owner" eq "users.email"))
+            groupBy("email")
+        }.all { UserPetsCount(getString("name"), getInt("count")) }
+
+        assertThat(all).isEqualTo(listOf(
+            UserPetsCount(fullName="Luigi Verdi", pets=2)
+        ))
+    }
+
+    @Test
+    fun joinJavaSyntax() {
+        val db = Database.connect()
+        val all: List<UserPetsCount> = db.select {
+            fields("users.name", "count(pets.name) as count")
+            from("users")
+            where(Or(
+                And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                Eq("users.age", 28)
+            ))
+            join(GenericJoin("pets", Eq("pets.owner", "users.email")))
             groupBy("email")
         }.all { UserPetsCount(getString("name"), getInt("count")) }
 
