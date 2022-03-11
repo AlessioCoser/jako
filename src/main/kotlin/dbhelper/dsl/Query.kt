@@ -10,6 +10,7 @@ data class Query(val statement: String, val params: List<Any?>) {
         private var where: Condition = Empty()
         private var joins: MutableList<Join> = mutableListOf()
         private var groupBy: String = ""
+        private var orderBy: String = ""
         private var limit: String = ""
         private var raw: String = ""
 
@@ -43,8 +44,13 @@ data class Query(val statement: String, val params: List<Any?>) {
             return this
         }
 
-        fun groupBy(field: String): Builder {
-            groupBy = " GROUP BY $field"
+        fun orderBy(order: Order): Builder {
+            orderBy = " ORDER BY ${order.statement()} ${order.direction()}"
+            return this
+        }
+
+        fun groupBy(vararg fields: String): Builder {
+            groupBy = " GROUP BY ${fields.joinToString(", ")}"
             return this
         }
 
@@ -57,7 +63,7 @@ data class Query(val statement: String, val params: List<Any?>) {
             if (raw.isNotBlank()) {
                 return Query(raw, emptyList())
             }
-            return Query("SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy$limit", where.params())
+            return Query("SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy$orderBy$limit", where.params())
         }
 
         private fun joinJoins(): String {

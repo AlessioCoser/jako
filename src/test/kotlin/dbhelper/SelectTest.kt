@@ -1,6 +1,8 @@
 package dbhelper
 
 import dbhelper.dsl.*
+import dbhelper.dsl.Order.Companion.asc
+import dbhelper.dsl.Order.Companion.desc
 import dbhelper.dsl.conditions.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
@@ -166,6 +168,7 @@ class SelectTest {
             )
             .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
+            .orderBy(asc("name"))
         ).all(UserPetsCountParser())
 
         assertThat(all).isEqualTo(listOf(
@@ -188,6 +191,7 @@ class SelectTest {
             )
             .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
+            .orderBy(Asc("name"))
         ).first(UserPetsCountParser())
 
         assertThat(user).isEqualTo(UserPetsCount(fullName="Luigi Verdi", pets=2))
@@ -202,11 +206,12 @@ class SelectTest {
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
             leftJoin("pets" on ("pets.owner" eq "users.email"))
             groupBy("email")
+            orderBy(desc("name"))
         }.all { UserPetsCount(getString("name"), getInt("count")) }
 
         assertThat(all).isEqualTo(listOf(
-            UserPetsCount(fullName="Luigi Verdi", pets=2),
-            UserPetsCount(fullName="Mario Rossi", pets=0)
+            UserPetsCount(fullName="Mario Rossi", pets=0),
+            UserPetsCount(fullName="Luigi Verdi", pets=2)
         ))
     }
 
