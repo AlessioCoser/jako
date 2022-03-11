@@ -145,20 +145,27 @@ class SelectTest {
     @Test
     fun first() {
         val db = Database.connect()
-        val all: List<User> = db.select {
-            fields("email", "name", "city", "age")
+        val all: List<UserPetsCount> = db.select {
+            fields("users.name", "count(email) as count")
             from("users")
-            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("age" eq 13))
-//            join("other_table" on ("user_id" eq "user.id"))
-        }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
+            join("pets" on ("pets.owner" eq "users.email"))
+            groupBy("email")
+        }.all { UserPetsCount(getString("name"), getInt("count")) }
 
-        assertThat(all).isEqualTo(listOf(
-            User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
-            User(email="marco@verdi.it", fullName="Marco Verdi", city="Milano", age=13)
-        ))
+        assertThat(all).isEqualTo(listOf(UserPetsCount(fullName = "Luigi Verdi", pets=2)))
+    }
+
+    @Test
+    fun test() {
+        val str = "? in ? in ? in ? in ?"
+        val values = listOf("1", "2", "3", 5, 5.6)
+
+        println(values.fold(str) { acc, value -> acc.replaceFirst("?", value.toString()) })
     }
 
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
 }
 
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
+data class UserPetsCount(val fullName: String, val pets: Int)

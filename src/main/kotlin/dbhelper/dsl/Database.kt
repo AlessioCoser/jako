@@ -1,8 +1,8 @@
 package dbhelper.dsl
 
 class Database(private val manager: ConnectionManager) {
-    fun select(prepare: Select2.() -> Unit): Query {
-        val select = Select2()
+    fun select(prepare: SelectBuilder.() -> Unit): Query {
+        val select = SelectBuilder()
         prepare(select)
         return Query(manager, select)
     }

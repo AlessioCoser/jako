@@ -61,35 +61,3 @@ infix fun WhereCondition.and(value: WhereCondition): WhereCondition {
 infix fun WhereCondition.or(value: WhereCondition): WhereCondition {
     return Or(this, value)
 }
-
-class Select2 {
-    private var from: String = ""
-    private var fields: List<String> = listOf("*")
-    private var where: WhereCondition = Empty()
-
-    fun from(table: String) {
-        this.from = table
-    }
-
-    fun fields(vararg fields: String) {
-        this.fields = fields.toList()
-    }
-
-    fun where(condition: WhereCondition) {
-        where = condition
-    }
-
-    fun build(): String {
-        return "SELECT ${joinFields()} FROM $from WHERE ${where.statement()}"
-    }
-
-    fun params(): List<Any?> {
-        return where.params()
-    }
-
-    private fun joinFields(): String {
-        return fields.joinToString(separator = ", ")
-    }
-
-    override fun toString() = "Select2<build=${build()}, params=${params()}>"
-}
