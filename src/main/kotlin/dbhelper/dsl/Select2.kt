@@ -14,6 +14,12 @@ class Eq(private val left: String, private val right: String): WhereCondition {
     }
 }
 
+class Gt(private val left: String, private val right: String): WhereCondition {
+    override fun statement(): String {
+        return "$left > $right"
+    }
+}
+
 class And(private val left: WhereCondition, private val right: WhereCondition): WhereCondition {
     override fun statement(): String {
         return "(${left.statement()} AND ${right.statement()})"
@@ -32,6 +38,10 @@ infix fun String.eq(value: String): WhereCondition {
 
 infix fun String.eq(value: Int): WhereCondition {
     return Eq(this, value.toString())
+}
+
+infix fun String.gt(value: Int): WhereCondition {
+    return Gt(this, value.toString())
 }
 
 infix fun WhereCondition.and(value: WhereCondition): WhereCondition {

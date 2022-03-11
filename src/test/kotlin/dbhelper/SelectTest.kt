@@ -21,10 +21,7 @@ class SelectTest {
         connect().use { connection ->
             val user = connection.select(
                 table = "users",
-                where = Where(
-                    And("city = ?", "Milano"),
-                    And("age > ?", 18)
-                ),
+                where = ("city" eq "Milano") and ("age" gt 18),
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).first()
 
@@ -37,7 +34,7 @@ class SelectTest {
         connect().use { connection ->
             val user = connection.select(
                 table = "users",
-                where = Where(And("city = ?", "Palermo")),
+                where = "city" eq "Palermo",
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) },
                 onEmpty = { User("stra@ng.er", "stranger", "nowhere", 0) }
             ).first()
@@ -51,7 +48,7 @@ class SelectTest {
         connect().use { connection ->
             val users = connection.select(
                 table = "users",
-                where = Where(And("city = ?", "Firenze")),
+                where = "city" eq "Firenze",
                 limit = 2,
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).all()
@@ -71,7 +68,7 @@ class SelectTest {
             val userEmail = connection.select(
                 table = "users",
                 fields = listOf("email"),
-                where = Where(And("city = ?", "Lucca")),
+                where = "city" eq "Lucca",
                 map = { it.getString("email") }
             ).first()
 
@@ -84,7 +81,7 @@ class SelectTest {
         connect().use { connection ->
             val users = connection.select(
                 table = "users",
-                where = Where(And("(city = ? OR city = ?)", "Firenze", "Lucca")),
+                where = ("city" eq "Firenze") or ("city" eq "Lucca"),
                 limit = 3,
                 map = { User(it.getString("email"), it.getString("name"), it.getString("city"), it.getInt("age")) }
             ).all()
@@ -105,7 +102,7 @@ class SelectTest {
         connect().use { connection ->
             val users = connection.select(
                 table = "users",
-                where = Where(And("(city = ? OR city = ?)", "Firenze", "Lucca")),
+                where = ("city" eq "Firenze") or ("city" eq "Lucca"),
                 joins = Joins(
                     LeftJoin("table2 ON table2.test = users.email"),
                     InnerJoin("table ON table.test = users.id")

@@ -1,5 +1,7 @@
 package dbhelper
 
+import dbhelper.dsl.Empty
+import dbhelper.dsl.WhereCondition
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -8,7 +10,7 @@ fun <T> Connection.select(
     table: String,
     map: (ResultSet) -> T,
     fields: List<String> = listOf("*"),
-    where: Where = Where(),
+    where: WhereCondition = Empty(),
     joins: Joins = Joins(),
     limit: Int? = null,
     orderBy: String? = null,
@@ -20,7 +22,7 @@ class Select<T>(
     private val table: String,
     private val forEach: (ResultSet) -> T,
     private val fields: List<String> = listOf("*"),
-    private val where: Where = Where(),
+    private val where: WhereCondition = Empty(),
     private val joins: Joins = Joins(),
     private val limit: Int? = null,
     private val orderBy: String? = null,
@@ -52,12 +54,13 @@ class Select<T>(
     }
 
     private fun query(limit: Int?): ResultSet {
+        val whereStatement = " WHERE ${where.statement()}"
         val query = """
-            SELECT ${joinFields()} FROM $table${joins.text()}${where.text()}${orderByPart()}${limitPart(limit)}
+            SELECT ${joinFields()} FROM $table${joins.text()}$whereStatement${orderByPart()}${limitPart(limit)}
         """
         println("query = $query")
         return connection.prepareStatement(query)
-            .setParameters(*(joins.params() + where.params()).toTypedArray())
+            .setParameters(*(joins.params()).toTypedArray())
             .executeQuery()
     }
 
