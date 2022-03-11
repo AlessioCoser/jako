@@ -8,7 +8,7 @@ data class Query(val statement: String, val params: List<Any?>) {
         private var from: String = ""
         private var fields: List<String> = listOf("*")
         private var where: Condition = Empty()
-        private var joins: MutableList<JoinStatement> = mutableListOf()
+        private var joins: MutableList<Join> = mutableListOf()
         private var groupBy: String = ""
         private var orderBy: String = ""
         private var limit: String = ""
@@ -35,12 +35,7 @@ data class Query(val statement: String, val params: List<Any?>) {
         }
 
         fun join(join: Join): Builder {
-            joins.add(InnerJoin(join))
-            return this
-        }
-
-        fun leftJoin(join: Join): Builder {
-            joins.add(LeftJoin(join))
+            joins.add(join)
             return this
         }
 

@@ -1,29 +1,44 @@
 package dbhelper.dsl
 
+import dbhelper.dsl.JoinType.*
 import dbhelper.dsl.conditions.Condition
 
 infix fun String.on(value: Condition): Join {
-    return Join(this, value)
+    return innerJoin(value)
 }
 
-interface JoinStatement {
-    fun statement(): String
+infix fun String.innerJoin(on: Condition): Join {
+    return InnerJoin(this, on)
 }
 
-class Join(private val table: String, private val onCondition: Condition): JoinStatement {
-    override fun statement() = "JOIN $table ON ${compileWhereCondition()}"
+infix fun String.leftJoin(on: Condition): Join {
+    return LeftJoin(this, on)
+}
 
-    private fun compileWhereCondition(): String {
-        val statement = onCondition.statement()
-        val params = onCondition.params()
+infix fun String.rightJoin(on: Condition): Join {
+    return RightJoin(this, on)
+}
+
+class InnerJoin(table: String, condition: Condition): Join(INNER_JOIN, table, condition)
+class LeftJoin(table: String, condition: Condition): Join(LEFT_JOIN, table, condition)
+class RightJoin(table: String, condition: Condition): Join(RIGHT_JOIN, table, condition)
+
+open class Join (private val type: JoinType, private val table: String, private val condition: Condition) {
+    constructor(type: JoinType, join: Join): this(type, join.table, join.condition)
+
+    fun statement(): String {
+        return "${type.value} $table ON ${compileCondition(condition)}"
+    }
+
+    private fun compileCondition(condition: Condition): String {
+        val statement = condition.statement()
+        val params = condition.params()
         return params.fold(statement) { acc, value -> acc.replaceFirst("?", value.toString()) }
     }
 }
 
-open class TypedJoin(private val type: String, private val joinCondition: JoinStatement): JoinStatement {
-    override fun statement() = "$type ${joinCondition.statement()}"
+enum class JoinType(val value: String) {
+    INNER_JOIN("INNER JOIN"),
+    LEFT_JOIN("LEFT JOIN"),
+    RIGHT_JOIN("RIGHT JOIN")
 }
-
-class InnerJoin(join: JoinStatement): TypedJoin("INNER", join)
-
-class LeftJoin(join: JoinStatement): TypedJoin("LEFT", join)
