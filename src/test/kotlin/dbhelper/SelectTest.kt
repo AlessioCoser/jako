@@ -143,10 +143,26 @@ class SelectTest {
     }
 
     @Test
-    fun first() {
+    fun join() {
         val db = Database.connect()
         val all: List<UserPetsCount> = db.select {
-            fields("users.name", "count(email) as count")
+            fields("users.name", "count(pets.name) as count")
+            from("users")
+            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
+            join("pets" on ("pets.owner" eq "users.email"))
+            groupBy("email")
+        }.all { UserPetsCount(getString("name"), getInt("count")) }
+
+        assertThat(all).isEqualTo(listOf(
+            UserPetsCount(fullName="Luigi Verdi", pets=2)
+        ))
+    }
+
+    @Test
+    fun leftJoin() {
+        val db = Database.connect()
+        val all: List<UserPetsCount> = db.select {
+            fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
             leftJoin("pets" on ("pets.owner" eq "users.email"))
@@ -155,7 +171,7 @@ class SelectTest {
 
         assertThat(all).isEqualTo(listOf(
             UserPetsCount(fullName="Luigi Verdi", pets=2),
-            UserPetsCount(fullName="Mario Rossi", pets=1)
+            UserPetsCount(fullName="Mario Rossi", pets=0)
         ))
     }
 
