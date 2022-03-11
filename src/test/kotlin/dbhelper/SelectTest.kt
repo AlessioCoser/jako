@@ -1,7 +1,6 @@
 package dbhelper
 
-import dbhelper.dsl.Database
-import dbhelper.dsl.Query
+import dbhelper.dsl.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -149,12 +148,16 @@ class SelectTest {
     @Test
     fun first() {
         val db = Database.connect()
-        val user: User = db.select {
+        val all: List<User> = db.select {
             fields("email", "name", "city", "age")
             from("users")
-        }.first { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("age" eq 13))
+        }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
 
-        assertThat(user).isEqualTo(User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35))
+        assertThat(all).isEqualTo(listOf(
+            User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
+            User(email="marco@verdi.it", fullName="Marco Verdi", city="Milano", age=13)
+        ))
     }
 
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
