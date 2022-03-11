@@ -20,7 +20,7 @@ class QueryExecutor(private val manager: ConnectionManager, private val queryBui
     }
 
     fun <T> first(parseRow: ResultSet.() -> T): T {
-        val query = queryBuilder.build()
+        val query = queryBuilder.limit(1).build()
         return manager.connection {
             val rows = execute(query, parseRow)
             rows.first() ?: throw RuntimeException("No records found for: $query")
