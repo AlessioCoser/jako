@@ -5,10 +5,14 @@ import dbhelper.dsl.conditions.Empty
 
 data class Query(val statement: String, val params: List<Any?>) {
     class Builder {
+        var from2: String = ""
+        var fields2: List<String> = listOf("*")
+        var where2: Condition = Empty()
+
         private var from: String = ""
         private var fields: List<String> = listOf("*")
         private var where: Condition = Empty()
-        private var joins: MutableList<Join> = mutableListOf()
+        private var joins: MutableList<JoinStatement> = mutableListOf()
         private var groupBy: String = ""
         private var orderBy: String = ""
         private var limit: String = ""
@@ -34,12 +38,12 @@ data class Query(val statement: String, val params: List<Any?>) {
             return this
         }
 
-        fun join(join: GenericJoin): Builder {
+        fun join(join: Join): Builder {
             joins.add(InnerJoin(join))
             return this
         }
 
-        fun leftJoin(join: GenericJoin): Builder {
+        fun leftJoin(join: Join): Builder {
             joins.add(LeftJoin(join))
             return this
         }

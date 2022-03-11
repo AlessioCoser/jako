@@ -5,7 +5,6 @@ import dbhelper.dsl.Order.Companion.asc
 import dbhelper.dsl.Order.Companion.desc
 import dbhelper.dsl.conditions.*
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -109,7 +108,7 @@ class SelectTest {
                     Eq("users.age", 28)
                 )
             )
-            .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
+            .join(Join("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
             .orderBy(asc("name"))
         ).all(UserPetsCountParser())
@@ -132,7 +131,7 @@ class SelectTest {
                     Eq("users.age", 28)
                 )
             )
-            .join(GenericJoin("pets", Eq("pets.owner", "users.email")))
+            .join(Join("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
             .orderBy(Asc("name"))
         ).first(UserPetsCountParser())
@@ -144,6 +143,10 @@ class SelectTest {
     fun leftJoin() {
         val db = Database.connect()
         val all: List<UserPetsCount> = db.select {
+//            where2 = (("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28)
+//            fields2 = listOf("users.name", "count(pets.name) as count")
+//            from2 = "users"
+
             fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
