@@ -1,11 +1,14 @@
 package dbhelper.dsl
 
+import dbhelper.dsl.conditions.Condition
+import dbhelper.dsl.conditions.Empty
+
 data class Query(val statement: String, val params: List<Any?>)
 
 class QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
-    private var where: WhereCondition = Empty()
+    private var where: Condition = Empty()
     private var joins: MutableList<Join> = mutableListOf()
     private var groupBy: String = ""
 
@@ -17,7 +20,7 @@ class QueryBuilder {
         this.fields = fields.toList()
     }
 
-    fun where(condition: WhereCondition) {
+    fun where(condition: Condition) {
         where = condition
     }
 

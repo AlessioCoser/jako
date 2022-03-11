@@ -1,8 +1,8 @@
 package dbhelper
 
-import dbhelper.dsl.Empty
 import dbhelper.dsl.Join
-import dbhelper.dsl.WhereCondition
+import dbhelper.dsl.conditions.Condition
+import dbhelper.dsl.conditions.Empty
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -11,7 +11,7 @@ fun <T> Connection.select(
     table: String,
     map: (ResultSet) -> T,
     fields: List<String> = listOf("*"),
-    where: WhereCondition = Empty(),
+    where: Condition = Empty(),
     joins: List<Join> = emptyList(),
     limit: Int? = null,
     groupBy: String? = null,
@@ -24,7 +24,7 @@ class Select<T>(
     private val table: String,
     private val forEach: (ResultSet) -> T,
     private val fields: List<String> = listOf("*"),
-    private val where: WhereCondition = Empty(),
+    private val where: Condition = Empty(),
     private val joins: List<Join> = emptyList(),
     private val limit: Int? = null,
     private val groupBy: String? = null,

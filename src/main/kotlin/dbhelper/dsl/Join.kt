@@ -1,10 +1,16 @@
 package dbhelper.dsl
 
+import dbhelper.dsl.conditions.Condition
+
 interface Join {
     fun statement(): String
 }
 
-class GenericJoin(private val table: String, private val onCondition: WhereCondition): Join {
+infix fun String.on(value: Condition): GenericJoin {
+    return GenericJoin(this, value)
+}
+
+class GenericJoin(private val table: String, private val onCondition: Condition): Join {
     override fun statement() = "JOIN $table ON ${compileWhereCondition()}"
 
     private fun compileWhereCondition(): String {
@@ -20,7 +26,3 @@ open class TypedJoin(private val type: String, private val joinCondition: Join):
 
 class InnerJoin(join: Join): TypedJoin("INNER", join)
 class LeftJoin(join: Join): TypedJoin("LEFT", join)
-
-infix fun String.on(value: WhereCondition): GenericJoin {
-    return GenericJoin(this, value)
-}

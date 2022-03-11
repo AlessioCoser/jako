@@ -1,6 +1,10 @@
 package dbhelper
 
 import dbhelper.dsl.*
+import dbhelper.dsl.conditions.and
+import dbhelper.dsl.conditions.eq
+import dbhelper.dsl.conditions.gt
+import dbhelper.dsl.conditions.or
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
