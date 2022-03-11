@@ -10,7 +10,7 @@ class Empty: WhereCondition {
     override fun params() = listOf<Any?>()
 }
 
-class Eq(private val left: String, private val right: String): WhereCondition {
+class Eq(private val left: String, private val right: Any?): WhereCondition {
     override fun statement(): String {
         return "$left = ?"
     }
@@ -18,7 +18,7 @@ class Eq(private val left: String, private val right: String): WhereCondition {
     override fun params() = listOf(right)
 }
 
-class Gt(private val left: String, private val right: String): WhereCondition {
+class Gt(private val left: String, private val right: Any?): WhereCondition {
     override fun statement(): String {
         return "$left > ?"
     }
@@ -43,15 +43,15 @@ class Or(private val left: WhereCondition, private val right: WhereCondition): W
 }
 
 infix fun String.eq(value: String): WhereCondition {
-    return Eq(this, "'$value'")
+    return Eq(this, value)
 }
 
 infix fun String.eq(value: Int): WhereCondition {
-    return Eq(this, value.toString())
+    return Eq(this, value)
 }
 
 infix fun String.gt(value: Int): WhereCondition {
-    return Gt(this, value.toString())
+    return Gt(this, value)
 }
 
 infix fun WhereCondition.and(value: WhereCondition): WhereCondition {
