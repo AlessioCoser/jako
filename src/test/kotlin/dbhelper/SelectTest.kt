@@ -149,11 +149,14 @@ class SelectTest {
             fields("users.name", "count(email) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-            join("pets" on ("pets.owner" eq "users.email"))
+            leftJoin("pets" on ("pets.owner" eq "users.email"))
             groupBy("email")
         }.all { UserPetsCount(getString("name"), getInt("count")) }
 
-        assertThat(all).isEqualTo(listOf(UserPetsCount(fullName = "Luigi Verdi", pets=2)))
+        assertThat(all).isEqualTo(listOf(
+            UserPetsCount(fullName="Luigi Verdi", pets=2),
+            UserPetsCount(fullName="Mario Rossi", pets=1)
+        ))
     }
 
     @Test
