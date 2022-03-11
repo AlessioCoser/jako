@@ -1,46 +1,43 @@
 package dbhelper.dsl
 
 import dbhelper.setParameters
+import java.sql.Connection
 import java.sql.ResultSet
 
-interface QueryResultParser<T> {
-    fun parse(resultSet: ResultSet): T
-}
+class QueryExecutor(private val manager: ConnectionManager, private val queryBuilder: Query.Builder) {
 
-class QueryExecutor(private val manager: ConnectionManager, private val queryBuilder: QueryBuilder) {
-
-    fun <T> all(parser: QueryResultParser<T>): List<T> {
+    fun <T> all(parser: QueryRowParser<T>): List<T> {
         return all { parser.parse(this) }
     }
 
-    fun <T> all(forEach: ResultSet.() -> T): List<T> {
+    fun <T> all(parseRow: ResultSet.() -> T): List<T> {
         val query = queryBuilder.build()
-        println(query)
-        return manager.connection {
-            val resultSet = prepareStatement(query.statement)
-                .setParameters(*query.params.toTypedArray())
-                .executeQuery()
-            val results = mutableListOf<T>()
-            while (resultSet.next()) {
-                results.add(forEach(resultSet))
-            }
-
-            results.toList()
-        }
+        return manager.connection { execute(query, parseRow) }
     }
 
-    fun <T> first(parser: QueryResultParser<T>): T {
+    fun <T> first(parser: QueryRowParser<T>): T {
         return first { parser.parse(this) }
     }
 
-    fun <T> first(forEach: ResultSet.() -> T): T {
+    fun <T> first(parseRow: ResultSet.() -> T): T {
         val query = queryBuilder.build()
-        println(query)
         return manager.connection {
-            val resultSet = prepareStatement(query.statement)
-                .setParameters(*query.params.toTypedArray())
-                .executeQuery()
-            if (resultSet.next()) forEach(resultSet) else throw RuntimeException("No records found for: $queryBuilder")
+            val rows = execute(query, parseRow)
+            rows.first() ?: throw RuntimeException("No records found for: $query")
         }
+    }
+
+    private fun <T> Connection.execute(query: Query, parseRow: ResultSet.() -> T): List<T> {
+        println(query)
+        val resultSet = prepareStatement(query.statement)
+            .setParameters(*query.params.toTypedArray())
+            .executeQuery()
+
+        val results = mutableListOf<T>()
+        while (resultSet.next()) {
+            results.add(parseRow(resultSet))
+        }
+
+        return results.toList()
     }
 }

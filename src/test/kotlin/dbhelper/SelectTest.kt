@@ -155,7 +155,7 @@ class SelectTest {
     fun allJavaSyntax() {
         val db = Database.connect()
 
-        val all: List<UserPetsCount> = db.select(QueryBuilder()
+        val all: List<UserPetsCount> = db.select(Query.builder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
@@ -177,7 +177,7 @@ class SelectTest {
     fun firstJavaSyntax() {
         val db = Database.connect()
 
-        val user: UserPetsCount = db.select(QueryBuilder()
+        val user: UserPetsCount = db.select(Query.builder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
@@ -238,7 +238,7 @@ class SelectTest {
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
 
-class UserPetsCountParser: QueryResultParser<UserPetsCount> {
+class UserPetsCountParser: QueryRowParser<UserPetsCount> {
     override fun parse(resultSet: ResultSet): UserPetsCount {
         return UserPetsCount(resultSet.getString("name"), resultSet.getInt("count"))
     }

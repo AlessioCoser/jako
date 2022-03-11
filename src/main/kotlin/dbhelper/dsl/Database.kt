@@ -1,13 +1,13 @@
 package dbhelper.dsl
 
 class Database(private val manager: ConnectionManager) {
-    fun select(prepare: QueryBuilder.() -> Unit): QueryExecutor {
-        val queryBuilder = QueryBuilder()
+    fun select(prepare: Query.Builder.() -> Unit): QueryExecutor {
+        val queryBuilder = Query.Builder()
         prepare(queryBuilder)
         return select(queryBuilder)
     }
 
-    fun select(queryBuilder: QueryBuilder): QueryExecutor {
+    fun select(queryBuilder: Query.Builder): QueryExecutor {
         return QueryExecutor(manager, queryBuilder)
     }
 
