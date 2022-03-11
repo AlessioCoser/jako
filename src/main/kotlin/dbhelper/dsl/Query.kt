@@ -11,6 +11,12 @@ data class Query(val statement: String, val params: List<Any?>) {
         private var joins: MutableList<Join> = mutableListOf()
         private var groupBy: String = ""
         private var limit: String = ""
+        private var raw: String = ""
+
+        fun raw(statement: String): Builder {
+            raw = statement
+            return this
+        }
 
         fun from(table: String): Builder {
             this.from = table
@@ -48,6 +54,9 @@ data class Query(val statement: String, val params: List<Any?>) {
         }
 
         fun build(): Query {
+            if (raw.isNotBlank()) {
+                return Query(raw, emptyList())
+            }
             return Query("SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy$limit", where.params())
         }
 

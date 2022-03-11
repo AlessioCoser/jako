@@ -232,6 +232,20 @@ class SelectTest {
         }
     }
 
+    @Test
+    fun `query raw`() {
+        val db = Database.connect()
+        val all: List<User> = db.select {
+            raw("""SELECT * FROM users WHERE city = 'Firenze';""")
+        }.all { User(getString("email"), getString("name"), getString("city"), getInt("age")) }
+
+        assertThat(all).isEqualTo(listOf(
+            User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
+            User(email="paolo@bianchi.it", fullName="Paolo Bianchi", city="Firenze", age=6),
+            User(email="matteo@renzi.it", fullName="Matteo Renzi", city="Firenze", age=45)
+        ))
+    }
+
     private fun connect() = getConnection("jdbc:postgresql://localhost:5432/tests", "user", "password")
 }
 
