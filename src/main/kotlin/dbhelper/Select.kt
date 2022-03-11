@@ -55,12 +55,12 @@ class Select<T>(
 
     private fun query(limit: Int?): ResultSet {
         val whereStatement = " WHERE ${where.statement()}"
-        val query = """
-            SELECT ${joinFields()} FROM $table${joins.text()}$whereStatement${orderByPart()}${limitPart(limit)}
-        """
+        val query = "SELECT ${joinFields()} FROM $table${joins.text()}$whereStatement${orderByPart()}${limitPart(limit)}"
         println("query = $query")
+        val parameters = joins.params() + where.params()
+        println("parameters = $parameters")
         return connection.prepareStatement(query)
-            .setParameters(*(joins.params()).toTypedArray())
+            .setParameters(*parameters.toTypedArray())
             .executeQuery()
     }
 

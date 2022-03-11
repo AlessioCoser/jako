@@ -1,12 +1,16 @@
 package dbhelper.dsl
 
+import dbhelper.setParameters
 import java.sql.ResultSet
 
-class Query(private val manager: ConnectionManager, private val select2: Select2) {
+class Query(private val manager: ConnectionManager, private val select: Select2) {
 
     fun <T> all(forEach: ResultSet.() -> T): List<T> {
+        println("$select")
         return manager.connection {
-            val resultSet = prepareStatement(select2.build()).executeQuery()
+            val resultSet = prepareStatement(select.build())
+                .setParameters(*select.params().toTypedArray())
+                .executeQuery()
             val results = mutableListOf<T>()
             while (resultSet.next()) {
                 results.add(forEach(resultSet))
@@ -17,11 +21,12 @@ class Query(private val manager: ConnectionManager, private val select2: Select2
     }
 
     fun <T> first(forEach: ResultSet.() -> T): T {
+        println("$select")
         return manager.connection {
-            val select = select2.build()
-            println("select = $select")
-            val resultSet = prepareStatement(select).executeQuery()
-            if (resultSet.next()) forEach(resultSet) else throw RuntimeException("No records found for: $select2")
+            val resultSet = prepareStatement(select.build())
+                .setParameters(*select.params().toTypedArray())
+                .executeQuery()
+            if (resultSet.next()) forEach(resultSet) else throw RuntimeException("No records found for: $select")
         }
     }
 }

@@ -2,34 +2,44 @@ package dbhelper.dsl
 
 interface WhereCondition {
     fun statement(): String
+    fun params(): List<Any?>
 }
 
 class Empty: WhereCondition {
     override fun statement() = "true"
+    override fun params() = listOf<Any?>()
 }
 
 class Eq(private val left: String, private val right: String): WhereCondition {
     override fun statement(): String {
-        return "$left = $right"
+        return "$left = ?"
     }
+
+    override fun params() = listOf(right)
 }
 
 class Gt(private val left: String, private val right: String): WhereCondition {
     override fun statement(): String {
-        return "$left > $right"
+        return "$left > ?"
     }
+
+    override fun params() = listOf(right)
 }
 
 class And(private val left: WhereCondition, private val right: WhereCondition): WhereCondition {
     override fun statement(): String {
         return "(${left.statement()} AND ${right.statement()})"
     }
+
+    override fun params() = left.params().plus(right.params())
 }
 
 class Or(private val left: WhereCondition, private val right: WhereCondition): WhereCondition {
     override fun statement(): String {
         return "(${left.statement()} OR ${right.statement()})"
     }
+
+    override fun params() = left.params().plus(right.params())
 }
 
 infix fun String.eq(value: String): WhereCondition {
@@ -73,9 +83,13 @@ class Select2 {
         return "SELECT ${joinFields()} FROM $from WHERE ${where.statement()}"
     }
 
+    fun params(): List<Any?> {
+        return where.params()
+    }
+
     private fun joinFields(): String {
         return fields.joinToString(separator = ", ")
     }
 
-    override fun toString() = "Select2<${build()}>"
+    override fun toString() = "Select2<build=${build()}, params=${params()}>"
 }
