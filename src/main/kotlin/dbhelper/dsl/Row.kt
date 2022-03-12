@@ -1,7 +1,6 @@
 package dbhelper.dsl
 
 import java.io.InputStream
-import java.lang.RuntimeException
 import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Time

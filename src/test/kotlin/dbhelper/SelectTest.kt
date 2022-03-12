@@ -4,6 +4,9 @@ import dbhelper.dsl.*
 import dbhelper.dsl.Order.Companion.asc
 import dbhelper.dsl.Order.Companion.desc
 import dbhelper.dsl.conditions.*
+import dbhelper.dsl.join.InnerJoin
+import dbhelper.dsl.join.leftJoin
+import dbhelper.dsl.join.on
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container

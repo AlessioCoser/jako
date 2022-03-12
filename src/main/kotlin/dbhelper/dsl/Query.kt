@@ -2,6 +2,7 @@ package dbhelper.dsl
 
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.conditions.Empty
+import dbhelper.dsl.join.Join
 
 data class Query(val statement: String, val params: List<Any?>) {
     class Builder {
