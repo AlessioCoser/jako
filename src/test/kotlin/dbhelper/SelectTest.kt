@@ -3,8 +3,8 @@ package dbhelper
 import dbhelper.dsl.*
 import dbhelper.dsl.conditions.*
 import dbhelper.dsl.join.InnerJoin
-import dbhelper.dsl.join.leftJoin
-import dbhelper.dsl.join.on
+import dbhelper.dsl.join.InnerJoin.Companion.on
+import dbhelper.dsl.join.LeftJoin.Companion.leftJoin
 import dbhelper.dsl.order.Asc
 import dbhelper.dsl.order.asc
 import dbhelper.dsl.order.desc

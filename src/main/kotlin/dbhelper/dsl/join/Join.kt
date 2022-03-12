@@ -2,10 +2,10 @@ package dbhelper.dsl.join
 
 import dbhelper.dsl.conditions.Condition
 
-abstract class Join (private val type: JoinType, private val table: String, private val condition: Condition) {
+abstract class Join (private val type: String, private val table: String, private val condition: Condition) {
 
     fun statement(): String {
-        return "${type.value} $table ON ${compileCondition(condition)}"
+        return "$type $table ON ${compileCondition(condition)}"
     }
 
     private fun compileCondition(condition: Condition): String {
