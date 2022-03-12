@@ -2,7 +2,6 @@ package dbhelper.query
 
 import dbhelper.query.conditions.Condition
 import dbhelper.query.join.Join
-import dbhelper.query.join.JoinBuilder
 import dbhelper.query.order.Order
 
 class QueryBuilderSql : QueryBuilder {
@@ -10,7 +9,7 @@ class QueryBuilderSql : QueryBuilder {
     private var fields: List<String> = listOf("*")
     private var where: String = ""
     private var whereParams: List<Any?> = emptyList()
-    private var join: JoinBuilder = JoinBuilder()
+    private var join: String = ""
     private var groupBy: String = ""
     private var having: String = ""
     private var havingParams: List<Any?> = emptyList()
@@ -40,7 +39,7 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     fun join(join: Join): QueryBuilderSql {
-        this.join.add(join)
+        this.join += " ${join.statement()}"
         return this
     }
 
@@ -81,7 +80,7 @@ class QueryBuilderSql : QueryBuilder {
         }
 
         return Query(
-            "SELECT ${joinFields()}$from${join.build()}$where$groupBy$having$orderBy$limit",
+            "SELECT ${joinFields()}$from${join}$where$groupBy$having$orderBy$limit",
             whereParams.plus(havingParams)
         )
     }
