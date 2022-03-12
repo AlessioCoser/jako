@@ -3,9 +3,9 @@ package dbhelper.query
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
-import dbhelper.query.join.InnerJoin
-import dbhelper.query.join.LeftJoin
 import dbhelper.query.join.On
+import dbhelper.query.join.On.Companion.eq
+import dbhelper.query.join.On.Companion.on
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -145,6 +145,19 @@ class QueryBuilderSqlTest {
         assertEquals(Query("SELECT * FROM people " +
                 "INNER JOIN bank_account ON people.id = bank_account.person_id " +
                 "LEFT JOIN pets ON people.id = pets.owner", emptyList()), query)
+    }
+
+    @Test
+    fun `join statement with dsl syntax`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .join("bank_account" on "people.id" eq "bank_account.person_id")
+            .rightJoin("pets" on "owner_id")
+            .build()
+
+        assertEquals(Query("SELECT * FROM people " +
+                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                "RIGHT JOIN pets USING(owner_id)", emptyList()), query)
     }
 
     @Test
