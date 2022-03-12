@@ -16,9 +16,11 @@ class QueryBuilderSql : QueryBuilder {
     private var orderBy: String = ""
     private var limit: String = ""
     private var raw: String = ""
+    private var rawParams: List<Any?> = emptyList()
 
-    fun raw(statement: String): QueryBuilderSql {
+    fun raw(statement: String, vararg params: Any?): QueryBuilderSql {
         raw = statement
+        rawParams = params.toList()
         return this
     }
 
@@ -72,7 +74,7 @@ class QueryBuilderSql : QueryBuilder {
 
     override fun build(): Query {
         if (raw.isNotBlank()) {
-            return Query(raw, emptyList())
+            return Query(raw, rawParams)
         }
 
         if(from.isBlank()) {
