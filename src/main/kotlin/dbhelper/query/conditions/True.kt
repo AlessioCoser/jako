@@ -1,4 +1,4 @@
-package dbhelper.dsl.query.conditions
+package dbhelper.query.conditions
 
 class True : Condition {
     override fun statement() = "true"

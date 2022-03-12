@@ -1,6 +1,6 @@
-package dbhelper.dsl.query.join
+package dbhelper.query.join
 
-import dbhelper.dsl.query.conditions.Condition
+import dbhelper.query.conditions.Condition
 
 class InnerJoin(table: String, condition: Condition) : Join("INNER JOIN", table, condition) {
     companion object {

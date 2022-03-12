@@ -1,4 +1,4 @@
-package dbhelper.dsl.query.order
+package dbhelper.query.order
 
 class Desc(vararg fields: String) : Order(*fields) {
     override fun direction() = "DESC"

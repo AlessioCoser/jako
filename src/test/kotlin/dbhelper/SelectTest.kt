@@ -1,20 +1,20 @@
 package dbhelper
 
-import dbhelper.dsl.*
-import dbhelper.dsl.query.*
-import dbhelper.dsl.query.conditions.And
-import dbhelper.dsl.query.conditions.And.Companion.and
-import dbhelper.dsl.query.conditions.Eq
-import dbhelper.dsl.query.conditions.Eq.Companion.eq
-import dbhelper.dsl.query.conditions.Gt.Companion.gt
-import dbhelper.dsl.query.conditions.Or
-import dbhelper.dsl.query.conditions.Or.Companion.or
-import dbhelper.dsl.query.join.InnerJoin
-import dbhelper.dsl.query.join.InnerJoin.Companion.on
-import dbhelper.dsl.query.join.LeftJoin.Companion.leftJoin
-import dbhelper.dsl.query.order.Asc
-import dbhelper.dsl.query.order.Asc.Companion.asc
-import dbhelper.dsl.query.order.Desc.Companion.desc
+import dbhelper.query.*
+import dbhelper.query.conditions.And
+import dbhelper.query.conditions.And.Companion.and
+import dbhelper.query.conditions.Eq
+import dbhelper.query.conditions.Eq.Companion.eq
+import dbhelper.query.conditions.Gt.Companion.gt
+import dbhelper.query.conditions.Or
+import dbhelper.query.conditions.Or.Companion.or
+import dbhelper.query.join.InnerJoin
+import dbhelper.query.join.InnerJoin.Companion.on
+import dbhelper.query.join.LeftJoin.Companion.leftJoin
+import dbhelper.query.order.Asc
+import dbhelper.query.order.Asc.Companion.asc
+import dbhelper.query.order.Desc.Companion.desc
+import dbhelper.query.Database
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -102,7 +102,7 @@ class SelectTest {
     @Test
     fun allJavaSyntax() {
         val all: List<UserPetsCount> = db.select(
-            QueryBuilderSql()
+            dbhelper.query.QueryBuilderSql()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
@@ -124,7 +124,7 @@ class SelectTest {
     @Test
     fun firstJavaSyntax() {
         val user: UserPetsCount = db.select(
-            QueryBuilderSql()
+            dbhelper.query.QueryBuilderSql()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(

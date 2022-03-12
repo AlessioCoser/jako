@@ -1,4 +1,4 @@
-package dbhelper.dsl.query.conditions
+package dbhelper.query.conditions
 
 class Eq(left: String, right: Any?) : GenericCondition(left, "=", right) {
     companion object {

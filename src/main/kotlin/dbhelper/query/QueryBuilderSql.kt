@@ -1,11 +1,11 @@
-package dbhelper.dsl.query
+package dbhelper.query
 
-import dbhelper.dsl.query.conditions.Condition
-import dbhelper.dsl.query.conditions.True
-import dbhelper.dsl.query.join.Join
-import dbhelper.dsl.query.order.Order
+import dbhelper.query.conditions.Condition
+import dbhelper.query.conditions.True
+import dbhelper.query.join.Join
+import dbhelper.query.order.Order
 
-class QueryBuilderSql: QueryBuilder {
+class QueryBuilderSql: dbhelper.query.QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
     private var where: Condition = True()
@@ -15,53 +15,53 @@ class QueryBuilderSql: QueryBuilder {
     private var limit: String = ""
     private var raw: String = ""
 
-    fun raw(statement: String): QueryBuilderSql {
+    fun raw(statement: String): dbhelper.query.QueryBuilderSql {
         raw = statement
         return this
     }
 
-    fun from(table: String): QueryBuilderSql {
+    fun from(table: String): dbhelper.query.QueryBuilderSql {
         this.from = table
         return this
     }
 
-    fun fields(vararg fields: String): QueryBuilderSql {
+    fun fields(vararg fields: String): dbhelper.query.QueryBuilderSql {
         this.fields = fields.toList()
         return this
     }
 
-    fun where(condition: Condition): QueryBuilderSql {
+    fun where(condition: Condition): dbhelper.query.QueryBuilderSql {
         where = condition
         return this
     }
 
-    fun join(join: Join): QueryBuilderSql {
+    fun join(join: Join): dbhelper.query.QueryBuilderSql {
         joins.add(join)
         return this
     }
 
-    fun orderBy(order: Order): QueryBuilderSql {
+    fun orderBy(order: Order): dbhelper.query.QueryBuilderSql {
         orderBy = " ORDER BY ${order.statement()} ${order.direction()}"
         return this
     }
 
-    fun groupBy(vararg fields: String): QueryBuilderSql {
+    fun groupBy(vararg fields: String): dbhelper.query.QueryBuilderSql {
         groupBy = " GROUP BY ${fields.joinToString(", ")}"
         return this
     }
 
-    fun limit(field: Int): QueryBuilderSql {
+    fun limit(field: Int): dbhelper.query.QueryBuilderSql {
         limit = " LIMIT $field"
         return this
     }
 
     override fun single() = limit(1)
 
-    override fun build(): Query {
+    override fun build(): dbhelper.query.Query {
         if (raw.isNotBlank()) {
-            return Query(raw, emptyList())
+            return dbhelper.query.Query(raw, emptyList())
         }
-        return Query(
+        return dbhelper.query.Query(
             "SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy$orderBy$limit",
             where.params()
         )

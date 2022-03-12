@@ -1,4 +1,4 @@
-package dbhelper.dsl.query.order
+package dbhelper.query.order
 
 abstract class Order(private vararg val fields: String) {
     fun statement() = fields.joinToString(", ")
