@@ -1,5 +1,5 @@
 package dbhelper.dsl
 
 interface SessionManager {
-    fun <T> session(fn: SqlSession.() -> T): T
+    fun <T> session(fn: SessionSql.() -> T): T
 }

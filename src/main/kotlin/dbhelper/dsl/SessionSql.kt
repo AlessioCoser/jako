@@ -2,11 +2,11 @@ package dbhelper.dsl
 
 import dbhelper.dsl.query.Query
 import dbhelper.dsl.query.Row
-import dbhelper.dsl.query.SqlRow
+import dbhelper.dsl.query.RowSql
 import java.sql.Connection
 import java.sql.PreparedStatement
 
-class SqlSession(private val connection: Connection): Session {
+class SessionSql(private val connection: Connection): Session {
     override fun <T> execute(query: Query, parseRow: Row.() -> T): List<T> {
         println(query)
         val resultSet = connection.prepareStatement(query.statement)
@@ -15,7 +15,7 @@ class SqlSession(private val connection: Connection): Session {
 
         val results = mutableListOf<T>()
         while (resultSet.next()) {
-            results.add(parseRow(SqlRow(resultSet)))
+            results.add(parseRow(RowSql(resultSet)))
         }
 
         return results.toList()

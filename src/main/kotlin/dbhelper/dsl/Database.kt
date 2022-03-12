@@ -1,14 +1,14 @@
 package dbhelper.dsl
 
 import dbhelper.dsl.query.QueryBuilder
+import dbhelper.dsl.query.QueryBuilderSql
 import dbhelper.dsl.query.QueryExecutor
-import dbhelper.dsl.query.SqlQueryBuilder
 
 class Database(jdbc: String, user: String, password: String) {
-    private val manager = SqlSessionManager(jdbc, user, password)
+    private val manager = SessionManagerSql(jdbc, user, password)
 
-    fun select(prepare: SqlQueryBuilder.() -> Unit): QueryExecutor {
-        val queryBuilder = SqlQueryBuilder()
+    fun select(prepare: QueryBuilderSql.() -> Unit): QueryExecutor {
+        val queryBuilder = QueryBuilderSql()
         prepare(queryBuilder)
         return select(queryBuilder)
     }

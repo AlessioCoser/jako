@@ -5,7 +5,7 @@ import dbhelper.dsl.query.conditions.True
 import dbhelper.dsl.query.join.Join
 import dbhelper.dsl.query.order.Order
 
-class SqlQueryBuilder: QueryBuilder {
+class QueryBuilderSql: QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
     private var where: Condition = True()
@@ -15,42 +15,42 @@ class SqlQueryBuilder: QueryBuilder {
     private var limit: String = ""
     private var raw: String = ""
 
-    fun raw(statement: String): SqlQueryBuilder {
+    fun raw(statement: String): QueryBuilderSql {
         raw = statement
         return this
     }
 
-    fun from(table: String): SqlQueryBuilder {
+    fun from(table: String): QueryBuilderSql {
         this.from = table
         return this
     }
 
-    fun fields(vararg fields: String): SqlQueryBuilder {
+    fun fields(vararg fields: String): QueryBuilderSql {
         this.fields = fields.toList()
         return this
     }
 
-    fun where(condition: Condition): SqlQueryBuilder {
+    fun where(condition: Condition): QueryBuilderSql {
         where = condition
         return this
     }
 
-    fun join(join: Join): SqlQueryBuilder {
+    fun join(join: Join): QueryBuilderSql {
         joins.add(join)
         return this
     }
 
-    fun orderBy(order: Order): SqlQueryBuilder {
+    fun orderBy(order: Order): QueryBuilderSql {
         orderBy = " ORDER BY ${order.statement()} ${order.direction()}"
         return this
     }
 
-    fun groupBy(vararg fields: String): SqlQueryBuilder {
+    fun groupBy(vararg fields: String): QueryBuilderSql {
         groupBy = " GROUP BY ${fields.joinToString(", ")}"
         return this
     }
 
-    fun limit(field: Int): SqlQueryBuilder {
+    fun limit(field: Int): QueryBuilderSql {
         limit = " LIMIT $field"
         return this
     }

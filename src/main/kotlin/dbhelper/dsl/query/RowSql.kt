@@ -1,13 +1,12 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.query.Row
 import java.io.InputStream
 import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Timestamp
 
-class SqlRow(resultSet: ResultSet): Row, ResultSet by resultSet {
+class RowSql(resultSet: ResultSet): Row, ResultSet by resultSet {
     override fun str(fieldName: String): String = getString(fieldName)
     override fun bool(fieldName: String) = getBoolean(fieldName)
     override fun byte(fieldName: String) = getByte(fieldName)
