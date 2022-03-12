@@ -14,7 +14,6 @@ import dbhelper.query.join.LeftJoin.Companion.leftJoin
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Asc.Companion.asc
 import dbhelper.query.order.Desc.Companion.desc
-import dbhelper.query.Database
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container

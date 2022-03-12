@@ -1,6 +1,10 @@
-package dbhelper.query
+package dbhelper
 
-class QueryExecutor(private val manager: SessionManager, private val queryBuilder: dbhelper.query.QueryBuilder) {
+import dbhelper.query.QueryBuilder
+import dbhelper.query.Row
+import dbhelper.query.RowParser
+
+class QueryExecutor(private val manager: SessionManager, private val queryBuilder: QueryBuilder) {
 
     fun <T> all(parser: RowParser<T>): List<T> {
         return all { parser.parse(this) }
