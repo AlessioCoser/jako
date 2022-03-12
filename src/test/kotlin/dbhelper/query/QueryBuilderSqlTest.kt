@@ -61,4 +61,24 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM people WHERE true LIMIT 1", emptyList()), query)
     }
+
+    @Test
+    fun `limit clause`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .limit(34)
+            .build()
+
+        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 34", emptyList()), query)
+    }
+
+    @Test
+    fun `use offset to skip N rows`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .limit(34, 6)
+            .build()
+
+        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 34 OFFSET 6", emptyList()), query)
+    }
 }

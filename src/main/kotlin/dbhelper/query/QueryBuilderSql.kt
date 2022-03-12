@@ -50,8 +50,12 @@ class QueryBuilderSql : QueryBuilder {
         return this
     }
 
-    fun limit(field: Int): QueryBuilderSql {
-        limit = " LIMIT $field"
+    fun limit(limit: Int, offset: Int = 0): QueryBuilderSql {
+        if(offset != 0) {
+            this.limit = " LIMIT $limit OFFSET $offset"
+        } else {
+            this.limit = " LIMIT $limit"
+        }
         return this
     }
 
