@@ -1,8 +1,6 @@
 package dbhelper.query.order
 
-class Desc(vararg fields: String) : Order(*fields) {
-    override fun direction() = "DESC"
-
+class Desc(vararg fields: String) : Order("DESC", *fields) {
     companion object {
         @JvmStatic
         fun desc(vararg fields: String) = Desc(*fields)

@@ -41,7 +41,7 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     fun orderBy(order: Order): QueryBuilderSql {
-        orderBy = " ORDER BY ${order.statement()} ${order.direction()}"
+        orderBy = " ORDER BY ${order.statement()}"
         return this
     }
 
