@@ -12,7 +12,8 @@ class QueryBuilderSql : QueryBuilder {
     private var whereParams: List<Any?> = emptyList()
     private var join: JoinBuilder = JoinBuilder()
     private var groupBy: String = ""
-    private var having: Condition? = null
+    private var having: String = ""
+    private var havingParams: List<Any?> = emptyList()
     private var orderBy: String = ""
     private var limit: String = ""
     private var raw: String = ""
@@ -54,7 +55,8 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     fun having(condition: Condition): QueryBuilderSql {
-        having = condition
+        having = " HAVING ${condition.statement()}"
+        havingParams = condition.params()
         return this
     }
 
@@ -75,8 +77,8 @@ class QueryBuilderSql : QueryBuilder {
         }
 
         return Query(
-            "SELECT ${joinFields()}${fromBuilder()}${join.build()}${where}$groupBy${joinHaving()}$orderBy$limit",
-            whereParams.plus(havingParams())
+            "SELECT ${joinFields()}${fromBuilder()}${join.build()}${where}$groupBy$having$orderBy$limit",
+            whereParams.plus(havingParams)
         )
     }
 
@@ -86,12 +88,6 @@ class QueryBuilderSql : QueryBuilder {
         }
 
         return " FROM $from"
-    }
-
-    private fun havingParams() = having?.params() ?: emptyList()
-
-    private fun joinHaving(): String {
-        return having?.statement()?.prependIndent(" HAVING ") ?: ""
     }
 
     private fun joinFields(): String {
