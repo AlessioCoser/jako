@@ -15,7 +15,7 @@ class QueryBuilderSqlTest {
     @Test
     fun `cannot build query without table name`() {
         val message = assertThrows(RuntimeException::class.java) {
-            val query = QueryBuilderSql().build()
+            QueryBuilderSql().build()
         }.message
 
         assertEquals("Cannot generate query without table name", message)
@@ -145,5 +145,29 @@ class QueryBuilderSqlTest {
                 "INNER JOIN bank_account ON people.id = bank_account.person_id " +
                 "LEFT JOIN pets ON people.id = pets.owner " +
                 "WHERE true", emptyList()), query)
+    }
+
+    @Test
+    fun `all together in right order`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("name", "count(name) AS total")
+            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
+            .join(InnerJoin("bank_account", Eq("people.id", "bank_account.person_id")))
+            .groupBy("name")
+            .having(Gt("count(name)", 12))
+            .orderBy(Asc("first", "second"))
+            .limit(34, 6)
+            .build()
+
+        assertEquals(Query("SELECT name, count(name) AS total " +
+                "FROM people " +
+                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                "WHERE (nationality = ? AND age > ?) " +
+                "GROUP BY name " +
+                "HAVING count(name) > ? " +
+                "ORDER BY first ASC, second ASC " +
+                "LIMIT 34 OFFSET 6", listOf("Italian", 20, 12)
+        ), query)
     }
 }
