@@ -1,7 +1,10 @@
 package dbhelper.dsl.query.order
 
-fun desc(vararg fields: String) = Desc(*fields)
-
-class Desc(vararg fields: String): Order(*fields) {
+class Desc(vararg fields: String) : Order(*fields) {
     override fun direction() = "DESC"
+
+    companion object {
+        @JvmStatic
+        fun desc(vararg fields: String) = Desc(*fields)
+    }
 }

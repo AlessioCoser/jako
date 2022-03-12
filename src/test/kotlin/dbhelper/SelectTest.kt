@@ -13,8 +13,8 @@ import dbhelper.dsl.query.join.InnerJoin
 import dbhelper.dsl.query.join.InnerJoin.Companion.on
 import dbhelper.dsl.query.join.LeftJoin.Companion.leftJoin
 import dbhelper.dsl.query.order.Asc
-import dbhelper.dsl.query.order.asc
-import dbhelper.dsl.query.order.desc
+import dbhelper.dsl.query.order.Asc.Companion.asc
+import dbhelper.dsl.query.order.Desc.Companion.desc
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
