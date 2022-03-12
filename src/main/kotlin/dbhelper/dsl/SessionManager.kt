@@ -1,11 +1,5 @@
 package dbhelper.dsl
 
-import java.sql.DriverManager
-
-class SessionManager(private val jdbc: String, private val user: String, private val password: String) {
-    fun <T> session(fn: Session.() -> T): T {
-        return DriverManager.getConnection(jdbc, user, password).use {
-            fn(Session(it))
-        }
-    }
+interface SessionManager {
+    fun <T> session(fn: SqlSession.() -> T): T
 }

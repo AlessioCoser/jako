@@ -1,6 +1,8 @@
-package dbhelper.dsl
+package dbhelper.dsl.query
 
-class QueryExecutor(private val manager: SessionManager, private val queryBuilder: Query.Builder) {
+import dbhelper.dsl.SessionManager
+
+class QueryExecutor(private val manager: SessionManager, private val queryBuilder: QueryBuilder) {
 
     fun <T> all(parser: RowParser<T>): List<T> {
         return all { parser.parse(this) }
@@ -16,7 +18,7 @@ class QueryExecutor(private val manager: SessionManager, private val queryBuilde
     }
 
     fun <T> first(parseRow: Row.() -> T): T {
-        val query = queryBuilder.limit(1).build()
+        val query = queryBuilder.single().build()
         return manager.session {
             val rows = execute(query, parseRow)
             rows.first() ?: throw RuntimeException("No records found for: $query")

@@ -1,4 +1,4 @@
-package dbhelper.dsl.conditions
+package dbhelper.dsl.query.conditions
 
 class And(private val left: Condition, private val right: Condition) : Condition {
     override fun statement(): String {

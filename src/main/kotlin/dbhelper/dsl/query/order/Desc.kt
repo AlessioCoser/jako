@@ -1,4 +1,4 @@
-package dbhelper.dsl.order
+package dbhelper.dsl.query.order
 
 fun desc(vararg fields: String) = Desc(*fields)
 

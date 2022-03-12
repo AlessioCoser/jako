@@ -1,4 +1,4 @@
-package dbhelper.dsl
+package dbhelper.dsl.query
 
 interface RowParser<T> {
     fun parse(row: Row): T

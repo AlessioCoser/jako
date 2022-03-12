@@ -1,6 +1,6 @@
-package dbhelper.dsl.join
+package dbhelper.dsl.query.join
 
-import dbhelper.dsl.conditions.Condition
+import dbhelper.dsl.query.conditions.Condition
 
 class LeftJoin(table: String, condition: Condition) : Join("LEFT JOIN", table, condition) {
     companion object {

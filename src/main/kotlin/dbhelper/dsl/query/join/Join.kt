@@ -1,6 +1,6 @@
-package dbhelper.dsl.join
+package dbhelper.dsl.query.join
 
-import dbhelper.dsl.conditions.Condition
+import dbhelper.dsl.query.conditions.Condition
 
 abstract class Join (private val type: String, private val table: String, private val condition: Condition) {
 

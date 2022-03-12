@@ -1,4 +1,4 @@
-package dbhelper.dsl.conditions
+package dbhelper.dsl.query.conditions
 
 class Gt(left: String, right: Any?) : GenericCondition(left, ">", right) {
     companion object {

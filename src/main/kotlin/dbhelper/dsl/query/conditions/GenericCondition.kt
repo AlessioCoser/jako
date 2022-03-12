@@ -1,4 +1,4 @@
-package dbhelper.dsl.conditions
+package dbhelper.dsl.query.conditions
 
 abstract class GenericCondition(
     private val left: String,

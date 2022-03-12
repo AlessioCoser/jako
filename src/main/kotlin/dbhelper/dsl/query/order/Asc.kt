@@ -1,4 +1,4 @@
-package dbhelper.dsl.order
+package dbhelper.dsl.query.order
 
 fun asc(vararg fields: String) = Asc(*fields)
 

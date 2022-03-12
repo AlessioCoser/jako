@@ -1,19 +1,20 @@
 package dbhelper
 
 import dbhelper.dsl.*
-import dbhelper.dsl.conditions.And
-import dbhelper.dsl.conditions.And.Companion.and
-import dbhelper.dsl.conditions.Eq
-import dbhelper.dsl.conditions.Eq.Companion.eq
-import dbhelper.dsl.conditions.Gt.Companion.gt
-import dbhelper.dsl.conditions.Or
-import dbhelper.dsl.conditions.Or.Companion.or
-import dbhelper.dsl.join.InnerJoin
-import dbhelper.dsl.join.InnerJoin.Companion.on
-import dbhelper.dsl.join.LeftJoin.Companion.leftJoin
-import dbhelper.dsl.order.Asc
-import dbhelper.dsl.order.asc
-import dbhelper.dsl.order.desc
+import dbhelper.dsl.query.*
+import dbhelper.dsl.query.conditions.And
+import dbhelper.dsl.query.conditions.And.Companion.and
+import dbhelper.dsl.query.conditions.Eq
+import dbhelper.dsl.query.conditions.Eq.Companion.eq
+import dbhelper.dsl.query.conditions.Gt.Companion.gt
+import dbhelper.dsl.query.conditions.Or
+import dbhelper.dsl.query.conditions.Or.Companion.or
+import dbhelper.dsl.query.join.InnerJoin
+import dbhelper.dsl.query.join.InnerJoin.Companion.on
+import dbhelper.dsl.query.join.LeftJoin.Companion.leftJoin
+import dbhelper.dsl.query.order.Asc
+import dbhelper.dsl.query.order.asc
+import dbhelper.dsl.query.order.desc
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -100,7 +101,8 @@ class SelectTest {
 
     @Test
     fun allJavaSyntax() {
-        val all: List<UserPetsCount> = db.select(Query.builder()
+        val all: List<UserPetsCount> = db.select(
+            SqlQueryBuilder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
@@ -121,7 +123,8 @@ class SelectTest {
 
     @Test
     fun firstJavaSyntax() {
-        val user: UserPetsCount = db.select(Query.builder()
+        val user: UserPetsCount = db.select(
+            SqlQueryBuilder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
