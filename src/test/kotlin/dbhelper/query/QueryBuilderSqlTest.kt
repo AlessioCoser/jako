@@ -3,6 +3,9 @@ package dbhelper.query
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
+import dbhelper.query.join.InnerJoin
+import dbhelper.query.join.LeftJoin
+import dbhelper.query.join.RightJoin
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.*
@@ -128,5 +131,19 @@ class QueryBuilderSqlTest {
             .build()
 
         assertEquals(Query("SELECT age FROM people WHERE (nationality = ? AND age > ?)", listOf("Italian", 20)), query)
+    }
+
+    @Test
+    fun `multiple join statement`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .join(InnerJoin("bank_account", Eq("people.id", "bank_account.person_id")))
+            .join(LeftJoin("pets", Eq("people.id", "pets.owner")))
+            .build()
+
+        assertEquals(Query("SELECT * FROM people " +
+                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                "LEFT JOIN pets ON people.id = pets.owner " +
+                "WHERE true", emptyList()), query)
     }
 }
