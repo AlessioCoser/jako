@@ -19,4 +19,14 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM people WHERE true", emptyList()), query)
     }
+
+    @Test
+    fun `build query choosing fields to select`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("first", "second")
+            .build()
+
+        assertEquals(Query("SELECT first, second FROM people WHERE true", emptyList()), query)
+    }
 }
