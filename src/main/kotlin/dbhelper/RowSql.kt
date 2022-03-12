@@ -7,7 +7,7 @@ import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Timestamp
 
-class RowSql(private val resultSet: ResultSet): Row {
+class RowSql(private val resultSet: ResultSet) : Row {
     override fun str(fieldName: String): String = resultSet.getString(fieldName)
     override fun bool(fieldName: String) = resultSet.getBoolean(fieldName)
     override fun byte(fieldName: String) = resultSet.getByte(fieldName)

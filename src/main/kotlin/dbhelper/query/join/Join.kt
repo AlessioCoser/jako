@@ -2,7 +2,7 @@ package dbhelper.query.join
 
 import dbhelper.query.conditions.Condition
 
-abstract class Join (private val type: String, private val table: String, private val condition: Condition) {
+abstract class Join(private val type: String, private val table: String, private val condition: Condition) {
 
     fun statement(): String {
         return "$type $table ON ${compileCondition(condition)}"

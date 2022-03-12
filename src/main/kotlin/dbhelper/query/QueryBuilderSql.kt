@@ -5,7 +5,7 @@ import dbhelper.query.conditions.True
 import dbhelper.query.join.Join
 import dbhelper.query.order.Order
 
-class QueryBuilderSql: QueryBuilder {
+class QueryBuilderSql : QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
     private var where: Condition = True()
