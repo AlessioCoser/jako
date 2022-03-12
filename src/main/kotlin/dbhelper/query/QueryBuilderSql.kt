@@ -1,7 +1,6 @@
 package dbhelper.query
 
 import dbhelper.query.conditions.Condition
-import dbhelper.query.conditions.True
 import dbhelper.query.join.Join
 import dbhelper.query.join.JoinBuilder
 import dbhelper.query.order.Order
@@ -9,8 +8,9 @@ import dbhelper.query.order.Order
 class QueryBuilderSql : QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
-    private var where: Condition = True()
-    private var joins: JoinBuilder = JoinBuilder()
+    private var where: String = ""
+    private var whereParams: List<Any?> = emptyList()
+    private var join: JoinBuilder = JoinBuilder()
     private var groupBy: String = ""
     private var having: Condition? = null
     private var orderBy: String = ""
@@ -33,12 +33,13 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     fun where(condition: Condition): QueryBuilderSql {
-        where = condition
+        where = " WHERE ${condition.statement()}"
+        whereParams = condition.params()
         return this
     }
 
     fun join(join: Join): QueryBuilderSql {
-        joins.add(join)
+        this.join.add(join)
         return this
     }
 
@@ -74,8 +75,8 @@ class QueryBuilderSql : QueryBuilder {
         }
 
         return Query(
-            "SELECT ${joinFields()}${fromBuilder()}${joins.build()} WHERE ${where.statement()}$groupBy${joinHaving()}$orderBy$limit",
-            where.params().plus(havingParams())
+            "SELECT ${joinFields()}${fromBuilder()}${join.build()}${where}$groupBy${joinHaving()}$orderBy$limit",
+            whereParams.plus(havingParams())
         )
     }
 

@@ -25,7 +25,7 @@ class QueryBuilderSqlTest {
     fun `build simple query`() {
         val query = QueryBuilderSql().from("people").build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people", emptyList()), query)
     }
 
     @Test
@@ -35,7 +35,7 @@ class QueryBuilderSqlTest {
             .fields("first", "second")
             .build()
 
-        assertEquals(Query("SELECT first, second FROM people WHERE true", emptyList()), query)
+        assertEquals(Query("SELECT first, second FROM people", emptyList()), query)
     }
 
     @Test
@@ -45,7 +45,7 @@ class QueryBuilderSqlTest {
             .orderBy(Asc("first", "second"))
             .build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true ORDER BY first ASC, second ASC", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people ORDER BY first ASC, second ASC", emptyList()), query)
     }
 
     @Test
@@ -55,7 +55,7 @@ class QueryBuilderSqlTest {
             .orderBy(Asc("first"), Desc("second"))
             .build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true ORDER BY first ASC, second DESC", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people ORDER BY first ASC, second DESC", emptyList()), query)
     }
 
     @Test
@@ -65,7 +65,7 @@ class QueryBuilderSqlTest {
             .single()
             .build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 1", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people LIMIT 1", emptyList()), query)
     }
 
     @Test
@@ -75,7 +75,7 @@ class QueryBuilderSqlTest {
             .limit(34)
             .build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 34", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people LIMIT 34", emptyList()), query)
     }
 
     @Test
@@ -85,7 +85,7 @@ class QueryBuilderSqlTest {
             .limit(34, 6)
             .build()
 
-        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 34 OFFSET 6", emptyList()), query)
+        assertEquals(Query("SELECT * FROM people LIMIT 34 OFFSET 6", emptyList()), query)
     }
 
     @Test
@@ -96,7 +96,7 @@ class QueryBuilderSqlTest {
             .groupBy("name")
             .build()
 
-        assertEquals(Query("SELECT name, count(name) AS total FROM people WHERE true GROUP BY name", emptyList()), query)
+        assertEquals(Query("SELECT name, count(name) AS total FROM people GROUP BY name", emptyList()), query)
     }
 
     @Test
@@ -108,7 +108,7 @@ class QueryBuilderSqlTest {
             .having(Gt("count(name)", 20))
             .build()
 
-        assertEquals(Query("SELECT name, count(name) FROM people WHERE true GROUP BY name HAVING count(name) > ?", listOf(20)), query)
+        assertEquals(Query("SELECT name, count(name) FROM people GROUP BY name HAVING count(name) > ?", listOf(20)), query)
     }
 
     @Test
@@ -143,8 +143,7 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM people " +
                 "INNER JOIN bank_account ON people.id = bank_account.person_id " +
-                "LEFT JOIN pets ON people.id = pets.owner " +
-                "WHERE true", emptyList()), query)
+                "LEFT JOIN pets ON people.id = pets.owner", emptyList()), query)
     }
 
     @Test
