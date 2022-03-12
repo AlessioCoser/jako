@@ -1,5 +1,7 @@
 package dbhelper.query
 
+import dbhelper.query.conditions.And
+import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
@@ -104,5 +106,27 @@ class QueryBuilderSqlTest {
             .build()
 
         assertEquals(Query("SELECT name, count(name) FROM people WHERE true GROUP BY name HAVING count(name) > ?", listOf(20)), query)
+    }
+
+    @Test
+    fun `where statement`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("age")
+            .where(Eq("age", 20))
+            .build()
+
+        assertEquals(Query("SELECT age FROM people WHERE age = ?", listOf(20)), query)
+    }
+
+    @Test
+    fun `multiple where statement`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("age")
+            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
+            .build()
+
+        assertEquals(Query("SELECT age FROM people WHERE (nationality = ? AND age > ?)", listOf("Italian", 20)), query)
     }
 }
