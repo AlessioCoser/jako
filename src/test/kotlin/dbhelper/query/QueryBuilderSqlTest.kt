@@ -5,10 +5,10 @@ import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
 import dbhelper.query.join.InnerJoin
 import dbhelper.query.join.LeftJoin
-import dbhelper.query.join.RightJoin
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class QueryBuilderSqlTest {
