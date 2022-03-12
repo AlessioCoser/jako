@@ -24,7 +24,7 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     fun from(table: String): QueryBuilderSql {
-        this.from = table
+        this.from = " FROM $table"
         return this
     }
 
@@ -76,18 +76,14 @@ class QueryBuilderSql : QueryBuilder {
             return Query(raw, emptyList())
         }
 
-        return Query(
-            "SELECT ${joinFields()}${fromBuilder()}${join.build()}${where}$groupBy$having$orderBy$limit",
-            whereParams.plus(havingParams)
-        )
-    }
-
-    private fun fromBuilder(): String {
         if(from.isBlank()) {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return " FROM $from"
+        return Query(
+            "SELECT ${joinFields()}$from${join.build()}$where$groupBy$having$orderBy$limit",
+            whereParams.plus(havingParams)
+        )
     }
 
     private fun joinFields(): String {
