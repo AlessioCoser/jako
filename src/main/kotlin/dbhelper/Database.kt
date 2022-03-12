@@ -1,6 +1,5 @@
 package dbhelper
 
-import dbhelper.query.QueryBuilder
 import dbhelper.query.QueryBuilderSql
 
 class Database(jdbc: String, user: String, password: String) {
@@ -12,7 +11,7 @@ class Database(jdbc: String, user: String, password: String) {
         return select(queryBuilder)
     }
 
-    fun select(queryBuilder: QueryBuilder): QueryExecutor {
+    fun select(queryBuilder: QueryBuilderSql): QueryExecutor {
         return QueryExecutor(manager, queryBuilder)
     }
 }

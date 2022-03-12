@@ -2,7 +2,6 @@ package dbhelper
 
 import dbhelper.query.Query
 import dbhelper.query.Row
-import dbhelper.query.RowSql
 import java.sql.Connection
 import java.sql.PreparedStatement
 
