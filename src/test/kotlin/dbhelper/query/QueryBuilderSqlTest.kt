@@ -1,5 +1,6 @@
 package dbhelper.query
 
+import dbhelper.query.conditions.Gt
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.*
@@ -91,5 +92,17 @@ class QueryBuilderSqlTest {
             .build()
 
         assertEquals(Query("SELECT name, count(name) AS total FROM people WHERE true GROUP BY name", emptyList()), query)
+    }
+
+    @Test
+    fun `group by with having`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("name", "count(name)")
+            .groupBy("name")
+            .having(Gt("count(name)", 20))
+            .build()
+
+        assertEquals(Query("SELECT name, count(name) FROM people WHERE true GROUP BY name HAVING count(name) > ?", listOf(20)), query)
     }
 }

@@ -11,6 +11,7 @@ class QueryBuilderSql : QueryBuilder {
     private var where: Condition = True()
     private var joins: MutableList<Join> = mutableListOf()
     private var groupBy: String = ""
+    private var having: Condition? = null
     private var orderBy: String = ""
     private var limit: String = ""
     private var raw: String = ""
@@ -50,6 +51,11 @@ class QueryBuilderSql : QueryBuilder {
         return this
     }
 
+    fun having(condition: Condition): QueryBuilderSql {
+        having = condition
+        return this
+    }
+
     fun limit(limit: Int, offset: Int = 0): QueryBuilderSql {
         if(offset != 0) {
             this.limit = " LIMIT $limit OFFSET $offset"
@@ -69,9 +75,15 @@ class QueryBuilderSql : QueryBuilder {
             return Query(raw, emptyList())
         }
         return Query(
-            "SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy$orderBy$limit",
-            where.params()
+            "SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy${joinHaving()}$orderBy$limit",
+            where.params().plus(havingParams())
         )
+    }
+
+    private fun havingParams() = having?.params() ?: emptyList()
+
+    private fun joinHaving(): String {
+        return having?.statement()?.prependIndent(" HAVING ") ?: ""
     }
 
     private fun joinJoins(): String {
