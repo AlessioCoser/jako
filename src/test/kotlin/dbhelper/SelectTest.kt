@@ -1,7 +1,13 @@
 package dbhelper
 
 import dbhelper.dsl.*
-import dbhelper.dsl.conditions.*
+import dbhelper.dsl.conditions.And
+import dbhelper.dsl.conditions.And.Companion.and
+import dbhelper.dsl.conditions.Eq
+import dbhelper.dsl.conditions.Eq.Companion.eq
+import dbhelper.dsl.conditions.Gt.Companion.gt
+import dbhelper.dsl.conditions.Or
+import dbhelper.dsl.conditions.Or.Companion.or
 import dbhelper.dsl.join.InnerJoin
 import dbhelper.dsl.join.InnerJoin.Companion.on
 import dbhelper.dsl.join.LeftJoin.Companion.leftJoin

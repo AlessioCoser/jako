@@ -1,7 +1,7 @@
 package dbhelper.dsl
 
 import dbhelper.dsl.conditions.Condition
-import dbhelper.dsl.conditions.Empty
+import dbhelper.dsl.conditions.True
 import dbhelper.dsl.join.Join
 import dbhelper.dsl.order.Order
 
@@ -9,7 +9,7 @@ data class Query(val statement: String, val params: List<Any?>) {
     class Builder {
         private var from: String = ""
         private var fields: List<String> = listOf("*")
-        private var where: Condition = Empty()
+        private var where: Condition = True()
         private var joins: MutableList<Join> = mutableListOf()
         private var groupBy: String = ""
         private var orderBy: String = ""
