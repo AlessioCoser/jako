@@ -9,7 +9,7 @@ class Or(private val left: Condition, private val right: Condition) : Condition 
 
     companion object {
         @JvmStatic
-        infix fun Condition.or(value: Condition): Condition {
+        infix fun Condition.or(value: Condition): Or {
             return Or(this, value)
         }
     }

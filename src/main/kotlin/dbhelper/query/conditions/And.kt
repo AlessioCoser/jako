@@ -9,7 +9,7 @@ class And(private val left: Condition, private val right: Condition) : Condition
 
     companion object {
         @JvmStatic
-        infix fun Condition.and(value: Condition): Condition {
+        infix fun Condition.and(value: Condition): And {
             return And(this, value)
         }
     }
