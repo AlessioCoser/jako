@@ -68,7 +68,7 @@ class QueryBuilderSql : QueryBuilder {
     override fun single() = limit(1)
 
     override fun build(): Query {
-        if(from.isNullOrBlank()) {
+        if(from.isBlank()) {
             throw RuntimeException("Cannot generate query without table name")
         }
         if (raw.isNotBlank()) {
