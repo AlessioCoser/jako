@@ -1,7 +1,7 @@
 package dbhelper.query.join
 
-import dbhelper.query.join.InnerJoin.Companion.innerJoin
-import dbhelper.query.join.InnerJoin.Companion.join
+import dbhelper.query.join.Join.Companion.innerJoin
+import dbhelper.query.join.Join.Companion.join
 import dbhelper.query.join.Join.Companion.on
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
