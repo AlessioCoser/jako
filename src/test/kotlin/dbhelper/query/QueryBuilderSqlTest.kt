@@ -1,6 +1,7 @@
 package dbhelper.query
 
 import dbhelper.query.order.Asc
+import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -39,5 +40,15 @@ class QueryBuilderSqlTest {
             .build()
 
         assertEquals(Query("SELECT * FROM people WHERE true ORDER BY first ASC, second ASC", emptyList()), query)
+    }
+
+    @Test
+    fun `add order by with one asc and one desc clause`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .orderBy(Asc("first"), Desc("second"))
+            .build()
+
+        assertEquals(Query("SELECT * FROM people WHERE true ORDER BY first ASC, second DESC", emptyList()), query)
     }
 }

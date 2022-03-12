@@ -40,8 +40,8 @@ class QueryBuilderSql : QueryBuilder {
         return this
     }
 
-    fun orderBy(order: Order): QueryBuilderSql {
-        orderBy = " ORDER BY ${order.statement()}"
+    fun orderBy(vararg order: Order): QueryBuilderSql {
+        orderBy = " ORDER BY ${order.joinToString(", ") { it.statement() }}"
         return this
     }
 
