@@ -2,7 +2,7 @@ package dbhelper.dsl
 
 class QueryExecutor(private val manager: SessionManager, private val queryBuilder: Query.Builder) {
 
-    fun <T> all(parser: QueryRowParser<T>): List<T> {
+    fun <T> all(parser: RowParser<T>): List<T> {
         return all { parser.parse(this) }
     }
 
@@ -11,7 +11,7 @@ class QueryExecutor(private val manager: SessionManager, private val queryBuilde
         return manager.session { execute(query, parseRow) }
     }
 
-    fun <T> first(parser: QueryRowParser<T>): T {
+    fun <T> first(parser: RowParser<T>): T {
         return first { parser.parse(this) }
     }
 

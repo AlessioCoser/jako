@@ -1,5 +1,5 @@
 package dbhelper.dsl
 
-interface QueryRowParser<T> {
+interface RowParser<T> {
     fun parse(row: Row): T
 }

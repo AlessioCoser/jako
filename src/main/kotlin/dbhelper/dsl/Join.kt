@@ -23,8 +23,7 @@ class InnerJoin(table: String, condition: Condition): Join(INNER_JOIN, table, co
 class LeftJoin(table: String, condition: Condition): Join(LEFT_JOIN, table, condition)
 class RightJoin(table: String, condition: Condition): Join(RIGHT_JOIN, table, condition)
 
-open class Join (private val type: JoinType, private val table: String, private val condition: Condition) {
-    constructor(type: JoinType, join: Join): this(type, join.table, join.condition)
+abstract class Join (private val type: JoinType, private val table: String, private val condition: Condition) {
 
     fun statement(): String {
         return "${type.value} $table ON ${compileCondition(condition)}"

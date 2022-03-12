@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import java.sql.ResultSet
 
 @Testcontainers
 class SelectTest {
@@ -103,7 +102,7 @@ class SelectTest {
             .join(InnerJoin("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
             .orderBy(asc("name"))
-        ).all(UserPetsCountParser())
+        ).all(UserPetsCountRowParser())
 
         assertThat(all).isEqualTo(listOf(
             UserPetsCount(fullName="Luigi Verdi", pets=2)
@@ -124,7 +123,7 @@ class SelectTest {
             .join(InnerJoin("pets", Eq("pets.owner", "users.email")))
             .groupBy("email")
             .orderBy(Asc("name"))
-        ).first(UserPetsCountParser())
+        ).first(UserPetsCountRowParser())
 
         assertThat(user).isEqualTo(UserPetsCount(fullName="Luigi Verdi", pets=2))
     }
@@ -163,7 +162,7 @@ class SelectTest {
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
 
-class UserPetsCountParser: QueryRowParser<UserPetsCount> {
+class UserPetsCountRowParser: RowParser<UserPetsCount> {
     override fun parse(row: Row): UserPetsCount {
         return UserPetsCount(row.str("name"), row.int("count"))
     }
