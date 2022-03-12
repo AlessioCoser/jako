@@ -3,6 +3,7 @@ package dbhelper.dsl
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.conditions.Empty
 import dbhelper.dsl.join.Join
+import dbhelper.dsl.order.Order
 
 data class Query(val statement: String, val params: List<Any?>) {
     class Builder {

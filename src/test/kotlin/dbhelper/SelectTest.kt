@@ -1,12 +1,13 @@
 package dbhelper
 
 import dbhelper.dsl.*
-import dbhelper.dsl.Order.Companion.asc
-import dbhelper.dsl.Order.Companion.desc
 import dbhelper.dsl.conditions.*
 import dbhelper.dsl.join.InnerJoin
 import dbhelper.dsl.join.leftJoin
 import dbhelper.dsl.join.on
+import dbhelper.dsl.order.Asc
+import dbhelper.dsl.order.asc
+import dbhelper.dsl.order.desc
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
