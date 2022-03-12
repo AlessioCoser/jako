@@ -71,6 +71,9 @@ class QueryBuilderSql : QueryBuilder {
     }
 
     private fun joinJoins(): String {
+        if(joins.isEmpty()) {
+            return ""
+        }
         return joins.joinToString(separator = " ", prefix = " ") { it.statement() }
     }
 
