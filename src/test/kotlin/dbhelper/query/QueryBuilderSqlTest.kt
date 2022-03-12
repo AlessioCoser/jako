@@ -51,4 +51,14 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM people WHERE true ORDER BY first ASC, second DESC", emptyList()), query)
     }
+
+    @Test
+    fun `single limits to one row`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .single()
+            .build()
+
+        assertEquals(Query("SELECT * FROM people WHERE true LIMIT 1", emptyList()), query)
+    }
 }
