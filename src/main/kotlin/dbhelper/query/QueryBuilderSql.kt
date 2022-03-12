@@ -83,4 +83,9 @@ class QueryBuilderSql : QueryBuilder {
 
         return Query("SELECT $fields$from$join$where$groupBy$having$orderBy$limit", whereParams.plus(havingParams))
     }
+
+    companion object {
+        @JvmStatic
+        fun raw(statement: String, vararg params: Any?) = QueryBuilderSql().raw(statement, *params).build()
+    }
 }

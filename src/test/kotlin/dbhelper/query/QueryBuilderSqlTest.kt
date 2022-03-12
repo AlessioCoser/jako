@@ -204,4 +204,11 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
     }
+
+    @Test
+    fun `raw can be used statically`() {
+        val query = QueryBuilderSql.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
+
+        assertEquals(Query("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
+    }
 }
