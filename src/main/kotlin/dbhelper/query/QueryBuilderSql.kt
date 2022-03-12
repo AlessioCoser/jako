@@ -3,13 +3,14 @@ package dbhelper.query
 import dbhelper.query.conditions.Condition
 import dbhelper.query.conditions.True
 import dbhelper.query.join.Join
+import dbhelper.query.join.JoinBuilder
 import dbhelper.query.order.Order
 
 class QueryBuilderSql : QueryBuilder {
     private var from: String = ""
     private var fields: List<String> = listOf("*")
     private var where: Condition = True()
-    private var joins: MutableList<Join> = mutableListOf()
+    private var joins: JoinBuilder = JoinBuilder()
     private var groupBy: String = ""
     private var having: Condition? = null
     private var orderBy: String = ""
@@ -68,29 +69,28 @@ class QueryBuilderSql : QueryBuilder {
     override fun single() = limit(1)
 
     override fun build(): Query {
-        if(from.isBlank()) {
-            throw RuntimeException("Cannot generate query without table name")
-        }
         if (raw.isNotBlank()) {
             return Query(raw, emptyList())
         }
+
         return Query(
-            "SELECT ${joinFields()} FROM $from${joinJoins()} WHERE ${where.statement()}$groupBy${joinHaving()}$orderBy$limit",
+            "SELECT ${joinFields()}${fromBuilder()}${joins.build()} WHERE ${where.statement()}$groupBy${joinHaving()}$orderBy$limit",
             where.params().plus(havingParams())
         )
+    }
+
+    private fun fromBuilder(): String {
+        if(from.isBlank()) {
+            throw RuntimeException("Cannot generate query without table name")
+        }
+
+        return " FROM $from"
     }
 
     private fun havingParams() = having?.params() ?: emptyList()
 
     private fun joinHaving(): String {
         return having?.statement()?.prependIndent(" HAVING ") ?: ""
-    }
-
-    private fun joinJoins(): String {
-        if(joins.isEmpty()) {
-            return ""
-        }
-        return joins.joinToString(separator = " ", prefix = " ") { it.statement() }
     }
 
     private fun joinFields(): String {

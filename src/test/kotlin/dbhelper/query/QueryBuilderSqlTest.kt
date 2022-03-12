@@ -187,4 +187,13 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM customers", emptyList()), query)
     }
+
+    @Test
+    fun `raw can be used alone`() {
+        val query = QueryBuilderSql()
+            .raw("SELECT * FROM customers")
+            .build()
+
+        assertEquals(Query("SELECT * FROM customers", emptyList()), query)
+    }
 }
