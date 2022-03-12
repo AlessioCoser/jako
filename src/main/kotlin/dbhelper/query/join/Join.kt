@@ -1,16 +1,21 @@
 package dbhelper.query.join
 
-import dbhelper.query.conditions.Eq
-
-abstract class Join(private val type: String, private val table: String, private val eq: Eq) {
-
+open class Join(
+    val type: String,
+    val table: String,
+    val field1: String,
+    private val field2: String? = null
+) {
     fun statement(): String {
-        return "$type $table ON ${compileCondition(eq)}"
+        if(field2 == null) {
+            return "$type $table USING($field1)"
+        }
+        return "$type $table ON $field1 = $field2"
     }
-
-    private fun compileCondition(eq: Eq): String {
-        val statement = eq.statement()
-        val params = eq.params()
-        return params.fold(statement) { acc, value -> acc.replaceFirst("?", value.toString()) }
+    companion object {
+        @JvmStatic
+        infix fun Join.on(field2: String): Join {
+            return Join(type, table, field1, field2)
+        }
     }
 }

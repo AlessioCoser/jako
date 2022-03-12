@@ -1,12 +1,10 @@
 package dbhelper.query.join
 
-import dbhelper.query.conditions.Eq
-
-class LeftJoin(table: String, eq: Eq) : Join("LEFT JOIN", table, eq) {
+class LeftJoin(table: String, field1: String, field2: String? = null) : Join("LEFT JOIN", table, field1) {
     companion object {
         @JvmStatic
-        infix fun String.leftJoin(on: Eq): Join {
-            return LeftJoin(this, on)
+        infix fun String.leftJoin(field1: String): Join {
+            return Join("LEFT JOIN", this, field1)
         }
     }
 }

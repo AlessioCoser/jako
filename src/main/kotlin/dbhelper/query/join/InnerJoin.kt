@@ -1,22 +1,15 @@
 package dbhelper.query.join
 
-import dbhelper.query.conditions.Eq
-
-class InnerJoin(table: String, eq: Eq) : Join("INNER JOIN", table, eq) {
+class InnerJoin(table: String, field1: String, field2: String? = null) : Join("INNER JOIN", table, field1, field2) {
     companion object {
         @JvmStatic
-        infix fun String.on(value: Eq): Join {
-            return innerJoin(value)
+        infix fun String.join(field1: String): Join {
+            return innerJoin(field1)
         }
 
         @JvmStatic
-        infix fun String.join(value: Eq): Join {
-            return innerJoin(value)
-        }
-
-        @JvmStatic
-        infix fun String.innerJoin(on: Eq): Join {
-            return InnerJoin(this, on)
+        infix fun String.innerJoin(field1: String): Join {
+            return Join("INNER JOIN", this, field1)
         }
     }
 }
