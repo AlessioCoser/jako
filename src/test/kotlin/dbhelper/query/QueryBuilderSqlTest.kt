@@ -81,4 +81,15 @@ class QueryBuilderSqlTest {
 
         assertEquals(Query("SELECT * FROM people WHERE true LIMIT 34 OFFSET 6", emptyList()), query)
     }
+
+    @Test
+    fun `group by`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("name", "count(name) AS total")
+            .groupBy("name")
+            .build()
+
+        assertEquals(Query("SELECT name, count(name) AS total FROM people WHERE true GROUP BY name", emptyList()), query)
+    }
 }
