@@ -1,7 +1,7 @@
 package dbhelper.query
 
 import dbhelper.query.conditions.Condition
-import dbhelper.query.join.Join
+import dbhelper.query.join.*
 import dbhelper.query.order.Order
 
 class QueryBuilderSql : QueryBuilder {
@@ -40,7 +40,11 @@ class QueryBuilderSql : QueryBuilder {
         return this
     }
 
-    fun join(join: Join): QueryBuilderSql {
+    fun join(on: On) = join(InnerJoin(on))
+    fun leftJoin(on: On) = join(LeftJoin(on))
+    fun rightJoin(on: On) = join(RightJoin(on))
+
+    private fun join(join: Join) : QueryBuilderSql {
         this.join += " ${join.statement()}"
         return this
     }

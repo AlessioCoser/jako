@@ -9,10 +9,9 @@ import dbhelper.query.conditions.Eq.Companion.eq
 import dbhelper.query.conditions.Gt.Companion.gt
 import dbhelper.query.conditions.Or
 import dbhelper.query.conditions.Or.Companion.or
-import dbhelper.query.join.InnerJoin
-import dbhelper.query.join.Join.Companion.join
-import dbhelper.query.join.Join.Companion.leftJoin
-import dbhelper.query.join.Join.Companion.on
+import dbhelper.query.join.On
+import dbhelper.query.join.On.Companion.eq
+import dbhelper.query.join.On.Companion.on
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Asc.Companion.asc
 import dbhelper.query.order.Desc.Companion.desc
@@ -91,7 +90,7 @@ class SelectTest {
             fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-            join("pets" join "pets.owner" on "users.email")
+            join("pets" on "pets.owner" eq "users.email")
             groupBy("email")
         }.all { UserPetsCount(str("name"), int("count")) }
 
@@ -112,7 +111,7 @@ class SelectTest {
                     Eq("users.age", 28)
                 )
             )
-            .join(InnerJoin("pets", "pets.owner", "users.email"))
+            .join(On("pets", "pets.owner", "users.email"))
             .groupBy("email")
             .orderBy(asc("name"))
         ).all(UserPetsCountRowParser())
@@ -134,7 +133,7 @@ class SelectTest {
                     Eq("users.age", 28)
                 )
             )
-            .join(InnerJoin("pets", "pets.owner", "users.email"))
+            .join(On("pets", "pets.owner", "users.email"))
             .groupBy("email")
             .orderBy(Asc("name"))
         ).first(UserPetsCountRowParser())
@@ -148,7 +147,7 @@ class SelectTest {
             fields("users.name", "count(pets.name) as count")
             from("users")
             where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-            join("pets" leftJoin "pets.owner" on "users.email")
+            leftJoin("pets" on "pets.owner" eq "users.email")
             groupBy("email")
             orderBy(desc("name"))
         }.all { UserPetsCount(str("name"), int("count")) }

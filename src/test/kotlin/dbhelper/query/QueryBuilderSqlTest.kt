@@ -5,6 +5,7 @@ import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
 import dbhelper.query.join.InnerJoin
 import dbhelper.query.join.LeftJoin
+import dbhelper.query.join.On
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -137,8 +138,8 @@ class QueryBuilderSqlTest {
     fun `multiple join statement`() {
         val query = QueryBuilderSql()
             .from("people")
-            .join(InnerJoin("bank_account", "people.id", "bank_account.person_id"))
-            .join(LeftJoin("pets", "people.id", "pets.owner"))
+            .join(On("bank_account", "people.id", "bank_account.person_id"))
+            .leftJoin(On("pets", "people.id", "pets.owner"))
             .build()
 
         assertEquals(Query("SELECT * FROM people " +
@@ -152,7 +153,7 @@ class QueryBuilderSqlTest {
             .from("people")
             .fields("name", "count(name) AS total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
-            .join(InnerJoin("bank_account", "people.id", "bank_account.person_id"))
+            .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
             .having(Gt("count(name)", 12))
             .orderBy(Asc("first", "second"))
@@ -176,7 +177,7 @@ class QueryBuilderSqlTest {
             .from("people")
             .fields("name", "count(name) AS total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
-            .join(InnerJoin("bank_account", "people.id", "bank_account.person_id"))
+            .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
             .having(Gt("count(name)", 12))
             .orderBy(Asc("first", "second"))
