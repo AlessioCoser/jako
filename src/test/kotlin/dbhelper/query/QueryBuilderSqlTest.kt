@@ -170,4 +170,21 @@ class QueryBuilderSqlTest {
                 "LIMIT 34 OFFSET 6", listOf("Italian", 20, 12)
         ), query)
     }
+
+    @Test
+    fun `raw overwrites all statements before used`() {
+        val query = QueryBuilderSql()
+            .from("people")
+            .fields("name", "count(name) AS total")
+            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
+            .join(InnerJoin("bank_account", Eq("people.id", "bank_account.person_id")))
+            .groupBy("name")
+            .having(Gt("count(name)", 12))
+            .orderBy(Asc("first", "second"))
+            .limit(34, 6)
+            .raw("SELECT * FROM customers")
+            .build()
+
+        assertEquals(Query("SELECT * FROM customers", emptyList()), query)
+    }
 }
