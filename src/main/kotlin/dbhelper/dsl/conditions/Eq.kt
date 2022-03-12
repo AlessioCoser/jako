@@ -1,12 +1,6 @@
 package dbhelper.dsl.conditions
 
-class Eq(private val left: String, private val right: Any?) : Condition {
-    override fun statement(): String {
-        return "$left = ?"
-    }
-
-    override fun params() = listOf(right)
-
+class Eq(left: String, right: Any?) : GenericCondition(left, "=", right) {
     companion object {
         @JvmStatic
         infix fun String.eq(value: String): Condition {
