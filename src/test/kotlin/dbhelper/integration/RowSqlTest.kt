@@ -28,7 +28,7 @@ class RowSqlTest {
             Types(
                 int("id"),
                 strOrNull("string"),
-                bool("boolean"),
+                boolOrNull("boolean"),
                 shortOrNull("short")
 //                int("int"),
 //                long("long"),
@@ -45,7 +45,7 @@ class RowSqlTest {
 
         assertThat(types).isEqualTo(listOf(
             Types(1, "str", true, 1),
-            Types(2, null, false, null)
+            Types(2, null, null, null)
         ))
     }
 }

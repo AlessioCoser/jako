@@ -9,7 +9,8 @@ import java.sql.Timestamp
 class RowSql(private val resultSet: ResultSet) : Row {
     override fun strOrNull(fieldName: String) = nullable(resultSet.getString(fieldName))
     override fun str(fieldName: String): String = strOrNull(fieldName)!!
-    override fun bool(fieldName: String) = resultSet.getBoolean(fieldName)
+    override fun boolOrNull(fieldName: String) = nullable(resultSet.getBoolean(fieldName))
+    override fun bool(fieldName: String) = boolOrNull(fieldName)!!
     override fun shortOrNull(fieldName: String) = nullable(resultSet.getShort(fieldName))
     override fun short(fieldName: String) = shortOrNull(fieldName)!!
     override fun int(fieldName: String) = resultSet.getInt(fieldName)

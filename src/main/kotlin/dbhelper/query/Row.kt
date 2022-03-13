@@ -7,6 +7,7 @@ import java.sql.Timestamp
 interface Row {
     fun strOrNull(fieldName: String): String?
     fun str(fieldName: String): String
+    fun boolOrNull(fieldName: String): Boolean?
     fun bool(fieldName: String): Boolean
     fun shortOrNull(fieldName: String): Short?
     fun short(fieldName: String): Short
