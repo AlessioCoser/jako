@@ -40,9 +40,8 @@ INSERT INTO public."pets" ("name", "type", "owner", "age") VALUES
 CREATE TABLE public."types" (
    "id" serial primary key,
    "string" varchar(50),
-   "boolean" boolean
---    "byte" bit(8),
---    "short" smallint,
+   "boolean" boolean,
+   "short" smallint
 --    "int" integer,
 --    "long" bigint,
 --    "float" real,
@@ -57,9 +56,8 @@ CREATE TABLE public."types" (
 
 INSERT INTO public."types"
     ("string",
-     "boolean"
---      "byte",
---      "short",
+     "boolean",
+     "short"
 --      "int",
 --      "long",
 --      "float",
@@ -73,9 +71,8 @@ INSERT INTO public."types"
 )
 VALUES
     ('str',
-     true
---      B'10101010',
---      1,
+     true,
+     1
 --      2,
 --      3,
 --      3.4,
@@ -87,6 +84,6 @@ VALUES
 --      '2013-03-21 09:10:59.897666 +02:00',
 --      '2013-03-21 09:10:59.897666'
 ),
-(null, null)
+(null, null, null)
 -- ,
 --     (null, null, null, null, null, null, null, null, null, null, null, null, null, null);

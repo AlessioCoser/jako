@@ -27,10 +27,9 @@ class RowSqlTest {
         }.all {
             Types(
                 int("id"),
-                strOrNull("string") ?: "",
-                bool("boolean")
-//                byte("byte"),
-//                short("short"),
+                strOrNull("string"),
+                bool("boolean"),
+                shortOrNull("short")
 //                int("int"),
 //                long("long"),
 //                float("float"),
@@ -45,8 +44,8 @@ class RowSqlTest {
         }
 
         assertThat(types).isEqualTo(listOf(
-            Types(1, "str", true),
-            Types(2, "", false)
+            Types(1, "str", true, 1),
+            Types(2, null, false, null)
         ))
     }
 }
@@ -54,9 +53,8 @@ class RowSqlTest {
 data class Types(
     val id: Int,
     val string: String?,
-    val boolean: Boolean?
-//    val byte: Byte?,
-//    val short: Short?,
+    val boolean: Boolean?,
+    val short: Short?
 //    val int: Int?,
 //    val long: Long,
 //    val float: Float,

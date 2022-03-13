@@ -5,10 +5,10 @@ import java.sql.Time
 import java.sql.Timestamp
 
 interface Row {
-    fun str(fieldName: String): String
     fun strOrNull(fieldName: String): String?
+    fun str(fieldName: String): String
     fun bool(fieldName: String): Boolean
-    fun byte(fieldName: String): Byte
+    fun shortOrNull(fieldName: String): Short?
     fun short(fieldName: String): Short
     fun int(fieldName: String): Int
     fun long(fieldName: String): Long
