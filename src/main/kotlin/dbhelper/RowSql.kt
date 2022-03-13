@@ -23,6 +23,8 @@ class RowSql(private val resultSet: ResultSet) : Row {
     override fun double(fieldName: String) = doubleOrNull(fieldName)!!
     override fun dateOrNull(fieldName: String) = nullable(resultSet.getDate(fieldName))
     override fun date(fieldName: String) = dateOrNull(fieldName)!!
+    override fun localDateOrNull(fieldName: String) = dateOrNull(fieldName)?.toLocalDate()
+    override fun localDate(fieldName: String) = localDateOrNull(fieldName)!!
     override fun time(fieldName: String): Time = resultSet.getTime(fieldName)
     override fun timestamp(fieldName: String): Timestamp = resultSet.getTimestamp(fieldName)
     override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)

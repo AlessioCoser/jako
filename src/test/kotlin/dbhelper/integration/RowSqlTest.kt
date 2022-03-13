@@ -35,7 +35,8 @@ class RowSqlTest {
                 longOrNull("long"),
                 floatOrNull("float"),
                 doubleOrNull("double"),
-                dateOrNull("date")
+                dateOrNull("date"),
+                localDateOrNull("local_date")
 //                time("time"),
 //                time("time"),
 //                timestamp("timestamp"),
@@ -45,8 +46,8 @@ class RowSqlTest {
         }
 
         assertThat(types).isEqualTo(listOf(
-            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6, Date.valueOf("1980-01-01")),
-            Types(2, null, null, null, null, null, null, null, null)
+            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6, Date.valueOf("1980-01-01"), LocalDate.of(1980, 1, 1)),
+            Types(2, null, null, null, null, null, null, null, null, null)
         ))
     }
 }
@@ -60,7 +61,8 @@ data class Types(
     val long: Long?,
     val float: Float?,
     val double: Double?,
-    val date: Date?
+    val date: Date?,
+    val localDate: LocalDate?
 //    val time: Time,
 //    val time_no_zone: Time,
 //    val timestamp: Timestamp,

@@ -3,6 +3,7 @@ package dbhelper.query
 import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
+import java.time.LocalDate
 
 interface Row {
     fun strOrNull(fieldName: String): String?
@@ -21,6 +22,8 @@ interface Row {
     fun double(fieldName: String): Double
     fun dateOrNull(fieldName: String): Date?
     fun date(fieldName: String): Date
+    fun localDateOrNull(fieldName: String): LocalDate?
+    fun localDate(fieldName: String): LocalDate
     fun time(fieldName: String): Time
     fun timestamp(fieldName: String): Timestamp
     fun bytes(fieldName: String): ByteArray
