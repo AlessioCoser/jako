@@ -8,7 +8,7 @@ import java.sql.Timestamp
 
 class RowSql(private val resultSet: ResultSet) : Row {
     override fun strOrNull(fieldName: String) = nullable(resultSet.getString(fieldName))
-    override fun str(fieldName: String): String = strOrNull(fieldName)!!
+    override fun str(fieldName: String) = strOrNull(fieldName)!!
     override fun boolOrNull(fieldName: String) = nullable(resultSet.getBoolean(fieldName))
     override fun bool(fieldName: String) = boolOrNull(fieldName)!!
     override fun shortOrNull(fieldName: String) = nullable(resultSet.getShort(fieldName))
@@ -21,10 +21,11 @@ class RowSql(private val resultSet: ResultSet) : Row {
     override fun float(fieldName: String) = floatOrNull(fieldName)!!
     override fun doubleOrNull(fieldName: String) = nullable(resultSet.getDouble(fieldName))
     override fun double(fieldName: String) = doubleOrNull(fieldName)!!
-    override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)
-    override fun date(fieldName: String): Date = resultSet.getDate(fieldName)
+    override fun dateOrNull(fieldName: String) = nullable(resultSet.getDate(fieldName))
+    override fun date(fieldName: String) = dateOrNull(fieldName)!!
     override fun time(fieldName: String): Time = resultSet.getTime(fieldName)
     override fun timestamp(fieldName: String): Timestamp = resultSet.getTimestamp(fieldName)
+    override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)
 
     private fun <T> nullable(value: T?): T? {
         if(resultSet.wasNull()) {

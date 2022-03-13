@@ -45,13 +45,13 @@ CREATE TABLE public."types" (
    "int" integer,
    "long" bigint,
    "float" real,
-   "double" double precision
---    "bytes" bytea,
---    "date" date,
+   "double" double precision,
+   "date" date
 --    "time" time(3),
 --    "time_no_zone" time(4) without time zone,
 --    "timestamp" timestamp,
---    "timestamp_no_zone" timestamp without time zone
+--    "timestamp_no_zone" timestamp without time zone,
+--    "bytes" bytea
 );
 
 INSERT INTO public."types"
@@ -61,13 +61,13 @@ INSERT INTO public."types"
      "int",
      "long",
      "float",
-     "double"
---      "bytes",
---      "date",
+     "double",
+     "date"
 --      "time",
 --      "time_no_zone",
 --      "timestamp",
 --      "timestamp_no_zone"
+--      "bytes",
 )
 VALUES
     ('str',
@@ -76,14 +76,12 @@ VALUES
      999,
      3,
      3.4,
-     5.6
---      E'\xC744'::bytea,
---      '1980-01-01',
+     5.6,
+     '1980-01-01'
 --      '01:02.123',
 --      '09:08.1234',
 --      '2013-03-21 09:10:59.897666 +02:00',
 --      '2013-03-21 09:10:59.897666'
+--      E'\xC744'::bytea,
 ),
-(null, null, null, null, null, null, null)
--- ,
---     (null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+(null, null, null, null, null, null, null, null);

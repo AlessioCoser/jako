@@ -19,8 +19,9 @@ interface Row {
     fun float(fieldName: String): Float
     fun doubleOrNull(fieldName: String): Double?
     fun double(fieldName: String): Double
-    fun bytes(fieldName: String): ByteArray
+    fun dateOrNull(fieldName: String): Date?
     fun date(fieldName: String): Date
     fun time(fieldName: String): Time
     fun timestamp(fieldName: String): Timestamp
+    fun bytes(fieldName: String): ByteArray
 }

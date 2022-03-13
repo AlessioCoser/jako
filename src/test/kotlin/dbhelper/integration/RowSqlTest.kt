@@ -9,6 +9,7 @@ import org.testcontainers.shaded.com.google.common.primitives.Bytes
 import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
+import java.time.LocalDate
 
 @Testcontainers
 class RowSqlTest {
@@ -33,19 +34,19 @@ class RowSqlTest {
                 intOrNull("int"),
                 longOrNull("long"),
                 floatOrNull("float"),
-                doubleOrNull("double")
-//                bytes("bytes"),
-//                date("date"),
+                doubleOrNull("double"),
+                dateOrNull("date")
 //                time("time"),
 //                time("time"),
 //                timestamp("timestamp"),
 //                timestamp("timestamp")
+//                bytes("bytes"),
             )
         }
 
         assertThat(types).isEqualTo(listOf(
-            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6),
-            Types(2, null, null, null, null, null, null, null)
+            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6, Date.valueOf("1980-01-01")),
+            Types(2, null, null, null, null, null, null, null, null)
         ))
     }
 }
@@ -58,11 +59,11 @@ data class Types(
     val int: Int?,
     val long: Long?,
     val float: Float?,
-    val double: Double?
-//    val bytes: ByteArray,
-//    val date: Date,
+    val double: Double?,
+    val date: Date?
 //    val time: Time,
 //    val time_no_zone: Time,
 //    val timestamp: Timestamp,
 //    val timestamp_no_zone: Timestamp
+//    val bytes: ByteArray,
 )
