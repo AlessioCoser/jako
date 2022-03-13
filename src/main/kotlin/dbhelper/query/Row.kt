@@ -11,9 +11,13 @@ interface Row {
     fun bool(fieldName: String): Boolean
     fun shortOrNull(fieldName: String): Short?
     fun short(fieldName: String): Short
+    fun intOrNull(fieldName: String): Int?
     fun int(fieldName: String): Int
+    fun longOrNull(fieldName: String): Long?
     fun long(fieldName: String): Long
+    fun floatOrNull(fieldName: String): Float?
     fun float(fieldName: String): Float
+    fun doubleOrNull(fieldName: String): Double?
     fun double(fieldName: String): Double
     fun bytes(fieldName: String): ByteArray
     fun date(fieldName: String): Date

@@ -41,11 +41,11 @@ CREATE TABLE public."types" (
    "id" serial primary key,
    "string" varchar(50),
    "boolean" boolean,
-   "short" smallint
---    "int" integer,
---    "long" bigint,
---    "float" real,
---    "double" double precision,
+   "short" smallint,
+   "int" integer,
+   "long" bigint,
+   "float" real,
+   "double" double precision
 --    "bytes" bytea,
 --    "date" date,
 --    "time" time(3),
@@ -57,11 +57,11 @@ CREATE TABLE public."types" (
 INSERT INTO public."types"
     ("string",
      "boolean",
-     "short"
---      "int",
---      "long",
---      "float",
---      "double",
+     "short",
+     "int",
+     "long",
+     "float",
+     "double"
 --      "bytes",
 --      "date",
 --      "time",
@@ -72,11 +72,11 @@ INSERT INTO public."types"
 VALUES
     ('str',
      true,
-     1
---      2,
---      3,
---      3.4,
---      5.6,
+     1,
+     999,
+     3,
+     3.4,
+     5.6
 --      E'\xC744'::bytea,
 --      '1980-01-01',
 --      '01:02.123',
@@ -84,6 +84,6 @@ VALUES
 --      '2013-03-21 09:10:59.897666 +02:00',
 --      '2013-03-21 09:10:59.897666'
 ),
-(null, null, null)
+(null, null, null, null, null, null, null)
 -- ,
 --     (null, null, null, null, null, null, null, null, null, null, null, null, null, null);

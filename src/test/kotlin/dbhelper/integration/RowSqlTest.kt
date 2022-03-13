@@ -29,11 +29,11 @@ class RowSqlTest {
                 int("id"),
                 strOrNull("string"),
                 boolOrNull("boolean"),
-                shortOrNull("short")
-//                int("int"),
-//                long("long"),
-//                float("float"),
-//                double("double"),
+                shortOrNull("short"),
+                intOrNull("int"),
+                longOrNull("long"),
+                floatOrNull("float"),
+                doubleOrNull("double")
 //                bytes("bytes"),
 //                date("date"),
 //                time("time"),
@@ -44,8 +44,8 @@ class RowSqlTest {
         }
 
         assertThat(types).isEqualTo(listOf(
-            Types(1, "str", true, 1),
-            Types(2, null, null, null)
+            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6),
+            Types(2, null, null, null, null, null, null, null)
         ))
     }
 }
@@ -54,11 +54,11 @@ data class Types(
     val id: Int,
     val string: String?,
     val boolean: Boolean?,
-    val short: Short?
-//    val int: Int?,
-//    val long: Long,
-//    val float: Float,
-//    val double: Double,
+    val short: Short?,
+    val int: Int?,
+    val long: Long?,
+    val float: Float?,
+    val double: Double?
 //    val bytes: ByteArray,
 //    val date: Date,
 //    val time: Time,
