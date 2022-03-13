@@ -1,17 +1,17 @@
 package dbhelper
 
-import dbhelper.query.QueryBuilderSql
+import dbhelper.query.QueryBuilder
 
 class Database(jdbc: String, user: String, password: String) {
-    private val manager = SessionManagerSql(jdbc, user, password)
+    private val manager = SessionManager(jdbc, user, password)
 
-    fun select(prepare: QueryBuilderSql.() -> Unit): QueryExecutor {
-        val queryBuilder = QueryBuilderSql()
+    fun select(prepare: QueryBuilder.() -> Unit): QueryExecutor {
+        val queryBuilder = QueryBuilder()
         prepare(queryBuilder)
         return select(queryBuilder)
     }
 
-    fun select(queryBuilder: QueryBuilderSql): QueryExecutor {
+    fun select(queryBuilder: QueryBuilder): QueryExecutor {
         return QueryExecutor(manager, queryBuilder)
     }
 }

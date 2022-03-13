@@ -102,7 +102,7 @@ class SelectTest {
     @Test
     fun allJavaSyntax() {
         val all: List<UserPetsCount> = db.select(
-            dbhelper.query.QueryBuilderSql()
+            dbhelper.query.QueryBuilder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(
@@ -124,7 +124,7 @@ class SelectTest {
     @Test
     fun firstJavaSyntax() {
         val user: UserPetsCount = db.select(
-            dbhelper.query.QueryBuilderSql()
+            dbhelper.query.QueryBuilder()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where(

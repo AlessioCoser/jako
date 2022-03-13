@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-class QueryBuilderSqlTest {
+class QueryBuilderTest {
     @Test
     fun `cannot build query without table name`() {
         val message = assertThrows(RuntimeException::class.java) {
-            QueryBuilderSql().build()
+            QueryBuilder().build()
         }.message
 
         assertEquals("Cannot generate query without table name", message)
@@ -24,14 +24,14 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `build simple query`() {
-        val query = QueryBuilderSql().from("people").build()
+        val query = QueryBuilder().from("people").build()
 
         assertEquals(Query("SELECT * FROM people", emptyList()), query)
     }
 
     @Test
     fun `build query choosing fields to select`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("first", "second")
             .build()
@@ -41,7 +41,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `add order by asc clause`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .orderBy(Asc("first", "second"))
             .build()
@@ -51,7 +51,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `add order by with one asc and one desc clause`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .orderBy(Asc("first"), Desc("second"))
             .build()
@@ -61,7 +61,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `single limits to one row`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .single()
             .build()
@@ -71,7 +71,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `limit clause`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .limit(34)
             .build()
@@ -81,7 +81,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `use offset to skip N rows`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .limit(34, 6)
             .build()
@@ -91,7 +91,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `group by`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("name", "count(name) AS total")
             .groupBy("name")
@@ -102,7 +102,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `group by with having`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("name", "count(name)")
             .groupBy("name")
@@ -114,7 +114,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `where statement`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("age")
             .where(Eq("age", 20))
@@ -125,7 +125,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `multiple where statement`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("age")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
@@ -136,7 +136,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `multiple join statement`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .leftJoin(On("pets", "people.id", "pets.owner"))
@@ -149,7 +149,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `join statement with dsl syntax`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .join("bank_account" on "people.id" eq "bank_account.person_id")
             .rightJoin("pets" on "owner_id")
@@ -162,7 +162,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `all together in right order`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("name", "count(name) AS total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
@@ -186,7 +186,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `raw overwrites all statements before used`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .from("people")
             .fields("name", "count(name) AS total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
@@ -203,7 +203,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `raw can be used alone`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .raw("SELECT * FROM customers")
             .build()
 
@@ -212,7 +212,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `raw can be used with some parameters`() {
-        val query = QueryBuilderSql()
+        val query = QueryBuilder()
             .raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
             .build()
 
@@ -221,7 +221,7 @@ class QueryBuilderSqlTest {
 
     @Test
     fun `raw can be used statically`() {
-        val query = QueryBuilderSql.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
+        val query = QueryBuilder.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
 
         assertEquals(Query("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
     }
