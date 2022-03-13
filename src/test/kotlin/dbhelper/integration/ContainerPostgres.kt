@@ -5,12 +5,12 @@ import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 import org.testcontainers.utility.MountableFile.forClasspathResource
 
 class ContainerPostgres(
-        user : String = "user",
-        password: String = "password",
-        port: Int = 5432,
-        reuse: Boolean = true,
-        waitStrategy: () -> LogMessageWaitStrategy = { defaultWaitStrategy() }
-): FixedHostPortGenericContainer<Nothing>("postgres:11") {
+    user: String = "user",
+    password: String = "password",
+    port: Int = 5432,
+    reuse: Boolean = true,
+    waitStrategy: () -> LogMessageWaitStrategy = { defaultWaitStrategy() }
+) : FixedHostPortGenericContainer<Nothing>("postgres:11") {
     init {
         withEnv("POSTGRES_USER", user)
         withEnv("POSTGRES_PASSWORD", password)
@@ -22,7 +22,7 @@ class ContainerPostgres(
 
     companion object {
         fun defaultWaitStrategy(): LogMessageWaitStrategy = LogMessageWaitStrategy()
-                .withRegEx(".*database system is ready to accept connections.*\\s")
-                .withTimes(2)
+            .withRegEx(".*database system is ready to accept connections.*\\s")
+            .withTimes(2)
     }
 }

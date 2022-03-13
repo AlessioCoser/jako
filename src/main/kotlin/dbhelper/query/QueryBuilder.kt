@@ -44,7 +44,7 @@ class QueryBuilder {
     fun leftJoin(on: On) = join(LeftJoin(on))
     fun rightJoin(on: On) = join(RightJoin(on))
 
-    private fun join(join: Join) : QueryBuilder {
+    private fun join(join: Join): QueryBuilder {
         this.join += " ${join.statement()}"
         return this
     }
@@ -66,7 +66,7 @@ class QueryBuilder {
     }
 
     fun limit(limit: Int, offset: Int = 0): QueryBuilder {
-        if(offset != 0) {
+        if (offset != 0) {
             this.limit = " LIMIT $limit OFFSET $offset"
         } else {
             this.limit = " LIMIT $limit"
@@ -81,7 +81,7 @@ class QueryBuilder {
             return Query(raw, rawParams)
         }
 
-        if(from.isBlank()) {
+        if (from.isBlank()) {
             throw RuntimeException("Cannot generate query without table name")
         }
 

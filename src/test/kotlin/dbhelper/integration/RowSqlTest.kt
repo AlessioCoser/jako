@@ -5,10 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import org.testcontainers.shaded.com.google.common.primitives.Bytes
 import java.sql.Date
-import java.sql.Time
-import java.sql.Timestamp
 import java.time.LocalDate
 
 @Testcontainers
@@ -45,10 +42,12 @@ class RowSqlTest {
             )
         }
 
-        assertThat(types).isEqualTo(listOf(
-            Types(1, "str", true, 1, 999, 3, 3.4f, 5.6, Date.valueOf("1980-01-01"), LocalDate.of(1980, 1, 1)),
-            Types(2, null, null, null, null, null, null, null, null, null)
-        ))
+        assertThat(types).isEqualTo(
+            listOf(
+                Types(1, "str", true, 1, 999, 3, 3.4f, 5.6, Date.valueOf("1980-01-01"), LocalDate.of(1980, 1, 1)),
+                Types(2, null, null, null, null, null, null, null, null, null)
+            )
+        )
     }
 }
 

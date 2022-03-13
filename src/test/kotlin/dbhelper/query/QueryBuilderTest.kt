@@ -109,7 +109,10 @@ class QueryBuilderTest {
             .having(Gt("count(name)", 20))
             .build()
 
-        assertEquals(Query("SELECT name, count(name) FROM people GROUP BY name HAVING count(name) > ?", listOf(20)), query)
+        assertEquals(
+            Query("SELECT name, count(name) FROM people GROUP BY name HAVING count(name) > ?", listOf(20)),
+            query
+        )
     }
 
     @Test
@@ -142,9 +145,13 @@ class QueryBuilderTest {
             .leftJoin(On("pets", "people.id", "pets.owner"))
             .build()
 
-        assertEquals(Query("SELECT * FROM people " +
-                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
-                "LEFT JOIN pets ON people.id = pets.owner", emptyList()), query)
+        assertEquals(
+            Query(
+                "SELECT * FROM people " +
+                        "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                        "LEFT JOIN pets ON people.id = pets.owner", emptyList()
+            ), query
+        )
     }
 
     @Test
@@ -155,9 +162,13 @@ class QueryBuilderTest {
             .rightJoin("pets" on "owner_id")
             .build()
 
-        assertEquals(Query("SELECT * FROM people " +
-                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
-                "RIGHT JOIN pets USING(owner_id)", emptyList()), query)
+        assertEquals(
+            Query(
+                "SELECT * FROM people " +
+                        "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                        "RIGHT JOIN pets USING(owner_id)", emptyList()
+            ), query
+        )
     }
 
     @Test
@@ -173,15 +184,18 @@ class QueryBuilderTest {
             .limit(34, 6)
             .build()
 
-        assertEquals(Query("SELECT name, count(name) AS total " +
-                "FROM people " +
-                "INNER JOIN bank_account ON people.id = bank_account.person_id " +
-                "WHERE (nationality = ? AND age > ?) " +
-                "GROUP BY name " +
-                "HAVING count(name) > ? " +
-                "ORDER BY first ASC, second ASC " +
-                "LIMIT 34 OFFSET 6", listOf("Italian", 20, 12)
-        ), query)
+        assertEquals(
+            Query(
+                "SELECT name, count(name) AS total " +
+                        "FROM people " +
+                        "INNER JOIN bank_account ON people.id = bank_account.person_id " +
+                        "WHERE (nationality = ? AND age > ?) " +
+                        "GROUP BY name " +
+                        "HAVING count(name) > ? " +
+                        "ORDER BY first ASC, second ASC " +
+                        "LIMIT 34 OFFSET 6", listOf("Italian", 20, 12)
+            ), query
+        )
     }
 
     @Test

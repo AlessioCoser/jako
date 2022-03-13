@@ -95,51 +95,55 @@ class SelectTest {
             groupBy("email")
         }.all { UserPetsCount(str("name"), int("count")) }
 
-        assertThat(all).isEqualTo(listOf(
-            UserPetsCount(fullName="Luigi Verdi", pets=2)
-        ))
+        assertThat(all).isEqualTo(
+            listOf(
+                UserPetsCount(fullName = "Luigi Verdi", pets = 2)
+            )
+        )
     }
 
     @Test
     fun allJavaSyntax() {
         val all: List<UserPetsCount> = db.select(
             dbhelper.query.QueryBuilder()
-            .fields("users.name", "count(pets.name) as count")
-            .from("users")
-            .where(
-                Or(
-                    And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
-                    Eq("users.age", 28)
+                .fields("users.name", "count(pets.name) as count")
+                .from("users")
+                .where(
+                    Or(
+                        And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                        Eq("users.age", 28)
+                    )
                 )
-            )
-            .join(On("pets", "pets.owner", "users.email"))
-            .groupBy("email")
-            .orderBy(asc("name"))
+                .join(On("pets", "pets.owner", "users.email"))
+                .groupBy("email")
+                .orderBy(asc("name"))
         ).all(UserPetsCountRowParser())
 
-        assertThat(all).isEqualTo(listOf(
-            UserPetsCount(fullName="Luigi Verdi", pets=2)
-        ))
+        assertThat(all).isEqualTo(
+            listOf(
+                UserPetsCount(fullName = "Luigi Verdi", pets = 2)
+            )
+        )
     }
 
     @Test
     fun firstJavaSyntax() {
         val user: UserPetsCount = db.select(
             dbhelper.query.QueryBuilder()
-            .fields("users.name", "count(pets.name) as count")
-            .from("users")
-            .where(
-                Or(
-                    And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
-                    Eq("users.age", 28)
+                .fields("users.name", "count(pets.name) as count")
+                .from("users")
+                .where(
+                    Or(
+                        And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                        Eq("users.age", 28)
+                    )
                 )
-            )
-            .join(On("pets", "pets.owner", "users.email"))
-            .groupBy("email")
-            .orderBy(Asc("name"))
+                .join(On("pets", "pets.owner", "users.email"))
+                .groupBy("email")
+                .orderBy(Asc("name"))
         ).first(UserPetsCountRowParser())
 
-        assertThat(user).isEqualTo(UserPetsCount(fullName="Luigi Verdi", pets=2))
+        assertThat(user).isEqualTo(UserPetsCount(fullName = "Luigi Verdi", pets = 2))
     }
 
     @Test
@@ -153,10 +157,12 @@ class SelectTest {
             orderBy(desc("name"))
         }.all { UserPetsCount(str("name"), int("count")) }
 
-        assertThat(all).isEqualTo(listOf(
-            UserPetsCount(fullName="Mario Rossi", pets=0),
-            UserPetsCount(fullName="Luigi Verdi", pets=2)
-        ))
+        assertThat(all).isEqualTo(
+            listOf(
+                UserPetsCount(fullName = "Mario Rossi", pets = 0),
+                UserPetsCount(fullName = "Luigi Verdi", pets = 2)
+            )
+        )
     }
 
     @Test
@@ -165,18 +171,20 @@ class SelectTest {
             raw("""SELECT * FROM users WHERE city = 'Firenze';""")
         }.all { User(str("email"), str("name"), str("city"), int("age")) }
 
-        assertThat(all).isEqualTo(listOf(
-            User(email="mario@rossi.it", fullName="Mario Rossi", city="Firenze", age=35),
-            User(email="paolo@bianchi.it", fullName="Paolo Bianchi", city="Firenze", age=6),
-            User(email="matteo@renzi.it", fullName="Matteo Renzi", city="Firenze", age=45)
-        ))
+        assertThat(all).isEqualTo(
+            listOf(
+                User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
+                User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6),
+                User(email = "matteo@renzi.it", fullName = "Matteo Renzi", city = "Firenze", age = 45)
+            )
+        )
     }
 }
 
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
 
-class UserPetsCountRowParser: RowParser<UserPetsCount> {
+class UserPetsCountRowParser : RowParser<UserPetsCount> {
     override fun parse(row: Row): UserPetsCount {
         return UserPetsCount(row.str("name"), row.int("count"))
     }

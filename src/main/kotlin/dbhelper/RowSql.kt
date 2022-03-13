@@ -1,7 +1,6 @@
 package dbhelper
 
 import dbhelper.query.Row
-import java.sql.Date
 import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Timestamp
@@ -30,7 +29,7 @@ class RowSql(private val resultSet: ResultSet) : Row {
     override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)
 
     private fun <T> nullable(value: T?): T? {
-        if(resultSet.wasNull()) {
+        if (resultSet.wasNull()) {
             return null
         }
         return value
