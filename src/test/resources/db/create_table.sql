@@ -36,3 +36,57 @@ INSERT INTO public."pets" ("name", "type", "owner", "age") VALUES
     ('Argo', 'Cat', 'vittorio@gialli.it', 1),
     ('Bruto', 'Mouse', 'luigi@verdi.it', 6),
     ('Fufi', 'Horse', 'vittorio@gialli.it', 4);
+
+CREATE TABLE public."types" (
+   "id" serial primary key,
+   "string" varchar(50),
+   "boolean" boolean
+--    "byte" bit(8),
+--    "short" smallint,
+--    "int" integer,
+--    "long" bigint,
+--    "float" real,
+--    "double" double precision,
+--    "bytes" bytea,
+--    "date" date,
+--    "time" time(3),
+--    "time_no_zone" time(4) without time zone,
+--    "timestamp" timestamp,
+--    "timestamp_no_zone" timestamp without time zone
+);
+
+INSERT INTO public."types"
+    ("string",
+     "boolean"
+--      "byte",
+--      "short",
+--      "int",
+--      "long",
+--      "float",
+--      "double",
+--      "bytes",
+--      "date",
+--      "time",
+--      "time_no_zone",
+--      "timestamp",
+--      "timestamp_no_zone"
+)
+VALUES
+    ('str',
+     true
+--      B'10101010',
+--      1,
+--      2,
+--      3,
+--      3.4,
+--      5.6,
+--      E'\xC744'::bytea,
+--      '1980-01-01',
+--      '01:02.123',
+--      '09:08.1234',
+--      '2013-03-21 09:10:59.897666 +02:00',
+--      '2013-03-21 09:10:59.897666'
+),
+(null, null)
+-- ,
+--     (null, null, null, null, null, null, null, null, null, null, null, null, null, null);

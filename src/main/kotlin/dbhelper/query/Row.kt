@@ -1,12 +1,12 @@
 package dbhelper.query
 
-import java.io.InputStream
 import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
 
 interface Row {
     fun str(fieldName: String): String
+    fun strOrNull(fieldName: String): String?
     fun bool(fieldName: String): Boolean
     fun byte(fieldName: String): Byte
     fun short(fieldName: String): Short
@@ -18,6 +18,4 @@ interface Row {
     fun date(fieldName: String): Date
     fun time(fieldName: String): Time
     fun timestamp(fieldName: String): Timestamp
-    fun asciiStream(fieldName: String): InputStream
-    fun binaryStream(fieldName: String): InputStream
 }

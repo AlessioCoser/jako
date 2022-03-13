@@ -1,4 +1,4 @@
-package dbhelper
+package dbhelper.integration
 
 import org.testcontainers.containers.FixedHostPortGenericContainer
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy

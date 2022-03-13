@@ -1,5 +1,6 @@
-package dbhelper
+package dbhelper.integration
 
+import dbhelper.Database
 import dbhelper.query.Row
 import dbhelper.query.RowParser
 import dbhelper.query.conditions.And
