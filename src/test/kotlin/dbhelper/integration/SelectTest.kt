@@ -1,6 +1,7 @@
 package dbhelper.integration
 
 import dbhelper.Database
+import dbhelper.query.QueryBuilder
 import dbhelper.query.Row
 import dbhelper.query.RowParser
 import dbhelper.query.conditions.And
@@ -105,7 +106,7 @@ class SelectTest {
     @Test
     fun allJavaSyntax() {
         val all: List<UserPetsCount> = db.select(
-            dbhelper.query.QueryBuilder()
+            QueryBuilder()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
                 .where(
@@ -129,7 +130,7 @@ class SelectTest {
     @Test
     fun firstJavaSyntax() {
         val user: UserPetsCount = db.select(
-            dbhelper.query.QueryBuilder()
+            QueryBuilder()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
                 .where(
@@ -139,6 +140,21 @@ class SelectTest {
                     )
                 )
                 .join(On("pets", "pets.owner", "users.email"))
+                .groupBy("email")
+                .orderBy(Asc("name"))
+        ).first(UserPetsCountRowParser())
+
+        assertThat(user).isEqualTo(UserPetsCount(fullName = "Luigi Verdi", pets = 2))
+    }
+
+    @Test
+    fun firstJavaHybridSyntax() {
+        val user: UserPetsCount = db.select(
+            QueryBuilder()
+                .fields("users.name", "count(pets.name) as count")
+                .from("users")
+                .where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
+                .join("pets" on "pets.owner" eq "users.email")
                 .groupBy("email")
                 .orderBy(Asc("name"))
         ).first(UserPetsCountRowParser())
