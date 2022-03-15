@@ -1,16 +1,15 @@
 package dbhelper.query
 
-import dbhelper.query.fields.Fields.AS
-import dbhelper.query.fields.Fields.wrap
+import dbhelper.query.fields.Fields.Companion.AS
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
-import dbhelper.query.fields.Aggregates.AVG
-import dbhelper.query.fields.Aggregates.COUNT
-import dbhelper.query.fields.Aggregates.EVERY
-import dbhelper.query.fields.Aggregates.MAX
-import dbhelper.query.fields.Aggregates.MIN
-import dbhelper.query.fields.Aggregates.SUM
+import dbhelper.query.fields.Fields.Companion.AVG
+import dbhelper.query.fields.Fields.Companion.COUNT
+import dbhelper.query.fields.Fields.Companion.EVERY
+import dbhelper.query.fields.Fields.Companion.MAX
+import dbhelper.query.fields.Fields.Companion.MIN
+import dbhelper.query.fields.Fields.Companion.SUM
 import dbhelper.query.join.On
 import dbhelper.query.join.On.Companion.EQ
 import dbhelper.query.join.On.Companion.ON

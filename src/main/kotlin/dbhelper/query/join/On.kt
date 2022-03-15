@@ -1,6 +1,6 @@
 package dbhelper.query.join
 
-import dbhelper.query.fields.Fields.wrap
+import dbhelper.query.fields.Fields.Companion.wrap
 
 class On(private val table: String, private val field1: String, private val field2: String? = null) {
 

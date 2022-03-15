@@ -1,7 +1,8 @@
 package dbhelper.query
 
-import dbhelper.query.fields.Fields.wrap
+import dbhelper.query.fields.Fields.Companion.wrap
 import dbhelper.query.conditions.Condition
+import dbhelper.query.fields.Fields
 import dbhelper.query.join.*
 import dbhelper.query.order.Order
 
@@ -26,12 +27,12 @@ class QueryBuilder {
     }
 
     fun from(table: String): QueryBuilder {
-        this.from = " FROM ${table.wrap()}"
+        this.from = From(table).statement()
         return this
     }
 
     fun fields(vararg fields: String): QueryBuilder {
-        this.fields = fields.joinToString(separator = ", ") { it.wrap() }
+        this.fields = Fields(fields).statement()
         return this
     }
 
