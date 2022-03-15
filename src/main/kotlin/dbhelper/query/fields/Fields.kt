@@ -1,7 +1,7 @@
 package dbhelper.query.fields
 
 class Fields(private val fields: List<String>) {
-    fun statement() = fields.joinToString(separator = ", ") { it.wrap() }
+    override fun toString() = fields.joinToString(separator = ", ") { it.wrap() }
 
     companion object {
         fun COUNT(fieldName: String) = "count(${fieldName.wrap()})"
@@ -29,6 +29,10 @@ class Fields(private val fields: List<String>) {
                     .replace(")", "\")")
             }
             return """"${this.replace(".", "\".\"")}""""
+        }
+
+        fun all(): Fields {
+            return Fields(listOf("*"))
         }
     }
 }

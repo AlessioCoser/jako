@@ -5,10 +5,13 @@ import dbhelper.query.conditions.Condition
 import dbhelper.query.fields.Fields
 import dbhelper.query.join.*
 import dbhelper.query.order.Order
+import dbhelper.query.where.EmptyWhere
+import dbhelper.query.where.GenericWhere
+import dbhelper.query.where.Where
 
 class QueryBuilder {
     private var from: String = ""
-    private var fields: String = "*"
+    private var fields: Fields = Fields.all()
     private var where: Where = EmptyWhere()
     private var join: String = ""
     private var groupBy: String = ""
@@ -31,12 +34,12 @@ class QueryBuilder {
     }
 
     fun fields(vararg fields: String): QueryBuilder {
-        this.fields = Fields(fields.toList()).statement()
+        this.fields = Fields(fields.toList())
         return this
     }
 
     fun where(condition: Condition): QueryBuilder {
-        where = WhereStatement(condition)
+        where = GenericWhere(condition)
         return this
     }
 
@@ -85,7 +88,7 @@ class QueryBuilder {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return Query("SELECT $fields$from$join${where.statement()}$groupBy$having$orderBy$limit", where.params().plus(havingParams))
+        return Query("SELECT $fields$from$join$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
     }
 
     companion object {
