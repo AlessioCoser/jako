@@ -2,7 +2,7 @@ package dbhelper.query
 
 object Fields {
     fun String.wrap(): String {
-        if(contains("(") and !contains("(\"")) {
+        if(contains("(")) {
             return this
                 .replace(".", "\".\"")
                 .replace("(", "(\"")
