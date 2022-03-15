@@ -1,6 +1,6 @@
 package dbhelper.query.join
 
-import dbhelper.query.Wrap.wrap
+import dbhelper.query.Fields.wrap
 
 class On(private val table: String, private val field1: String, private val field2: String? = null) {
 
@@ -22,31 +22,4 @@ class On(private val table: String, private val field1: String, private val fiel
             return On(this, field1)
         }
     }
-}
-
-interface Field {
-    override fun toString(): String
-}
-
-class NormalField(private val field: String): Field {
-    override fun toString() = field.wrap()
-}
-
-abstract class Aggregate(private val operator: String, private val field: String): Field {
-    override fun toString(): String {
-        return "$operator(${field.wrap()})"
-    }
-}
-
-class Count(field: String): Aggregate("count", field) {
-    companion object {
-        infix fun COUNT(field: String) = Count(field)
-    }
-}
-infix fun String.AS(name: String): String {
-    return "${this.wrap()} AS ${name.wrap()}"
-}
-
-infix fun Aggregate.AS(name: String): String {
-    return "$this AS ${name.wrap()}"
 }

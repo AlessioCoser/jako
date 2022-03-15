@@ -1,6 +1,6 @@
 package dbhelper.query
 
-import dbhelper.query.Wrap.wrap
+import dbhelper.query.Fields.wrap
 import dbhelper.query.conditions.Condition
 import dbhelper.query.join.*
 import dbhelper.query.order.Order
@@ -31,7 +31,7 @@ class QueryBuilder {
     }
 
     fun fields(vararg fields: String): QueryBuilder {
-        this.fields = fields.joinToString(separator = ", ")
+        this.fields = fields.joinToString(separator = ", ") { it.wrap() }
         return this
     }
 

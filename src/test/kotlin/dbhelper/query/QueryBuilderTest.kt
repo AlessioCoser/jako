@@ -1,5 +1,6 @@
 package dbhelper.query
 
+import dbhelper.query.Fields.AS
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
@@ -36,7 +37,7 @@ class QueryBuilderTest {
             .fields("first", "second")
             .build()
 
-        assertEquals(Query("SELECT first, second FROM \"people\"", emptyList()), query)
+        assertEquals(Query("""SELECT "first", "second" FROM "people"""", emptyList()), query)
     }
 
     @Test
@@ -93,11 +94,11 @@ class QueryBuilderTest {
     fun `group by`() {
         val query = QueryBuilder()
             .from("people")
-            .fields("name", "count(name) AS total")
+            .fields("name", "count(name)" AS "total")
             .groupBy("name")
             .build()
 
-        assertEquals(Query("SELECT name, count(name) AS total FROM \"people\" GROUP BY name", emptyList()), query)
+        assertEquals(Query("""SELECT "name", count("name") AS "total" FROM "people" GROUP BY name""", emptyList()), query)
     }
 
     @Test
@@ -110,7 +111,7 @@ class QueryBuilderTest {
             .build()
 
         assertEquals(
-            Query("""SELECT name, count(name) FROM "people" GROUP BY name HAVING count(name) > ?""", listOf(20)),
+            Query("""SELECT "name", count("name") FROM "people" GROUP BY name HAVING count(name) > ?""", listOf(20)),
             query
         )
     }
@@ -120,10 +121,11 @@ class QueryBuilderTest {
         val query = QueryBuilder()
             .from("people")
             .fields("age")
+            .fields("age")
             .where(Eq("age", 20))
             .build()
 
-        assertEquals(Query("""SELECT age FROM "people" WHERE age = ?""", listOf(20)), query)
+        assertEquals(Query("""SELECT "age" FROM "people" WHERE age = ?""", listOf(20)), query)
     }
 
     @Test
@@ -134,7 +136,7 @@ class QueryBuilderTest {
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .build()
 
-        assertEquals(Query("SELECT age FROM \"people\" WHERE (nationality = ? AND age > ?)", listOf("Italian", 20)), query)
+        assertEquals(Query("""SELECT "age" FROM "people" WHERE (nationality = ? AND age > ?)""", listOf("Italian", 20)), query)
     }
 
     @Test
@@ -175,7 +177,7 @@ class QueryBuilderTest {
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
-            .fields("name", "count(name) AS total")
+            .fields("name", "count(name)" AS "total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
@@ -186,7 +188,7 @@ class QueryBuilderTest {
 
         assertEquals(
             Query(
-                """SELECT name, count(name) AS total """ +
+                """SELECT "name", count("name") AS "total" """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
                         """WHERE (nationality = ? AND age > ?) """ +
