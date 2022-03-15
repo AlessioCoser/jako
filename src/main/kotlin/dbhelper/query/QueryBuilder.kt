@@ -13,7 +13,7 @@ class QueryBuilder {
     private var from: From? = null
     private var fields: Fields = Fields.all()
     private var where: Where = EmptyWhere()
-    private var join: String = ""
+    private var joins: Joins = Joins()
     private var groupBy: String = ""
     private var having: String = ""
     private var havingParams: List<Any?> = emptyList()
@@ -43,12 +43,18 @@ class QueryBuilder {
         return this
     }
 
-    fun join(on: On) = join(InnerJoin(on))
-    fun leftJoin(on: On) = join(LeftJoin(on))
-    fun rightJoin(on: On) = join(RightJoin(on))
+    fun join(on: On): QueryBuilder {
+        joins.join(on)
+        return this
+    }
+    
+    fun leftJoin(on: On): QueryBuilder {
+        joins.leftJoin(on)
+        return this
+    }
 
-    private fun join(join: Join): QueryBuilder {
-        this.join += " ${join.statement()}"
+    fun rightJoin(on: On): QueryBuilder {
+        joins.rightJoin(on)
         return this
     }
 
@@ -88,7 +94,7 @@ class QueryBuilder {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return Query("SELECT $fields$from$join$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
+        return Query("SELECT $fields$from${joins.statement()}$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
     }
 
     companion object {
