@@ -1,7 +1,7 @@
 package dbhelper.query.join
 
-import dbhelper.query.join.On.Companion.eq
-import dbhelper.query.join.On.Companion.on
+import dbhelper.query.join.On.Companion.EQ
+import dbhelper.query.join.On.Companion.ON
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -22,28 +22,28 @@ class TypedJoinTest {
 
     @Test
     fun `inner join with innerJoin`() {
-        val join = InnerJoin("table" on "field_original" eq "field_table")
+        val join = InnerJoin("table" ON "field_original" EQ "field_table")
 
         assertEquals("INNER JOIN table ON field_original = field_table", join.statement())
     }
 
     @Test
     fun `inner join with USING`() {
-        val join = InnerJoin("table" on "field")
+        val join = InnerJoin("table" ON "field")
 
         assertEquals("INNER JOIN table USING(field)", join.statement())
     }
 
     @Test
     fun `left join`() {
-        val join = LeftJoin("table" on "field")
+        val join = LeftJoin("table" ON "field")
 
         assertEquals("LEFT JOIN table USING(field)", join.statement())
     }
 
     @Test
     fun `right join`() {
-        val join = RightJoin("table" on "field")
+        val join = RightJoin("table" ON "field")
 
         assertEquals("RIGHT JOIN table USING(field)", join.statement())
     }

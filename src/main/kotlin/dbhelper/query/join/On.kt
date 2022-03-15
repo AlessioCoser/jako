@@ -14,11 +14,11 @@ class On(private val table: String, private val field1: String, private val fiel
     }
 
     companion object {
-        infix fun On.eq(field2: String): On {
+        infix fun On.EQ(field2: String): On {
             return On(this, field2)
         }
 
-        infix fun String.on(field1: String): On {
+        infix fun String.ON(field1: String): On {
             return On(this, field1)
         }
     }

@@ -4,8 +4,8 @@ import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
 import dbhelper.query.join.On
-import dbhelper.query.join.On.Companion.eq
-import dbhelper.query.join.On.Companion.on
+import dbhelper.query.join.On.Companion.EQ
+import dbhelper.query.join.On.Companion.ON
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Desc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -158,8 +158,8 @@ class QueryBuilderTest {
     fun `join statement with dsl syntax`() {
         val query = QueryBuilder()
             .from("people")
-            .join("bank_account" on "people.id" eq "bank_account.person_id")
-            .rightJoin("pets" on "owner_id")
+            .join("bank_account" ON "people.id" EQ "bank_account.person_id")
+            .rightJoin("pets" ON "owner_id")
             .build()
 
         assertEquals(

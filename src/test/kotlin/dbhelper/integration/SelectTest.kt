@@ -5,18 +5,18 @@ import dbhelper.query.QueryBuilder
 import dbhelper.query.Row
 import dbhelper.query.RowParser
 import dbhelper.query.conditions.And
-import dbhelper.query.conditions.And.Companion.and
+import dbhelper.query.conditions.And.Companion.AND
 import dbhelper.query.conditions.Eq
-import dbhelper.query.conditions.Eq.Companion.eq
-import dbhelper.query.conditions.Gt.Companion.gt
+import dbhelper.query.conditions.Eq.Companion.EQ
+import dbhelper.query.conditions.Gt.Companion.GT
 import dbhelper.query.conditions.Or
-import dbhelper.query.conditions.Or.Companion.or
+import dbhelper.query.conditions.Or.Companion.OR
 import dbhelper.query.join.On
-import dbhelper.query.join.On.Companion.eq
-import dbhelper.query.join.On.Companion.on
+import dbhelper.query.join.On.Companion.EQ
+import dbhelper.query.join.On.Companion.ON
 import dbhelper.query.order.Asc
-import dbhelper.query.order.Asc.Companion.asc
-import dbhelper.query.order.Desc.Companion.desc
+import dbhelper.query.order.Asc.Companion.ASC
+import dbhelper.query.order.Desc.Companion.DESC
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -36,7 +36,7 @@ class SelectTest {
     fun `select with where`() {
         val user: User = db.select {
             from("users")
-            where(("city" eq "Milano") and ("age" gt 18))
+            where(("city" EQ "Milano") AND ("age" GT 18))
         }.first { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
@@ -46,7 +46,7 @@ class SelectTest {
     fun `select all`() {
         val users: List<User> = db.select {
             from("users")
-            where("city" eq "Firenze")
+            where("city" EQ "Firenze")
             limit(2)
         }.all { User(str("email"), str("name"), str("city"), int("age")) }
 
@@ -63,7 +63,7 @@ class SelectTest {
         val userEmail = db.select {
             from("users")
             fields("email")
-            where("city" eq "Lucca")
+            where("city" EQ "Lucca")
         }.first { str("email") }
 
         assertThat(userEmail).isEqualTo("luigi@verdi.it")
@@ -73,7 +73,7 @@ class SelectTest {
     fun `select multiple cities`() {
         val users = db.select {
             from("users")
-            where(("city" eq "Firenze") or ("city" eq "Lucca"))
+            where(("city" EQ "Firenze") OR ("city" EQ "Lucca"))
             limit(3)
         }.all { User(str("email"), str("name"), str("city"), int("age")) }
 
@@ -91,8 +91,8 @@ class SelectTest {
         val all: List<UserPetsCount> = db.select {
             fields("users.name", "count(pets.name) as count")
             from("users")
-            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-            join("pets" on "pets.owner" eq "users.email")
+            where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
+            join("pets" ON "pets.owner" EQ "users.email")
             groupBy("email")
         }.all { UserPetsCount(str("name"), int("count")) }
 
@@ -117,7 +117,7 @@ class SelectTest {
                 )
                 .join(On("pets", "pets.owner", "users.email"))
                 .groupBy("email")
-                .orderBy(asc("name"))
+                .orderBy(ASC("name"))
         ).all(UserPetsCountRowParser())
 
         assertThat(all).isEqualTo(
@@ -153,8 +153,8 @@ class SelectTest {
             QueryBuilder()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
-                .where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-                .join("pets" on "pets.owner" eq "users.email")
+                .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
+                .join("pets" ON "pets.owner" EQ "users.email")
                 .groupBy("email")
                 .orderBy(Asc("name"))
         ).first(UserPetsCountRowParser())
@@ -167,10 +167,10 @@ class SelectTest {
         val all = db.select {
             fields("users.name", "count(pets.name) as count")
             from("users")
-            where((("email" eq "mario@rossi.it") and ("city" eq "Firenze")) or ("users.age" eq 28))
-            leftJoin("pets" on "pets.owner" eq "users.email")
+            where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
+            leftJoin("pets" ON "pets.owner" EQ "users.email")
             groupBy("email")
-            orderBy(desc("name"))
+            orderBy(DESC("name"))
         }.all { UserPetsCount(str("name"), int("count")) }
 
         assertThat(all).isEqualTo(
