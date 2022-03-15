@@ -46,7 +46,7 @@ class QueryBuilderTest {
             .orderBy(Asc("first", "second"))
             .build()
 
-        assertEquals(Query("SELECT * FROM people ORDER BY first ASC, second ASC", emptyList()), query)
+        assertEquals(Query("""SELECT * FROM people ORDER BY "first" ASC, "second" ASC""", emptyList()), query)
     }
 
     @Test
@@ -56,7 +56,7 @@ class QueryBuilderTest {
             .orderBy(Asc("first"), Desc("second"))
             .build()
 
-        assertEquals(Query("SELECT * FROM people ORDER BY first ASC, second DESC", emptyList()), query)
+        assertEquals(Query("""SELECT * FROM people ORDER BY "first" ASC, "second" DESC""", emptyList()), query)
     }
 
     @Test
@@ -192,7 +192,7 @@ class QueryBuilderTest {
                         """WHERE (nationality = ? AND age > ?) """ +
                         """GROUP BY name """ +
                         """HAVING count(name) > ? """ +
-                        """ORDER BY first ASC, second ASC """ +
+                        """ORDER BY "first" ASC, "second" ASC """ +
                         """LIMIT 34 OFFSET 6""", listOf("Italian", 20, 12)
             ), query
         )
