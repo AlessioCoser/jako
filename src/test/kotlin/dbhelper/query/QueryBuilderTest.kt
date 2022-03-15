@@ -26,7 +26,7 @@ class QueryBuilderTest {
     fun `build simple query`() {
         val query = QueryBuilder().from("people").build()
 
-        assertEquals(Query("SELECT * FROM people", emptyList()), query)
+        assertEquals(Query("SELECT * FROM \"people\"", emptyList()), query)
     }
 
     @Test
@@ -36,7 +36,7 @@ class QueryBuilderTest {
             .fields("first", "second")
             .build()
 
-        assertEquals(Query("SELECT first, second FROM people", emptyList()), query)
+        assertEquals(Query("SELECT first, second FROM \"people\"", emptyList()), query)
     }
 
     @Test
@@ -46,7 +46,7 @@ class QueryBuilderTest {
             .orderBy(Asc("first", "second"))
             .build()
 
-        assertEquals(Query("""SELECT * FROM people ORDER BY "first" ASC, "second" ASC""", emptyList()), query)
+        assertEquals(Query("""SELECT * FROM "people" ORDER BY "first" ASC, "second" ASC""", emptyList()), query)
     }
 
     @Test
@@ -56,7 +56,7 @@ class QueryBuilderTest {
             .orderBy(Asc("first"), Desc("second"))
             .build()
 
-        assertEquals(Query("""SELECT * FROM people ORDER BY "first" ASC, "second" DESC""", emptyList()), query)
+        assertEquals(Query("""SELECT * FROM "people" ORDER BY "first" ASC, "second" DESC""", emptyList()), query)
     }
 
     @Test
@@ -66,7 +66,7 @@ class QueryBuilderTest {
             .single()
             .build()
 
-        assertEquals(Query("SELECT * FROM people LIMIT 1", emptyList()), query)
+        assertEquals(Query("SELECT * FROM \"people\" LIMIT 1", emptyList()), query)
     }
 
     @Test
@@ -76,7 +76,7 @@ class QueryBuilderTest {
             .limit(34)
             .build()
 
-        assertEquals(Query("SELECT * FROM people LIMIT 34", emptyList()), query)
+        assertEquals(Query("""SELECT * FROM "people" LIMIT 34""", emptyList()), query)
     }
 
     @Test
@@ -86,7 +86,7 @@ class QueryBuilderTest {
             .limit(34, 6)
             .build()
 
-        assertEquals(Query("SELECT * FROM people LIMIT 34 OFFSET 6", emptyList()), query)
+        assertEquals(Query("SELECT * FROM \"people\" LIMIT 34 OFFSET 6", emptyList()), query)
     }
 
     @Test
@@ -97,7 +97,7 @@ class QueryBuilderTest {
             .groupBy("name")
             .build()
 
-        assertEquals(Query("SELECT name, count(name) AS total FROM people GROUP BY name", emptyList()), query)
+        assertEquals(Query("SELECT name, count(name) AS total FROM \"people\" GROUP BY name", emptyList()), query)
     }
 
     @Test
@@ -110,7 +110,7 @@ class QueryBuilderTest {
             .build()
 
         assertEquals(
-            Query("SELECT name, count(name) FROM people GROUP BY name HAVING count(name) > ?", listOf(20)),
+            Query("""SELECT name, count(name) FROM "people" GROUP BY name HAVING count(name) > ?""", listOf(20)),
             query
         )
     }
@@ -123,7 +123,7 @@ class QueryBuilderTest {
             .where(Eq("age", 20))
             .build()
 
-        assertEquals(Query("SELECT age FROM people WHERE age = ?", listOf(20)), query)
+        assertEquals(Query("""SELECT age FROM "people" WHERE age = ?""", listOf(20)), query)
     }
 
     @Test
@@ -134,7 +134,7 @@ class QueryBuilderTest {
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .build()
 
-        assertEquals(Query("SELECT age FROM people WHERE (nationality = ? AND age > ?)", listOf("Italian", 20)), query)
+        assertEquals(Query("SELECT age FROM \"people\" WHERE (nationality = ? AND age > ?)", listOf("Italian", 20)), query)
     }
 
     @Test
@@ -147,7 +147,7 @@ class QueryBuilderTest {
 
         assertEquals(
             Query(
-                "SELECT * FROM people " +
+                "SELECT * FROM \"people\" " +
                         "INNER JOIN \"bank_account\" ON \"people\".\"id\" = \"bank_account\".\"person_id\" " +
                         "LEFT JOIN \"pets\" ON \"people\".\"id\" = \"pets\".\"owner\"", emptyList()
             ), query
@@ -164,7 +164,7 @@ class QueryBuilderTest {
 
         assertEquals(
             Query(
-                "SELECT * FROM people " +
+                "SELECT * FROM \"people\" " +
                         "INNER JOIN \"bank_account\" ON \"people\".\"id\" = \"bank_account\".\"person_id\" " +
                         "RIGHT JOIN \"pets\" USING(\"owner_id\")", emptyList()
             ), query
@@ -187,7 +187,7 @@ class QueryBuilderTest {
         assertEquals(
             Query(
                 """SELECT name, count(name) AS total """ +
-                        """FROM people """ +
+                        """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
                         """WHERE (nationality = ? AND age > ?) """ +
                         """GROUP BY name """ +

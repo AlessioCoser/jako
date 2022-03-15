@@ -1,5 +1,6 @@
 package dbhelper.query
 
+import dbhelper.query.Wrap.wrap
 import dbhelper.query.conditions.Condition
 import dbhelper.query.join.*
 import dbhelper.query.order.Order
@@ -25,7 +26,7 @@ class QueryBuilder {
     }
 
     fun from(table: String): QueryBuilder {
-        this.from = " FROM $table"
+        this.from = " FROM ${table.wrap()}"
         return this
     }
 
