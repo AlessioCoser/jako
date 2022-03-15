@@ -1,6 +1,6 @@
 package dbhelper.query.conditions
 
-import dbhelper.query.Fields.wrap
+import dbhelper.query.fields.Fields.wrap
 
 abstract class GenericCondition(
     private val left: String,

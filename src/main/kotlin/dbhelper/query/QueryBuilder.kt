@@ -1,6 +1,6 @@
 package dbhelper.query
 
-import dbhelper.query.Fields.wrap
+import dbhelper.query.fields.Fields.wrap
 import dbhelper.query.conditions.Condition
 import dbhelper.query.join.*
 import dbhelper.query.order.Order

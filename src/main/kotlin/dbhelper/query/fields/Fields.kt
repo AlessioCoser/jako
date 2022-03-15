@@ -1,7 +1,13 @@
-package dbhelper.query
+package dbhelper.query.fields
 
 object Fields {
     fun String.wrap(): String {
+        if(contains("(*)")) {
+            return this
+        }
+        if(contains("(\"") || (startsWith("\"") && endsWith("\""))) {
+            return this
+        }
         if(contains("(")) {
             return this
                 .replace(".", "\".\"")

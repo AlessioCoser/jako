@@ -1,9 +1,11 @@
 package dbhelper.query
 
-import dbhelper.query.Fields.AS
+import dbhelper.query.fields.Fields.AS
+import dbhelper.query.fields.Fields.wrap
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
+import dbhelper.query.fields.Aggregates.COUNT
 import dbhelper.query.join.On
 import dbhelper.query.join.On.Companion.EQ
 import dbhelper.query.join.On.Companion.ON
@@ -177,7 +179,7 @@ class QueryBuilderTest {
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
-            .fields("name", "count(name)" AS "total")
+            .fields("name", COUNT("name") AS "total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
