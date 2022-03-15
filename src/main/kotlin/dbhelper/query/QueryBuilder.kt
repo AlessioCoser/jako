@@ -10,7 +10,7 @@ import dbhelper.query.where.GenericWhere
 import dbhelper.query.where.Where
 
 class QueryBuilder {
-    private var from: String = ""
+    private var from: From? = null
     private var fields: Fields = Fields.all()
     private var where: Where = EmptyWhere()
     private var join: String = ""
@@ -29,7 +29,7 @@ class QueryBuilder {
     }
 
     fun from(table: String): QueryBuilder {
-        this.from = From(table).statement()
+        this.from = From(table)
         return this
     }
 
@@ -84,7 +84,7 @@ class QueryBuilder {
             return Query(raw, rawParams)
         }
 
-        if (from.isBlank()) {
+        if (from == null) {
             throw RuntimeException("Cannot generate query without table name")
         }
 
