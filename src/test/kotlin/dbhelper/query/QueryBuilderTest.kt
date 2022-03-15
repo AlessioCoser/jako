@@ -211,17 +211,6 @@ class QueryBuilderTest {
     }
 
     @Test
-    fun `multiple where statement`() {
-        val query = QueryBuilder()
-            .from("people")
-            .fields("age")
-            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
-            .build()
-
-        assertEquals(Query("""SELECT "age" FROM "people" WHERE ("nationality" = ? AND "age" > ?)""", listOf("Italian", 20)), query)
-    }
-
-    @Test
     fun `multiple join statement`() {
         val query = QueryBuilder()
             .from("people")
@@ -260,7 +249,7 @@ class QueryBuilderTest {
         val query = QueryBuilder()
             .from("people")
             .fields("name", COUNT("*") AS "total")
-            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
+            .where(Eq("nationality", "Italian"))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
             .having(Gt(COUNT("*"), 12))
@@ -273,11 +262,11 @@ class QueryBuilderTest {
                 """SELECT "name", count(*) AS "total" """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
-                        """WHERE ("nationality" = ? AND "age" > ?) """ +
+                        """WHERE "nationality" = ? """ +
                         """GROUP BY "name" """ +
                         """HAVING count(*) > ? """ +
                         """ORDER BY "first" ASC, "second" ASC """ +
-                        """LIMIT 34 OFFSET 6""", listOf("Italian", 20, 12)
+                        """LIMIT 34 OFFSET 6""", listOf("Italian", 12)
             ), query
         )
     }
