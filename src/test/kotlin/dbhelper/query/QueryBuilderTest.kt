@@ -259,23 +259,23 @@ class QueryBuilderTest {
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
-            .fields("name", COUNT("name") AS "total")
+            .fields("name", COUNT("*") AS "total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
-            .having(Gt(COUNT("name"), 12))
+            .having(Gt(COUNT("*"), 12))
             .orderBy(Asc("first", "second"))
             .limit(34, 6)
             .build()
 
         assertEquals(
             Query(
-                """SELECT "name", count("name") AS "total" """ +
+                """SELECT "name", count(*) AS "total" """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
                         """WHERE ("nationality" = ? AND "age" > ?) """ +
                         """GROUP BY "name" """ +
-                        """HAVING count("name") > ? """ +
+                        """HAVING count(*) > ? """ +
                         """ORDER BY "first" ASC, "second" ASC """ +
                         """LIMIT 34 OFFSET 6""", listOf("Italian", 20, 12)
             ), query

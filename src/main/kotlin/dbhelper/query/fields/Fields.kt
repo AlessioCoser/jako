@@ -2,7 +2,7 @@ package dbhelper.query.fields
 
 object Fields {
     fun String.wrap(): String {
-        if(contains("(*)")) {
+        if(contains("(*)") || this == "*") {
             return this
         }
         if(contains("(\"") || (startsWith("\"") && endsWith("\""))) {
