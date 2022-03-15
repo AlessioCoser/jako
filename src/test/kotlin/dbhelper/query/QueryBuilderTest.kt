@@ -5,7 +5,12 @@ import dbhelper.query.fields.Fields.wrap
 import dbhelper.query.conditions.And
 import dbhelper.query.conditions.Eq
 import dbhelper.query.conditions.Gt
+import dbhelper.query.fields.Aggregates.AVG
 import dbhelper.query.fields.Aggregates.COUNT
+import dbhelper.query.fields.Aggregates.EVERY
+import dbhelper.query.fields.Aggregates.MAX
+import dbhelper.query.fields.Aggregates.MIN
+import dbhelper.query.fields.Aggregates.SUM
 import dbhelper.query.join.On
 import dbhelper.query.join.On.Companion.EQ
 import dbhelper.query.join.On.Companion.ON
@@ -119,6 +124,81 @@ class QueryBuilderTest {
     }
 
     @Test
+    fun `group by with having sum`() {
+        val query = QueryBuilder()
+            .from("people")
+            .fields("name", SUM("name"))
+            .groupBy("name")
+            .having(Gt(SUM("name"), 20))
+            .build()
+
+        assertEquals(
+            Query("""SELECT "name", sum("name") FROM "people" GROUP BY "name" HAVING sum("name") > ?""", listOf(20)),
+            query
+        )
+    }
+
+    @Test
+    fun `group by with having min`() {
+        val query = QueryBuilder()
+            .from("people")
+            .fields("name", MIN("name"))
+            .groupBy("name")
+            .having(Gt(MIN("name"), 20))
+            .build()
+
+        assertEquals(
+            Query("""SELECT "name", min("name") FROM "people" GROUP BY "name" HAVING min("name") > ?""", listOf(20)),
+            query
+        )
+    }
+
+    @Test
+    fun `group by with having max`() {
+        val query = QueryBuilder()
+            .from("people")
+            .fields("name", MAX("name"))
+            .groupBy("name")
+            .having(Gt(MAX("name"), 20))
+            .build()
+
+        assertEquals(
+            Query("""SELECT "name", max("name") FROM "people" GROUP BY "name" HAVING max("name") > ?""", listOf(20)),
+            query
+        )
+    }
+
+    @Test
+    fun `group by with having every`() {
+        val query = QueryBuilder()
+            .from("people")
+            .fields("name", EVERY("name"))
+            .groupBy("name")
+            .having(Gt(EVERY("name"), 20))
+            .build()
+
+        assertEquals(
+            Query("""SELECT "name", every("name") FROM "people" GROUP BY "name" HAVING every("name") > ?""", listOf(20)),
+            query
+        )
+    }
+
+    @Test
+    fun `group by with having avg`() {
+        val query = QueryBuilder()
+            .from("people")
+            .fields("name", AVG("name"))
+            .groupBy("name")
+            .having(Gt(AVG("name"), 20))
+            .build()
+
+        assertEquals(
+            Query("""SELECT "name", avg("name") FROM "people" GROUP BY "name" HAVING avg("name") > ?""", listOf(20)),
+            query
+        )
+    }
+
+    @Test
     fun `where statement`() {
         val query = QueryBuilder()
             .from("people")
@@ -183,7 +263,7 @@ class QueryBuilderTest {
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .groupBy("name")
-            .having(Gt("count(name)", 12))
+            .having(Gt(COUNT("name"), 12))
             .orderBy(Asc("first", "second"))
             .limit(34, 6)
             .build()
