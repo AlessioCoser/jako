@@ -111,7 +111,7 @@ class QueryBuilderTest {
             .build()
 
         assertEquals(
-            Query("""SELECT "name", count("name") FROM "people" GROUP BY name HAVING count(name) > ?""", listOf(20)),
+            Query("""SELECT "name", count("name") FROM "people" GROUP BY name HAVING count("name") > ?""", listOf(20)),
             query
         )
     }
@@ -125,7 +125,7 @@ class QueryBuilderTest {
             .where(Eq("age", 20))
             .build()
 
-        assertEquals(Query("""SELECT "age" FROM "people" WHERE age = ?""", listOf(20)), query)
+        assertEquals(Query("""SELECT "age" FROM "people" WHERE "age" = ?""", listOf(20)), query)
     }
 
     @Test
@@ -136,7 +136,7 @@ class QueryBuilderTest {
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
             .build()
 
-        assertEquals(Query("""SELECT "age" FROM "people" WHERE (nationality = ? AND age > ?)""", listOf("Italian", 20)), query)
+        assertEquals(Query("""SELECT "age" FROM "people" WHERE ("nationality" = ? AND "age" > ?)""", listOf("Italian", 20)), query)
     }
 
     @Test
@@ -191,9 +191,9 @@ class QueryBuilderTest {
                 """SELECT "name", count("name") AS "total" """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
-                        """WHERE (nationality = ? AND age > ?) """ +
+                        """WHERE ("nationality" = ? AND "age" > ?) """ +
                         """GROUP BY name """ +
-                        """HAVING count(name) > ? """ +
+                        """HAVING count("name") > ? """ +
                         """ORDER BY "first" ASC, "second" ASC """ +
                         """LIMIT 34 OFFSET 6""", listOf("Italian", 20, 12)
             ), query
