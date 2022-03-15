@@ -1,14 +1,16 @@
 package dbhelper.query.join
 
+import dbhelper.query.Wrap.wrap
+
 class On(private val table: String, private val field1: String, private val field2: String? = null) {
 
     constructor(join: On, field2: String) : this(join.table, join.field1, field2)
 
     override fun toString(): String {
         if (field2 == null) {
-            return "$table USING($field1)"
+            return "${table.wrap()} USING(${field1.wrap()})"
         }
-        return "$table ON $field1 = $field2"
+        return "${table.wrap()} ON ${field1.wrap()} = ${field2.wrap()}"
     }
 
     companion object {
@@ -21,4 +23,3 @@ class On(private val table: String, private val field1: String, private val fiel
         }
     }
 }
-
