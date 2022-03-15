@@ -98,7 +98,7 @@ class QueryBuilderTest {
             .groupBy("name")
             .build()
 
-        assertEquals(Query("""SELECT "name", count("name") AS "total" FROM "people" GROUP BY name""", emptyList()), query)
+        assertEquals(Query("""SELECT "name", count("name") AS "total" FROM "people" GROUP BY "name"""", emptyList()), query)
     }
 
     @Test
@@ -111,7 +111,7 @@ class QueryBuilderTest {
             .build()
 
         assertEquals(
-            Query("""SELECT "name", count("name") FROM "people" GROUP BY name HAVING count("name") > ?""", listOf(20)),
+            Query("""SELECT "name", count("name") FROM "people" GROUP BY "name" HAVING count("name") > ?""", listOf(20)),
             query
         )
     }
@@ -192,7 +192,7 @@ class QueryBuilderTest {
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
                         """WHERE ("nationality" = ? AND "age" > ?) """ +
-                        """GROUP BY name """ +
+                        """GROUP BY "name" """ +
                         """HAVING count("name") > ? """ +
                         """ORDER BY "first" ASC, "second" ASC """ +
                         """LIMIT 34 OFFSET 6""", listOf("Italian", 20, 12)

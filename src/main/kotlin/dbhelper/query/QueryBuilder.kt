@@ -56,7 +56,7 @@ class QueryBuilder {
     }
 
     fun groupBy(vararg fields: String): QueryBuilder {
-        groupBy = " GROUP BY ${fields.joinToString(", ")}"
+        groupBy = " GROUP BY ${fields.joinToString(", ") { it.wrap() }}"
         return this
     }
 
