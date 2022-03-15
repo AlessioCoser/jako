@@ -32,7 +32,7 @@ class QueryBuilder {
     }
 
     fun fields(vararg fields: String): QueryBuilder {
-        this.fields = Fields(fields).statement()
+        this.fields = Fields(fields.toList()).statement()
         return this
     }
 

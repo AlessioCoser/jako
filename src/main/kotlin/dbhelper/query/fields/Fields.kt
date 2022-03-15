@@ -1,6 +1,6 @@
 package dbhelper.query.fields
 
-class Fields(private val fields: Array<out String>) {
+class Fields(private val fields: List<String>) {
     fun statement() = fields.joinToString(separator = ", ") { it.wrap() }
 
     companion object {
@@ -11,8 +11,12 @@ class Fields(private val fields: Array<out String>) {
         fun MIN(fieldName: String) = "min(${fieldName.wrap()})"
         fun SUM(fieldName: String) = "sum(${fieldName.wrap()})"
 
+        infix fun String.AS(name: String): String {
+            return "${this.wrap()} AS ${name.wrap()}"
+        }
+
         fun String.wrap(): String {
-            if(contains("(*)") || this == "*") {
+            if(contains("(*)") || this == "*" || contains("AS")) {
                 return this
             }
             if(contains("(\"") || (startsWith("\"") && endsWith("\""))) {
@@ -25,10 +29,6 @@ class Fields(private val fields: Array<out String>) {
                     .replace(")", "\")")
             }
             return """"${this.replace(".", "\".\"")}""""
-        }
-
-        infix fun String.AS(name: String): String {
-            return "$this AS ${name.wrap()}"
         }
     }
 }
