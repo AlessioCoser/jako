@@ -9,8 +9,7 @@ import dbhelper.query.order.Order
 class QueryBuilder {
     private var from: String = ""
     private var fields: String = "*"
-    private var where: String = ""
-    private var whereParams: List<Any?> = emptyList()
+    private var where: Where = EmptyWhere()
     private var join: String = ""
     private var groupBy: String = ""
     private var having: String = ""
@@ -37,8 +36,7 @@ class QueryBuilder {
     }
 
     fun where(condition: Condition): QueryBuilder {
-        where = " WHERE ${condition.statement()}"
-        whereParams = condition.params()
+        where = WhereStatement(condition)
         return this
     }
 
@@ -87,7 +85,7 @@ class QueryBuilder {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return Query("SELECT $fields$from$join$where$groupBy$having$orderBy$limit", whereParams.plus(havingParams))
+        return Query("SELECT $fields$from$join${where.statement()}$groupBy$having$orderBy$limit", where.params().plus(havingParams))
     }
 
     companion object {
