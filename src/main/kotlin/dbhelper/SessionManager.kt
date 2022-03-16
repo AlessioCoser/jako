@@ -1,10 +1,18 @@
 package dbhelper
 
-import java.sql.DriverManager
+import com.zaxxer.hikari.HikariDataSource
 
-class SessionManager(private val jdbc: String, private val user: String, private val password: String) {
+class SessionManager(jdbc: String, user: String, password: String) {
+    private val dataSource = HikariDataSource()
+
+    init {
+        dataSource.jdbcUrl = jdbc
+        dataSource.username = user
+        dataSource.password = password
+    }
+
     fun <T> session(fn: Session.() -> T): T {
-        return DriverManager.getConnection(jdbc, user, password).use {
+        return dataSource.connection.use {
             fn(Session(it))
         }
     }
