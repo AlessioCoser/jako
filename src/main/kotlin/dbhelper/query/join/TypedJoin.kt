@@ -1,7 +1,7 @@
 package dbhelper.query.join
 
 sealed class TypedJoin(private val type: String, private val on: On) : Join {
-    override fun statement(): String {
+    override fun toString(): String {
         return "$type $on"
     }
 }

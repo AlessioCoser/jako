@@ -94,7 +94,7 @@ class QueryBuilder {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return Query("SELECT $fields$from${joins.statement()}$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
+        return Query("SELECT $fields$from$joins$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
     }
 
     companion object {

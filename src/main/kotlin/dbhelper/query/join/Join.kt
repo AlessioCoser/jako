@@ -1,5 +1,5 @@
 package dbhelper.query.join
 
 interface Join {
-    fun statement(): String
+    override fun toString(): String
 }
