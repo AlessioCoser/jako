@@ -3,11 +3,12 @@ package dbhelper.query
 import dbhelper.query.fields.Fields.Companion.wrap
 import dbhelper.query.conditions.Condition
 import dbhelper.query.fields.Fields
+import dbhelper.query.having.EmptyHaving
+import dbhelper.query.having.GenericHaving
+import dbhelper.query.having.Having
 import dbhelper.query.join.*
 import dbhelper.query.order.Order
-import dbhelper.query.where.EmptyWhere
-import dbhelper.query.where.GenericWhere
-import dbhelper.query.where.Where
+import dbhelper.query.where.*
 
 class QueryBuilder {
     private var from: From? = null
@@ -15,8 +16,7 @@ class QueryBuilder {
     private var where: Where = EmptyWhere()
     private var joins: Joins = Joins()
     private var groupBy: String = ""
-    private var having: String = ""
-    private var havingParams: List<Any?> = emptyList()
+    private var having: Having = EmptyHaving()
     private var orderBy: String = ""
     private var limit: String = ""
     private var raw: String = ""
@@ -69,8 +69,7 @@ class QueryBuilder {
     }
 
     fun having(condition: Condition): QueryBuilder {
-        having = " HAVING ${condition.statement()}"
-        havingParams = condition.params()
+        having = GenericHaving(condition)
         return this
     }
 
@@ -94,8 +93,10 @@ class QueryBuilder {
             throw RuntimeException("Cannot generate query without table name")
         }
 
-        return Query("SELECT $fields$from$joins$where$groupBy$having$orderBy$limit", where.params().plus(havingParams))
+        return Query("SELECT $fields$from$joins$where$groupBy$having$orderBy$limit", allParams())
     }
+
+    private fun allParams() = where.params().plus(having.params())
 
     companion object {
         @JvmStatic
