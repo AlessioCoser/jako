@@ -11,6 +11,8 @@ import dbhelper.query.conditions.Eq.Companion.EQ
 import dbhelper.query.conditions.Gt.Companion.GT
 import dbhelper.query.conditions.Or
 import dbhelper.query.conditions.Or.Companion.OR
+import dbhelper.query.fields.Fields.Companion.AS
+import dbhelper.query.fields.Fields.Companion.COUNT
 import dbhelper.query.join.On
 import dbhelper.query.join.On.Companion.EQ
 import dbhelper.query.join.On.Companion.ON
@@ -165,7 +167,7 @@ class SelectTest {
     @Test
     fun leftJoin() {
         val all = db.select {
-            fields("users.name", "count(pets.name) as count")
+            fields("users.name", COUNT("pets.name") AS "count")
             from("users")
             where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
             leftJoin("pets" ON "pets.owner" EQ "users.email")
