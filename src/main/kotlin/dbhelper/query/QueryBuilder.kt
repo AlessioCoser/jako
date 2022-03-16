@@ -11,20 +11,18 @@ import dbhelper.query.order.Order
 import dbhelper.query.where.*
 
 class QueryBuilder {
+    private var rawQuery: Query? = null
     private var from: From? = null
     private var fields: Fields = Fields.all()
     private var where: Where = EmptyWhere()
     private var joins: Joins = Joins()
-    private var groupBy: String = ""
     private var having: Having = EmptyHaving()
+    private var groupBy: String = ""
     private var orderBy: String = ""
     private var limit: String = ""
-    private var raw: String = ""
-    private var rawParams: List<Any?> = emptyList()
 
     fun raw(statement: String, vararg params: Any?): QueryBuilder {
-        raw = statement
-        rawParams = params.toList()
+        rawQuery = Query(statement, params.toList())
         return this
     }
 
@@ -85,15 +83,11 @@ class QueryBuilder {
     fun single() = limit(1)
 
     fun build(): Query {
-        if (raw.isNotBlank()) {
-            return Query(raw, rawParams)
-        }
+        return rawQuery ?: Query("SELECT $fields${buildFrom()}$joins$where$groupBy$having$orderBy$limit", allParams())
+    }
 
-        if (from == null) {
-            throw RuntimeException("Cannot generate query without table name")
-        }
-
-        return Query("SELECT $fields$from$joins$where$groupBy$having$orderBy$limit", allParams())
+    private fun buildFrom(): From {
+        return from ?: throw RuntimeException("Cannot generate query without table name")
     }
 
     private fun allParams() = where.params().plus(having.params())
