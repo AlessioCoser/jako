@@ -9,6 +9,9 @@ import dbhelper.query.having.NoHaving
 import dbhelper.query.having.GenericHaving
 import dbhelper.query.having.Having
 import dbhelper.query.join.*
+import dbhelper.query.limit.Limit
+import dbhelper.query.limit.LimitTo
+import dbhelper.query.limit.NoLimit
 import dbhelper.query.order.NoOrder
 import dbhelper.query.order.Order
 import dbhelper.query.order.OrderBy
@@ -24,7 +27,7 @@ class QueryBuilder {
     private var having: Having = NoHaving()
     private var orderBy: Order = NoOrder()
     private var groupBy: Group = NoGroup()
-    private var limit: String = ""
+    private var limit: Limit = NoLimit()
 
     fun raw(statement: String, vararg params: Any?): QueryBuilder {
         rawQuery = Query(statement, params.toList())
@@ -77,11 +80,7 @@ class QueryBuilder {
     }
 
     fun limit(limit: Int, offset: Int = 0): QueryBuilder {
-        if (offset != 0) {
-            this.limit = " LIMIT $limit OFFSET $offset"
-        } else {
-            this.limit = " LIMIT $limit"
-        }
+        this.limit = LimitTo(limit, offset)
         return this
     }
 
