@@ -20,11 +20,16 @@ class JoinsTest {
     }
 
     @Test
-    fun `joins on 2 fields`() {
+    fun `joins with two joins`() {
         val joins = Joins()
-        joins.join(On("table", "field1", "field2"))
+        joins.join(On("table", "field1"))
+        joins.join(On("another", "field2"))
 
-        assertEquals(" INNER JOIN \"table\" ON \"field1\" = \"field2\"", joins.toString())
+        assertEquals(
+            " INNER JOIN \"table\" USING(\"field1\")" +
+            " INNER JOIN \"another\" USING(\"field2\")",
+            joins.toString()
+        )
     }
 
     @Test
