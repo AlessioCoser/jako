@@ -2,8 +2,7 @@ package dbhelper.integration
 
 import dbhelper.Database
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertArrayEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -40,11 +39,7 @@ class RowSqlTest {
                 doubleOrNull("double"),
                 dateOrNull("date"),
                 localDateOrNull("local_date"),
-                timeOrNull("time"),
-                timestampOrNull("timestamp"),
-                timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
-                timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
-                timestampOrNull("timestamp_no_zone")
+                timeOrNull("time")
             )
         }
 
@@ -52,15 +47,30 @@ class RowSqlTest {
             listOf(
                 Types(
                     1, "str", true, 1, 999, 3, 3.4f, 5.6,
-                    Date.valueOf("1980-01-01"), LocalDate.of(1980, 1, 1), Time.valueOf(LocalTime.of(1, 2, 3, 123)),
-                    Timestamp.valueOf("2013-03-21 16:10:59.897666"),
-                    Timestamp.valueOf("2013-03-21 11:10:59.897666"),
-                    Timestamp.valueOf("2013-03-21 10:10:59.897666"),
-                    Timestamp.valueOf("2013-03-21 10:10:59.897666")
+                    Date.valueOf("1980-01-01"), LocalDate.of(1980, 1, 1), Time.valueOf(LocalTime.of(1, 2, 3, 123))
                 ),
-                Types(2, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+                Types(2, null, null, null, null, null, null, null, null, null, null)
             )
         )
+    }
+
+    @Test
+    fun `select timestamps`() {
+        val arr: List<Timestamps?> = db.select {
+            from("types")
+            fields("timestamp", "timestamp_no_zone")
+        }.all { Timestamps(
+            timestampOrNull("timestamp"),
+            timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
+            timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
+            timestampOrNull("timestamp_no_zone")
+        ) }
+
+        assertEquals(Timestamp.valueOf("2013-03-21 16:10:59.897666"), arr[0]!!.zone)
+        assertEquals(Timestamp.valueOf("2013-03-21 11:10:59.897666"), arr[0]!!.noZoneUtc)
+        assertEquals(Timestamp.valueOf("2013-03-21 10:10:59.897666"), arr[0]!!.noZoneEurope)
+        assertEquals(Timestamp.valueOf("2013-03-21 10:10:59.897666"), arr[0]!!.noZone)
+        assertEquals(Timestamps(null, null, null, null), arr[1])
     }
 
     @Test
@@ -86,9 +96,12 @@ data class Types(
     val double: Double?,
     val date: Date?,
     val localDate: LocalDate?,
-    val time: Time?,
-    val timestampZone: Timestamp?,
-    val timestampNoZoneUtc: Timestamp?,
-    val timestampNoZoneEurope: Timestamp?,
-    val timestampNoZone: Timestamp?
+    val time: Time?
+)
+
+data class Timestamps(
+    val zone: Timestamp?,
+    val noZoneUtc: Timestamp?,
+    val noZoneEurope: Timestamp?,
+    val noZone: Timestamp?
 )
