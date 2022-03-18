@@ -7,7 +7,7 @@ abstract class GenericCondition(
     private val operator: String,
     private val right: Any?
 ) : Condition {
-    override fun statement(): String {
+    override fun toString(): String {
         return "${left.wrap()} $operator ?"
     }
 

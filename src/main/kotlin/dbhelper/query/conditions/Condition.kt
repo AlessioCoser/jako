@@ -1,6 +1,6 @@
 package dbhelper.query.conditions
 
 interface Condition {
-    fun statement(): String
+    override fun toString(): String
     fun params(): List<Any?>
 }

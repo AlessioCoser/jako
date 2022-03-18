@@ -1,8 +1,8 @@
 package dbhelper.query.conditions
 
 class And(private val left: Condition, private val right: Condition) : Condition {
-    override fun statement(): String {
-        return "(${left.statement()} AND ${right.statement()})"
+    override fun toString(): String {
+        return "($left AND $right)"
     }
 
     override fun params() = left.params().plus(right.params())

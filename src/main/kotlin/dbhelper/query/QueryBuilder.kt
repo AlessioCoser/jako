@@ -57,7 +57,7 @@ class QueryBuilder {
     }
 
     fun orderBy(vararg order: Order): QueryBuilder {
-        orderBy = " ORDER BY ${order.joinToString(", ") { it.statement() }}"
+        orderBy = " ORDER BY ${order.joinToString(", ") { "$it" }}"
         return this
     }
 
