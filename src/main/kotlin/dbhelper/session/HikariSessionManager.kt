@@ -1,8 +1,8 @@
-package dbhelper
+package dbhelper.session
 
 import com.zaxxer.hikari.HikariDataSource
 
-class SessionManager(jdbc: String, user: String, password: String) {
+class HikariSessionManager(jdbc: String, user: String, password: String): SessionManager {
     private val dataSource = HikariDataSource()
 
     init {
@@ -12,7 +12,7 @@ class SessionManager(jdbc: String, user: String, password: String) {
         // dataSource.maximumPoolSize // start with this: ((2 * core_count) + number_of_disks)
     }
 
-    fun <T> session(fn: Session.() -> T): T {
+    override fun <T> session(fn: Session.() -> T): T {
         return dataSource.connection.use {
             fn(Session(it))
         }

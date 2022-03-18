@@ -3,6 +3,7 @@ package dbhelper
 import dbhelper.query.QueryBuilder
 import dbhelper.query.Row
 import dbhelper.query.RowParser
+import dbhelper.session.SessionManager
 
 class QueryExecutor(private val manager: SessionManager, private val queryBuilder: QueryBuilder) {
 

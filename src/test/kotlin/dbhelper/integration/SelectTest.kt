@@ -19,6 +19,7 @@ import dbhelper.query.join.On.Companion.ON
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Asc.Companion.ASC
 import dbhelper.query.order.Desc.Companion.DESC
+import dbhelper.session.HikariSessionManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -32,7 +33,7 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
-    private val db = Database("jdbc:postgresql://localhost:5432/tests", "user", "password")
+    private val db = Database(HikariSessionManager("jdbc:postgresql://localhost:5432/tests", "user", "password"))
 
     @Test
     fun `select with where`() {

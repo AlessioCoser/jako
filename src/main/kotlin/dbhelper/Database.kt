@@ -1,9 +1,11 @@
 package dbhelper
 
 import dbhelper.query.QueryBuilder
+import dbhelper.session.SessionManager
+import dbhelper.session.SimpleSessionManager
 
-class Database(jdbc: String, user: String, password: String) {
-    private val manager = SessionManager(jdbc, user, password)
+class Database(private val manager: SessionManager) {
+    constructor(jdbc: String, user: String, password: String): this(SimpleSessionManager(jdbc, user, password))
 
     fun select(prepare: QueryBuilder.() -> Unit): QueryExecutor {
         val queryBuilder = QueryBuilder()
