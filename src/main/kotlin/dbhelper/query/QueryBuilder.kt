@@ -7,7 +7,10 @@ import dbhelper.query.having.EmptyHaving
 import dbhelper.query.having.GenericHaving
 import dbhelper.query.having.Having
 import dbhelper.query.join.*
+import dbhelper.query.order.NoOrder
 import dbhelper.query.order.Order
+import dbhelper.query.order.OrderBy
+import dbhelper.query.order.OrderField
 import dbhelper.query.where.*
 
 class QueryBuilder {
@@ -18,7 +21,7 @@ class QueryBuilder {
     private var joins: Joins = Joins()
     private var having: Having = EmptyHaving()
     private var groupBy: String = ""
-    private var orderBy: String = ""
+    private var orderBy: Order = NoOrder()
     private var limit: String = ""
 
     fun raw(statement: String, vararg params: Any?): QueryBuilder {
@@ -56,8 +59,8 @@ class QueryBuilder {
         return this
     }
 
-    fun orderBy(vararg order: Order): QueryBuilder {
-        orderBy = " ORDER BY ${order.joinToString(", ") { "$it" }}"
+    fun orderBy(vararg fields: OrderField): QueryBuilder {
+        orderBy = OrderBy(fields.toList())
         return this
     }
 
