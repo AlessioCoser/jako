@@ -1,5 +1,7 @@
 package dbhelper.query.order
 
+import dbhelper.query.order.Asc.Companion.ASC
+import dbhelper.query.order.Desc.Companion.DESC
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -7,6 +9,13 @@ class OrderFieldTest {
     @Test
     fun `asc one field`() {
         val asc = Asc("field1")
+
+        assertEquals("\"field1\" ASC", asc.toString())
+    }
+
+    @Test
+    fun `asc dsl`() {
+        val asc = ASC("field1")
 
         assertEquals("\"field1\" ASC", asc.toString())
     }
@@ -23,6 +32,13 @@ class OrderFieldTest {
         val desc = Desc("field1")
 
         assertEquals("\"field1\" DESC", desc.toString())
+    }
+
+    @Test
+    fun `desc dsl`() {
+        val asc = DESC("field1")
+
+        assertEquals("\"field1\" DESC", asc.toString())
     }
 
     @Test
