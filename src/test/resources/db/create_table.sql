@@ -48,10 +48,10 @@ CREATE TABLE public."types" (
                                 "double" double precision,
                                 "date" date,
                                 "local_date" date,
-                                "time" time
+                                "time" time,
+                                "timestamp" timestamp with time zone,
+                                "timestamp_no_zone" timestamp without time zone
 --    "time_no_zone" time(4) without time zone,
---    "timestamp" timestamp,
---    "timestamp_no_zone" timestamp without time zone,
 --    "bytes" bytea
 );
 
@@ -65,10 +65,10 @@ INSERT INTO public."types"
  "double",
  "date",
  "local_date",
- "time"
---      "time_no_zone",
---      "timestamp",
---      "timestamp_no_zone"
+ "time",
+ "timestamp",
+ "timestamp_no_zone"
+--      "time_no_zone"
 --      "bytes",
 )
 VALUES
@@ -81,10 +81,10 @@ VALUES
      5.6,
      '1980-01-01',
      '1980-01-01',
-     '01:02:03'
+     '01:02:03',
+     '2013-03-21 10:10:59.897666-05',
+     '2013-03-21 10:10:59.897666'
 --      '09:08.1234',
---      '2013-03-21 09:10:59.897666 +02:00',
---      '2013-03-21 09:10:59.897666'
 --      E'\xC744'::bytea,
     ),
-    (null, null, null, null, null, null, null, null, null, null);
+    (null, null, null, null, null, null, null, null, null, null, null, null);

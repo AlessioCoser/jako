@@ -4,6 +4,7 @@ import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
 import java.time.LocalDate
+import java.util.*
 
 interface Row {
     fun strOrNull(fieldName: String): String?
@@ -26,6 +27,7 @@ interface Row {
     fun localDate(fieldName: String): LocalDate
     fun timeOrNull(fieldName: String): Time?
     fun time(fieldName: String): Time
-    fun timestamp(fieldName: String): Timestamp
+    fun timestampOrNull(fieldName: String, calendar: Calendar? = null): Timestamp?
+    fun timestamp(fieldName: String, calendar: Calendar? = null): Timestamp
     fun bytes(fieldName: String): ByteArray
 }

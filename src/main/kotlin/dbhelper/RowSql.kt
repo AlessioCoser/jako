@@ -4,6 +4,7 @@ import dbhelper.query.Row
 import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Timestamp
+import java.util.*
 
 class RowSql(private val resultSet: ResultSet) : Row {
     override fun strOrNull(fieldName: String) = nullable(resultSet.getString(fieldName))
@@ -26,11 +27,11 @@ class RowSql(private val resultSet: ResultSet) : Row {
     override fun localDate(fieldName: String) = localDateOrNull(fieldName)!!
     override fun timeOrNull(fieldName: String): Time? = nullable(resultSet.getTime(fieldName))
     override fun time(fieldName: String): Time = timeOrNull(fieldName)!!
-    override fun timestamp(fieldName: String): Timestamp = resultSet.getTimestamp(fieldName)
+    override fun timestampOrNull(fieldName: String, calendar: Calendar?): Timestamp? = nullable(resultSet.getTimestamp(fieldName, calendar))
+    override fun timestamp(fieldName: String, calendar: Calendar?): Timestamp = timestampOrNull(fieldName, calendar)!!
     override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)
 
     private fun <T> nullable(value: T?): T? {
-        println(value)
         if (resultSet.wasNull()) {
             return null
         }
