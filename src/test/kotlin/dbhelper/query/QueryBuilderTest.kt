@@ -29,12 +29,21 @@ class QueryBuilderTest {
     }
 
     @Test
+    fun `build single query`() {
+        val query = QueryBuilder().from("people").single().build()
+
+        assertEquals(Query("SELECT * FROM \"people\" LIMIT 1", emptyList()), query)
+    }
+
+    @Test
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
             .fields("name", COUNT("*") AS "total")
             .where(Eq("nationality", "Italian"))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
+            .leftJoin(On("left", "identifier"))
+            .rightJoin(On("right", "people.id", "bank_account.person_id"))
             .groupBy("name")
             .having(Gt(COUNT("*"), 12))
             .orderBy(Asc("first", "second"))
@@ -46,6 +55,8 @@ class QueryBuilderTest {
                 """SELECT "name", count(*) AS "total" """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
+                        """LEFT JOIN "left" USING("identifier") """ +
+                        """RIGHT JOIN "right" ON "people"."id" = "bank_account"."person_id" """ +
                         """WHERE "nationality" = ? """ +
                         """GROUP BY "name" """ +
                         """HAVING count(*) > ? """ +

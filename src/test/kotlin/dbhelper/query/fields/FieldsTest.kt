@@ -58,4 +58,16 @@ class FieldsTest {
         val fields = Fields(listOf(SUM("field") AS "name"))
         assertEquals("sum(\"field\") AS \"name\"", fields.toString())
     }
+
+    @Test
+    fun `do not quote when already present an aggregate function`() {
+        val fields = Fields(listOf("count(\"primo\")"))
+        assertEquals("count(\"primo\")", fields.toString())
+    }
+
+    @Test
+    fun `do quote only inside when already present an aggregate function`() {
+        val fields = Fields(listOf("count(primo.secondo)"))
+        assertEquals("count(\"primo\".\"secondo\")", fields.toString())
+    }
 }

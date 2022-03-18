@@ -25,11 +25,19 @@ class ConditionTest {
     }
 
     @Test
-    fun `eq using dsl`() {
+    fun `eq str using dsl`() {
         val condition = "field" EQ "value"
 
         assertEquals("\"field\" = ?", condition.toString())
         assertEquals(listOf("value"), condition.params())
+    }
+
+    @Test
+    fun `eq int using dsl`() {
+        val condition = "field" EQ 1
+
+        assertEquals("\"field\" = ?", condition.toString())
+        assertEquals(listOf(1), condition.params())
     }
 
     @Test
