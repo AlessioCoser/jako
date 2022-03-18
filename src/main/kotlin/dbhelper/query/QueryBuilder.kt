@@ -1,9 +1,11 @@
 package dbhelper.query
 
-import dbhelper.query.fields.Fields.Companion.wrap
 import dbhelper.query.conditions.Condition
 import dbhelper.query.fields.Fields
-import dbhelper.query.having.EmptyHaving
+import dbhelper.query.group.NoGroup
+import dbhelper.query.group.Group
+import dbhelper.query.group.GroupBy
+import dbhelper.query.having.NoHaving
 import dbhelper.query.having.GenericHaving
 import dbhelper.query.having.Having
 import dbhelper.query.join.*
@@ -17,11 +19,11 @@ class QueryBuilder {
     private var rawQuery: Query? = null
     private var from: From? = null
     private var fields: Fields = Fields.all()
-    private var where: Where = EmptyWhere()
+    private var where: Where = NoWhere()
     private var joins: Joins = Joins()
-    private var having: Having = EmptyHaving()
-    private var groupBy: String = ""
+    private var having: Having = NoHaving()
     private var orderBy: Order = NoOrder()
+    private var groupBy: Group = NoGroup()
     private var limit: String = ""
 
     fun raw(statement: String, vararg params: Any?): QueryBuilder {
@@ -65,7 +67,7 @@ class QueryBuilder {
     }
 
     fun groupBy(vararg fields: String): QueryBuilder {
-        groupBy = " GROUP BY ${fields.joinToString(", ") { it.wrap() }}"
+        groupBy = GroupBy(fields.toList())
         return this
     }
 

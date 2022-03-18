@@ -1,6 +1,6 @@
-package dbhelper.query.where
+package dbhelper.query.having
 
-class EmptyWhere: Where {
+class NoHaving: Having {
     override fun toString() = ""
     override fun params() = emptyList<String>()
 }
