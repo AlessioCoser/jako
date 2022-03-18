@@ -21,6 +21,7 @@ import dbhelper.query.where.*
 class QueryBuilder {
     private var rawQuery: Query? = null
     private var from: From? = null
+        get() = field ?: throw RuntimeException("Cannot generate query without table name")
     private var fields: Fields = Fields.all()
     private var where: Where = NoWhere()
     private var joins: Joins = Joins()
@@ -87,11 +88,7 @@ class QueryBuilder {
     fun single() = limit(1)
 
     fun build(): Query {
-        return rawQuery ?: Query("SELECT $fields${buildFrom()}$joins$where$groupBy$having$orderBy$limit", allParams())
-    }
-
-    private fun buildFrom(): From {
-        return from ?: throw RuntimeException("Cannot generate query without table name")
+        return rawQuery ?: Query("SELECT $fields$from$joins$where$groupBy$having$orderBy$limit", allParams())
     }
 
     private fun allParams() = where.params().plus(having.params())
