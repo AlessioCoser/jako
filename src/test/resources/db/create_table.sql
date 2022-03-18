@@ -47,8 +47,8 @@ CREATE TABLE public."types" (
                                 "float" real,
                                 "double" double precision,
                                 "date" date,
-                                "local_date" date
---    "time" time(3),
+                                "local_date" date,
+                                "time" time
 --    "time_no_zone" time(4) without time zone,
 --    "timestamp" timestamp,
 --    "timestamp_no_zone" timestamp without time zone,
@@ -64,8 +64,8 @@ INSERT INTO public."types"
  "float",
  "double",
  "date",
- "local_date"
---      "time",
+ "local_date",
+ "time"
 --      "time_no_zone",
 --      "timestamp",
 --      "timestamp_no_zone"
@@ -80,11 +80,11 @@ VALUES
      3.4,
      5.6,
      '1980-01-01',
-     '1980-01-01'
---      '01:02.123',
+     '1980-01-01',
+     '01:02:03'
 --      '09:08.1234',
 --      '2013-03-21 09:10:59.897666 +02:00',
 --      '2013-03-21 09:10:59.897666'
 --      E'\xC744'::bytea,
     ),
-    (null, null, null, null, null, null, null, null, null);
+    (null, null, null, null, null, null, null, null, null, null);

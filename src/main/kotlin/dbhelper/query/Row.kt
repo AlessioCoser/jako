@@ -24,6 +24,7 @@ interface Row {
     fun date(fieldName: String): Date
     fun localDateOrNull(fieldName: String): LocalDate?
     fun localDate(fieldName: String): LocalDate
+    fun timeOrNull(fieldName: String): Time?
     fun time(fieldName: String): Time
     fun timestamp(fieldName: String): Timestamp
     fun bytes(fieldName: String): ByteArray
