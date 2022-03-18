@@ -29,6 +29,7 @@ class RowSql(private val resultSet: ResultSet) : Row {
     override fun time(fieldName: String): Time = timeOrNull(fieldName)!!
     override fun timestampOrNull(fieldName: String, calendar: Calendar?): Timestamp? = nullable(resultSet.getTimestamp(fieldName, calendar))
     override fun timestamp(fieldName: String, calendar: Calendar?): Timestamp = timestampOrNull(fieldName, calendar)!!
+    override fun bytesOrNull(fieldName: String): ByteArray? = resultSet.getBytes(fieldName)
     override fun bytes(fieldName: String): ByteArray = resultSet.getBytes(fieldName)
 
     private fun <T> nullable(value: T?): T? {

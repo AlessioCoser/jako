@@ -29,5 +29,6 @@ interface Row {
     fun time(fieldName: String): Time
     fun timestampOrNull(fieldName: String, calendar: Calendar? = null): Timestamp?
     fun timestamp(fieldName: String, calendar: Calendar? = null): Timestamp
+    fun bytesOrNull(fieldName: String): ByteArray?
     fun bytes(fieldName: String): ByteArray
 }

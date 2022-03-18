@@ -50,9 +50,8 @@ CREATE TABLE public."types" (
                                 "local_date" date,
                                 "time" time,
                                 "timestamp" timestamp with time zone,
-                                "timestamp_no_zone" timestamp without time zone
---    "time_no_zone" time(4) without time zone,
---    "bytes" bytea
+                                "timestamp_no_zone" timestamp without time zone,
+                                "bytes" bytea
 );
 
 INSERT INTO public."types"
@@ -67,9 +66,8 @@ INSERT INTO public."types"
  "local_date",
  "time",
  "timestamp",
- "timestamp_no_zone"
---      "time_no_zone"
---      "bytes",
+ "timestamp_no_zone",
+ "bytes"
 )
 VALUES
     ('str',
@@ -83,8 +81,7 @@ VALUES
      '1980-01-01',
      '01:02:03',
      '2013-03-21 10:10:59.897666-05',
-     '2013-03-21 10:10:59.897666'
---      '09:08.1234',
---      E'\xC744'::bytea,
+     '2013-03-21 10:10:59.897666',
+     '\\000'::bytea
     ),
-    (null, null, null, null, null, null, null, null, null, null, null, null);
+    (null, null, null, null, null, null, null, null, null, null, null, null, null);

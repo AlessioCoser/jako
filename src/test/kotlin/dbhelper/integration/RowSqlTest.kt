@@ -2,6 +2,8 @@ package dbhelper.integration
 
 import dbhelper.Database
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -43,7 +45,6 @@ class RowSqlTest {
                 timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
                 timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
                 timestampOrNull("timestamp_no_zone")
-//                bytes("bytes"),
             )
         }
 
@@ -60,6 +61,17 @@ class RowSqlTest {
                 Types(2, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             )
         )
+    }
+
+    @Test
+    fun `select bytearrays`() {
+        val arr: List<ByteArray?> = db.select {
+            from("types")
+            fields("bytes")
+        }.all { bytesOrNull("bytes") }
+
+        assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), arr[0]!!.toTypedArray())
+        assertNull(arr[1])
     }
 }
 
@@ -79,5 +91,4 @@ data class Types(
     val timestampNoZoneUtc: Timestamp?,
     val timestampNoZoneEurope: Timestamp?,
     val timestampNoZone: Timestamp?
-//    val bytes: ByteArray,
 )
