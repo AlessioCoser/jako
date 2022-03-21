@@ -14,7 +14,7 @@ class HikariSessionManager(jdbc: String, user: String, password: String): Sessio
 
     override fun <T> session(fn: Session.() -> T): T {
         return dataSource.connection.use {
-            fn(Session(it))
+            fn(SessionSql(it))
         }
     }
 }
