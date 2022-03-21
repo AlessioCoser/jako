@@ -2,37 +2,34 @@ package dbhelper.insert
 
 import dbhelper.query.fields.Fields.Companion.wrap
 
-class Values(private vararg val columns: Column) {
-    private val params = transpose(*columns)
+class Row(cols: List<Column>) {
+    val columns = cols.associate { it.name to it.value }
+}
 
-    fun columns(): String {
-        return columns.joinToString(prefix = " (", separator = ", ", postfix = ")") { it.name.wrap() }
-    }
+class Values {
+    private val rows: MutableList<Row> = mutableListOf()
+    private val columns: List<String> by lazy { initializeColumns() }
 
-    fun values(): String {
-        return " VALUES " + insertPlaceHolders()
+    fun add(row: Row) {
+        rows.add(row)
     }
 
     fun params(): List<Any?> {
-        return params
+        return rows.flatMap { row -> columns.map { row.columns[it] } }
+    }
+
+    fun statement(): String {
+        val columnsSql = columns.joinToString(prefix = "(", separator = ", ", postfix = ")") { it.wrap() }
+        return " $columnsSql VALUES " + insertPlaceHolders()
     }
 
     private fun insertPlaceHolders(): String {
-        val rowSize = params.size / columns.size
-        val columnsString = columns.indices.joinToString(", ") { "?" }
+        val placeholders = columns.indices.joinToString(", ") { "?" }
 
-        return (0 until rowSize).joinToString(separator = "), (", prefix = "(", postfix = ")") { columnsString }
+        return (0 until rows.size).joinToString(separator = "), (", prefix = "(", postfix = ")") { placeholders }
     }
 
-    private fun transpose(vararg columns: Column): List<Any?> {
-        val columnIndices = columns.indices
-        val maxRowSize = columns.maxBy { it.size }?.size ?: 0
-        val rowIndices = 0 until maxRowSize
-
-        return rowIndices.flatMap { columnIndex ->
-            columnIndices.map { rowIndex ->
-                columns.getOrNull(rowIndex)?.getOrNull(columnIndex)
-            }
-        }
+    private fun initializeColumns(): List<String> {
+        return rows.flatMap { row -> row.columns.keys }.distinct()
     }
 }

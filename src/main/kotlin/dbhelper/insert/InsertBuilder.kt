@@ -16,7 +16,7 @@ class InsertBuilder {
     }
 
     fun values(vararg values: Column): InsertBuilder {
-        this.values = Values(*values)
+        this.values.add(Row(values.toList()))
         return this
     }
 
