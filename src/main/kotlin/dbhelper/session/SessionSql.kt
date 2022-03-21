@@ -1,12 +1,19 @@
 package dbhelper.session
 
 import dbhelper.RowSql
+import dbhelper.insert.Insert
 import dbhelper.query.Query
 import dbhelper.query.Row
 import java.sql.Connection
 import java.sql.PreparedStatement
 
 class SessionSql(private val connection: Connection): Session {
+    override fun execute(insert: Insert) {
+        connection.prepareStatement(insert.statement)
+            .setParameters(*insert.params.toTypedArray())
+            .execute()
+    }
+
     override fun <T> execute(query: Query, parseRow: Row.() -> T): List<T> {
         val resultSet = connection.prepareStatement(query.statement)
             .setParameters(*query.params.toTypedArray())

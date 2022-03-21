@@ -3,12 +3,19 @@ CREATE DATABASE tests;
 
 \connect "tests";
 
+CREATE TABLE public."customers" (
+                                "name" varchar(50) NOT NULL,
+                                "age" integer NOT NULL,
+                                CONSTRAINT "pk_customers" PRIMARY KEY ("name")
+);
+CREATE INDEX "ix_customers_name" ON public."customers" USING btree ("name");
+
 CREATE TABLE public."users" (
                                 "email" varchar(50) NOT NULL,
                                 "name" varchar(50) NOT NULL,
                                 "city" varchar(50) NOT NULL,
                                 "age" integer NOT NULL,
-                                CONSTRAINT "pk_table" PRIMARY KEY ("email")
+                                CONSTRAINT "pk_users" PRIMARY KEY ("email")
 );
 CREATE INDEX "ix_users_email" ON public."users" USING btree ("email");
 
@@ -17,7 +24,7 @@ CREATE TABLE public."pets" (
                                "type" varchar(50) NOT NULL,
                                "owner" varchar(50) NOT NULL,
                                "age" integer NOT NULL,
-                               CONSTRAINT "pk_pets_table" PRIMARY KEY ("name", "owner"),
+                               CONSTRAINT "pk_pets" PRIMARY KEY ("name", "owner"),
                                CONSTRAINT fk_pets FOREIGN KEY(owner) REFERENCES users(email)
 );
 CREATE INDEX "ix_pets_name_and_owner" ON public."pets" USING btree ("name", "owner");
