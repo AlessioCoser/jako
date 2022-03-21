@@ -21,9 +21,13 @@ import dbhelper.query.order.Asc.Companion.ASC
 import dbhelper.query.order.Desc.Companion.DESC
 import dbhelper.session.HikariSessionManager
 import org.assertj.core.api.Assertions.assertThat
+import org.jooq.*
+import org.jooq.impl.*
+import org.jooq.impl.DSL.*
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+
 
 @Testcontainers
 class SelectTest {
@@ -33,7 +37,8 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
-    private val db = Database(HikariSessionManager("jdbc:postgresql://localhost:5432/tests", "user", "password"))
+    private val sessionManager = HikariSessionManager("jdbc:postgresql://localhost:5432/tests", "user", "password")
+    private val db = Database(sessionManager)
 
     @Test
     fun `select with where`() {

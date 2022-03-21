@@ -8,7 +8,7 @@ import dbhelper.query.Row
 import java.sql.Connection
 import java.sql.PreparedStatement
 
-class SessionSql(private val connection: Connection): Session {
+class SessionSql(override val connection: Connection): Session {
     override fun execute(insert: Insert) {
         preparedStatement(insert).execute()
     }
