@@ -1,7 +1,9 @@
 package dbhelper.insert
 
 import dbhelper.insert.Column.Companion.SET
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class InsertBuilderTest {
@@ -67,5 +69,14 @@ class InsertBuilderTest {
 
         assertEquals("INSERT INTO table (column1, column2) VALUES (?, ?)", insert.statement)
         assertEquals(listOf("1", 2), insert.params)
+    }
+
+    @Test
+    fun `insert without values`() {
+        val message = assertThrows(RuntimeException::class.java) {
+            InsertBuilder().into("table").build()
+        }.message
+
+        assertThat(message).isEqualTo("Cannot generate insert without values")
     }
 }

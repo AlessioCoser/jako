@@ -19,6 +19,9 @@ class Values {
     }
 
     fun statement(): String {
+        if(rows.isEmpty()) {
+            throw RuntimeException("Cannot generate insert without values")
+        }
         val columnsSql = columns.joinToString(prefix = "(", separator = ", ", postfix = ")") { it.wrap() }
         return " $columnsSql VALUES " + insertPlaceHolders()
     }
