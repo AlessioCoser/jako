@@ -3,7 +3,7 @@ package dbhelper.session
 import com.zaxxer.hikari.HikariDataSource
 
 class HikariSessionManager(jdbc: String, user: String, password: String): SessionManager {
-    private val dataSource = HikariDataSource()
+    override val dataSource = HikariDataSource()
 
     init {
         dataSource.jdbcUrl = jdbc
