@@ -1,12 +1,8 @@
 package dbhelper.dsl.conditions
 
-import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.And.Companion.AND
-import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Eq.Companion.EQ
-import dbhelper.dsl.conditions.Gt
 import dbhelper.dsl.conditions.Gt.Companion.GT
-import dbhelper.dsl.conditions.Or
 import dbhelper.dsl.conditions.Or.Companion.OR
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

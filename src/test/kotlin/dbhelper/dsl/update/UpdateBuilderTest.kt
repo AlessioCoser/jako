@@ -1,6 +1,5 @@
 package dbhelper.dsl.update
 
-import dbhelper.dsl.conditions.Eq.Companion.EQ
 import dbhelper.dsl.conditions.Gt.Companion.GT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals

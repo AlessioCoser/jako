@@ -1,6 +1,5 @@
 package dbhelper.dsl.fields
 
-import dbhelper.dsl.fields.Fields
 import dbhelper.dsl.fields.Fields.Companion.AS
 import dbhelper.dsl.fields.Fields.Companion.AVG
 import dbhelper.dsl.fields.Fields.Companion.COUNT

@@ -1,15 +1,15 @@
 package dbhelper.dsl.update
 
+import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Fields.Companion.wrap
-import dbhelper.dsl.query.QueryBuilder
 import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 import java.sql.Date
 import java.time.LocalDate
 
-class UpdateBuilder {
+class UpdateBuilder: StatementBuilder {
     private var rawUpdate: Update? = null
     private var table: String? = null
     private val fields: SetFields = SetFields()
@@ -40,7 +40,7 @@ class UpdateBuilder {
         return this
     }
 
-    fun build(): Update {
+    override fun build(): Update {
         return rawUpdate ?: Update(tableOrThrow(), fieldsOrThrow(), where)
     }
 

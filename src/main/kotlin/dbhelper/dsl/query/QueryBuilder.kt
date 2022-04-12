@@ -1,5 +1,6 @@
 package dbhelper.dsl.query
 
+import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Fields
 import dbhelper.dsl.query.group.Group
@@ -21,7 +22,7 @@ import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 
-class QueryBuilder {
+class QueryBuilder: StatementBuilder {
     private var rawQuery: Query? = null
     private var from: From? = null
     private var fields: Fields = Fields.all()
@@ -89,7 +90,7 @@ class QueryBuilder {
 
     fun single() = limit(1)
 
-    fun build(): Query {
+    override fun build(): Query {
         return rawQuery ?: Query(fields, fromOrThrow(), joins, where, groupBy, having, orderBy, limit)
     }
 

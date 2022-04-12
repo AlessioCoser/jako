@@ -3,9 +3,6 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.HikariConnector
 import dbhelper.database.JdbcPostgresConnection
-import dbhelper.dsl.query.QueryBuilder
-import dbhelper.dsl.query.Row
-import dbhelper.dsl.query.RowParser
 import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.And.Companion.AND
 import dbhelper.dsl.conditions.Eq
@@ -15,6 +12,9 @@ import dbhelper.dsl.conditions.Or
 import dbhelper.dsl.conditions.Or.Companion.OR
 import dbhelper.dsl.fields.Fields.Companion.AS
 import dbhelper.dsl.fields.Fields.Companion.COUNT
+import dbhelper.dsl.query.QueryBuilder
+import dbhelper.dsl.query.Row
+import dbhelper.dsl.query.RowParser
 import dbhelper.dsl.query.join.On
 import dbhelper.dsl.query.join.On.Companion.EQ
 import dbhelper.dsl.query.join.On.Companion.ON

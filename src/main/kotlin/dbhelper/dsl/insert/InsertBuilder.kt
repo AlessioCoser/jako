@@ -1,9 +1,10 @@
 package dbhelper.dsl.insert
 
+import dbhelper.dsl.StatementBuilder
 import java.sql.Date
 import java.time.LocalDate
 
-class InsertBuilder {
+class InsertBuilder: StatementBuilder {
     private var rawInsert: Insert? = null
     private var into: Into? = null
     private var insertRow: InsertRow = InsertRow()
@@ -28,7 +29,7 @@ class InsertBuilder {
         return this
     }
 
-    fun build(): Insert {
+    override fun build(): Insert {
         return rawInsert ?: Insert(intoOrThrow(), rowOrThrow())
     }
 
