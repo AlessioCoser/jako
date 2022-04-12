@@ -1,7 +1,7 @@
 package dbhelper.query.group
 
 import dbhelper.query.fields.Fields.Companion.COUNT
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class GroupByTest {

@@ -1,6 +1,8 @@
 package dbhelper.integration
 
-import dbhelper.Database
+import dbhelper.database.Database
+import dbhelper.database.HikariConnector
+import dbhelper.database.JdbcPostgresConnection
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -21,7 +23,8 @@ class RowSqlTest {
         val postgres = ContainerPostgres()
     }
 
-    private val db = Database("jdbc:postgresql://localhost:5432/tests", "user", "password")
+    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val db = Database.connect(HikariConnector(connectionConfig))
 
     @Test
     fun `select types`() {

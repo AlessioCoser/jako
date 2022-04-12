@@ -2,13 +2,14 @@ package dbhelper.query
 
 import dbhelper.query.conditions.Condition
 import dbhelper.query.fields.Fields
-import dbhelper.query.group.NoGroup
 import dbhelper.query.group.Group
 import dbhelper.query.group.GroupBy
-import dbhelper.query.having.NoHaving
+import dbhelper.query.group.NoGroup
 import dbhelper.query.having.GenericHaving
 import dbhelper.query.having.Having
-import dbhelper.query.join.*
+import dbhelper.query.having.NoHaving
+import dbhelper.query.join.Joins
+import dbhelper.query.join.On
 import dbhelper.query.limit.Limit
 import dbhelper.query.limit.LimitTo
 import dbhelper.query.limit.NoLimit
@@ -16,7 +17,9 @@ import dbhelper.query.order.NoOrder
 import dbhelper.query.order.Order
 import dbhelper.query.order.OrderBy
 import dbhelper.query.order.OrderField
-import dbhelper.query.where.*
+import dbhelper.query.where.GenericWhere
+import dbhelper.query.where.NoWhere
+import dbhelper.query.where.Where
 
 class QueryBuilder {
     private var rawQuery: Query? = null

@@ -1,7 +1,5 @@
 package dbhelper.database
 
-import dbhelper.Statement
-import dbhelper.insert.Insert
 import dbhelper.insert.InsertBuilder
 import dbhelper.query.QueryBuilder
 

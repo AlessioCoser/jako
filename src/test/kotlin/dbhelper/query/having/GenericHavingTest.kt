@@ -1,8 +1,7 @@
 package dbhelper.query.having
 
 import dbhelper.query.conditions.Eq.Companion.EQ
-import dbhelper.query.where.NoWhere
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class GenericHavingTest {
