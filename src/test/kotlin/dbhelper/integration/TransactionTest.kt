@@ -24,22 +24,29 @@ class TransactionTest {
     private val db = Database.connect(HikariConnector(connectionConfig))
 
     @Test
-    fun `transaction ok`() {
+    fun `transaction failure`() {
         assertThrows<RuntimeException> {
             db.useTransaction {
                 db.insert {
                     into("customers")
                     values("name" SET "transaction_test", "age" SET 18)
                 }.execute()
+
+                assertThat(customerIsPresent("transaction_test")).isTrue
+
                 throw RuntimeException()
             }
         }
 
+        assertThat(customerIsPresent("transaction_test")).isFalse
+    }
+
+    private fun customerIsPresent(name: String): Boolean {
         val customer = db.select {
             from("customers")
-            where("name" EQ "transaction_test")
+            where("name" EQ name)
         }.first { Customer(str("name"), int("age")) }
 
-        assertThat(customer).isNull()
+        return customer != null
     }
 }
