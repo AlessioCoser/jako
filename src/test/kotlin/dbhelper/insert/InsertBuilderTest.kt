@@ -1,6 +1,6 @@
 package dbhelper.insert
 
-import dbhelper.insert.Column.Companion.SET
+import dbhelper.insert.InsertColumn.Companion.SET
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

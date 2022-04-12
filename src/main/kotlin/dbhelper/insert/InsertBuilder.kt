@@ -3,7 +3,7 @@ package dbhelper.insert
 class InsertBuilder {
     private var rawInsert: Insert? = null
     private var into: String? = null
-    private var values: Values = Values()
+    private var values: InsertValues = InsertValues()
 
     fun raw(statement: String, vararg params: Any?): InsertBuilder {
         rawInsert = Insert(statement, params.toList())
@@ -15,8 +15,8 @@ class InsertBuilder {
         return this
     }
 
-    fun values(vararg values: Column): InsertBuilder {
-        this.values.add(Row(values.toList()))
+    fun values(vararg values: InsertColumn): InsertBuilder {
+        this.values.add(InsertRow(values.toList()))
         return this
     }
 

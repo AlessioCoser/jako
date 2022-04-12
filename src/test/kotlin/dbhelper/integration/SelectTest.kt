@@ -1,6 +1,8 @@
 package dbhelper.integration
 
-import dbhelper.Database
+import dbhelper.database.Database
+import dbhelper.database.HikariConnector
+import dbhelper.database.JdbcPostgresConnection
 import dbhelper.query.QueryBuilder
 import dbhelper.query.Row
 import dbhelper.query.RowParser
@@ -19,7 +21,6 @@ import dbhelper.query.join.On.Companion.ON
 import dbhelper.query.order.Asc
 import dbhelper.query.order.Asc.Companion.ASC
 import dbhelper.query.order.Desc.Companion.DESC
-import dbhelper.session.HikariSessionManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -34,12 +35,12 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
-    private val sessionManager = HikariSessionManager("jdbc:postgresql://localhost:5432/tests", "user", "password")
-    private val db = Database(sessionManager)
+    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val db = Database.connect(HikariConnector(connectionConfig))
 
     @Test
     fun `select with where`() {
-        val user: User = db.select {
+        val user = db.select {
             from("users")
             where(("city" EQ "Milano") AND ("age" GT 18))
         }.first { User(str("email"), str("name"), str("city"), int("age")) }
@@ -134,7 +135,7 @@ class SelectTest {
 
     @Test
     fun firstJavaSyntax() {
-        val user: UserPetsCount = db.select(
+        val user = db.select(
             QueryBuilder()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
@@ -154,7 +155,7 @@ class SelectTest {
 
     @Test
     fun firstJavaHybridSyntax() {
-        val user: UserPetsCount = db.select(
+        val user: UserPetsCount? = db.select(
             QueryBuilder()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")

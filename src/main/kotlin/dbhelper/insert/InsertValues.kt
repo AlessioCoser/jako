@@ -2,15 +2,15 @@ package dbhelper.insert
 
 import dbhelper.query.fields.Fields.Companion.wrap
 
-class Row(cols: List<Column>) {
+class InsertRow(cols: List<InsertColumn>) {
     val columns = cols.associate { it.name to it.value }
 }
 
-class Values {
-    private val rows: MutableList<Row> = mutableListOf()
+class InsertValues {
+    private val rows: MutableList<InsertRow> = mutableListOf()
     private val columns: List<String> by lazy { initializeColumns() }
 
-    fun add(row: Row) {
+    fun add(row: InsertRow) {
         rows.add(row)
     }
 

@@ -1,9 +1,10 @@
 package dbhelper.integration
 
-import dbhelper.Database
-import dbhelper.insert.Column.Companion.SET
+import dbhelper.database.Database
+import dbhelper.database.JdbcPostgresConnection
+import dbhelper.database.SimpleConnector
+import dbhelper.insert.InsertColumn.Companion.SET
 import dbhelper.query.conditions.Eq.Companion.EQ
-import dbhelper.session.HikariSessionManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -17,14 +18,15 @@ class InsertTest {
         val postgres = ContainerPostgres()
     }
 
-    private val db = Database(HikariSessionManager("jdbc:postgresql://localhost:5432/tests", "user", "password"))
+    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val db = Database.connect(SimpleConnector(connectionConfig))
 
     @Test
     fun `insert city and age`() {
         db.insert {
             into("customers")
             values("name" SET "name1", "age" SET 18)
-        }
+        }.execute()
 
         val customer = db.select {
             from("customers")
