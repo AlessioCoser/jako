@@ -1,43 +1,16 @@
 package dbhelper.insert
 
-import dbhelper.insert.InsertColumn.Companion.SET
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.sql.Date
+import java.time.LocalDate
 
 class InsertBuilderTest {
     @Test
-    fun `insert into statement and params all`() {
-        val insert = InsertBuilder()
-            .into("table")
-            .values("column1" SET "1.1", "column2" SET "1.2", "column3" SET "1.3")
-            .values("column1" SET "2.1", "column2" SET "2.2")
-            .values("column1" SET "3.1", "column2" SET "3.2", "column3" SET "3.3")
-            .values("column3" SET "4.3")
-            .build()
-
-        assertEquals(
-            "INSERT INTO \"table\" (\"column1\", \"column2\", \"column3\") VALUES " +
-                    "(?, ?, ?), " +
-                    "(?, ?, ?), " +
-                    "(?, ?, ?), " +
-                    "(?, ?, ?)",
-            insert.statement
-        )
-        assertEquals(
-            listOf(
-                "1.1", "1.2", "1.3",
-                "2.1", "2.2", null,
-                "3.1", "3.2", "3.3",
-                null, null, "4.3"
-            ), insert.params
-        )
-    }
-
-    @Test
     fun `insert into single param foreach column`() {
-        val insert = InsertBuilder().into("table").values("column1" SET "1", "column2" SET 2, "column3" SET "3").build()
+        val insert = InsertBuilder().into("table").set("column1", "1").set("column2", 2).set("column3", "3").build()
 
         assertEquals("INSERT INTO \"table\" (\"column1\", \"column2\", \"column3\") VALUES (?, ?, ?)", insert.statement)
         assertEquals(listOf("1", 2, "3"), insert.params)
@@ -55,7 +28,7 @@ class InsertBuilderTest {
     fun `insert raw wins over other insert`() {
         val insert = InsertBuilder()
             .into("table")
-            .values("column1" SET "1")
+            .set("column1", "1")
             .raw("INSERT INTO table (column1, column2) VALUES (?, ?)", "1", 2)
             .build()
 
@@ -78,5 +51,16 @@ class InsertBuilderTest {
         }.message
 
         assertThat(message).isEqualTo("Cannot generate insert without values")
+    }
+
+    @Test
+    fun `insert local-date`() {
+        val insert = InsertBuilder()
+            .into("table")
+            .set("column1", LocalDate.of(2022, 4, 1))
+            .build()
+
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?)""", insert.statement)
+        assertEquals(listOf(Date.valueOf("2022-04-01")), insert.params)
     }
 }

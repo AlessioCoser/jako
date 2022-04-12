@@ -1,9 +1,12 @@
 package dbhelper.insert
 
+import java.sql.Date
+import java.time.LocalDate
+
 class InsertBuilder {
     private var rawInsert: Insert? = null
     private var into: String? = null
-    private var values: InsertValues = InsertValues()
+    private var insertRow: InsertRow = InsertRow()
 
     fun raw(statement: String, vararg params: Any?): InsertBuilder {
         rawInsert = Insert(statement, params.toList())
@@ -15,14 +18,21 @@ class InsertBuilder {
         return this
     }
 
-    fun values(vararg values: InsertColumn): InsertBuilder {
-        this.values.add(InsertRow(values.toList()))
+    fun set(column: String, value: Any?): InsertBuilder {
+        insertRow.add(InsertColumn(column, value))
+        return this
+    }
+
+    fun set(column: String, value: LocalDate?): InsertBuilder {
+        insertRow.add(InsertColumn(column, if (value == null) null else Date.valueOf(value)))
         return this
     }
 
     fun build(): Insert {
-        return rawInsert ?: Insert(intoOrThrow(), values)
+        return rawInsert ?: Insert(intoOrThrow(), rowOrThrow())
     }
+
+    private fun rowOrThrow() = if (insertRow.isNotEmpty()) insertRow else throw RuntimeException("Cannot generate insert without values")
 
     private fun intoOrThrow(): String = into ?: throw RuntimeException("Cannot generate insert without table name")
 

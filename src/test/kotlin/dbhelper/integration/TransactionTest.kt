@@ -3,7 +3,6 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.HikariConnector
 import dbhelper.database.JdbcPostgresConnection
-import dbhelper.insert.InsertColumn.Companion.SET
 import dbhelper.query.conditions.Eq.Companion.EQ
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,7 +28,8 @@ class TransactionTest {
             db.useTransaction {
                 db.insert {
                     into("customers")
-                    values("name" SET "transaction_test", "age" SET 18)
+                    set("name", "transaction_test")
+                    set("age", 18)
                 }.execute()
 
                 assertThat(customerIsPresent("transaction_test")).isTrue

@@ -3,7 +3,6 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
-import dbhelper.insert.InsertColumn.Companion.SET
 import dbhelper.query.conditions.Eq.Companion.EQ
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,7 +24,8 @@ class InsertTest {
     fun `insert city and age`() {
         db.insert {
             into("customers")
-            values("name" SET "name1", "age" SET 18)
+            set("name", "name1")
+            set("age", 18)
         }.execute()
 
         val customer = db.select {
