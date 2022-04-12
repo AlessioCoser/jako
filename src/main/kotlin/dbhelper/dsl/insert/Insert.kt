@@ -1,6 +1,5 @@
 package dbhelper.dsl.insert
 
-import dbhelper.dsl.Into
 import dbhelper.dsl.Statement
 
 

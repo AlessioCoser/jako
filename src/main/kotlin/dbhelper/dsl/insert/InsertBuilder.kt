@@ -1,7 +1,5 @@
 package dbhelper.dsl.insert
 
-import dbhelper.dsl.From
-import dbhelper.dsl.Into
 import java.sql.Date
 import java.time.LocalDate
 

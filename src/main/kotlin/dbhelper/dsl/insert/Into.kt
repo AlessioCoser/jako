@@ -1,4 +1,4 @@
-package dbhelper.dsl
+package dbhelper.dsl.insert
 
 import dbhelper.dsl.fields.Fields.Companion.wrap
 

@@ -1,6 +1,5 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.From
 import dbhelper.dsl.Statement
 import dbhelper.dsl.fields.Fields
 import dbhelper.dsl.query.group.Group
