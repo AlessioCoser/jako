@@ -1,7 +1,7 @@
 package dbhelper.database
 
-import dbhelper.insert.InsertBuilder
-import dbhelper.query.QueryBuilder
+import dbhelper.dsl.insert.InsertBuilder
+import dbhelper.dsl.query.QueryBuilder
 
 
 class Database(val transactionManager: TransactionManager) {

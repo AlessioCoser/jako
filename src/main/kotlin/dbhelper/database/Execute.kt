@@ -1,6 +1,6 @@
 package dbhelper.database
 
-import dbhelper.Statement
+import dbhelper.dsl.Statement
 
 class Execute internal constructor(private val transactionManager: TransactionManager, private val statement: Statement) {
     fun execute() {
@@ -8,8 +8,4 @@ class Execute internal constructor(private val transactionManager: TransactionMa
             it.prepareStatement(statement).execute()
         }
     }
-
-//    fun executeAndCountAffected(update: Update): Int {
-//        return selectFirst(update.countAffected()) { it.getInt("count") } ?: 0
-//    }
 }

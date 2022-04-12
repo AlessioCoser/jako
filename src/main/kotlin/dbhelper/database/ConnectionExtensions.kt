@@ -1,6 +1,6 @@
 package dbhelper.database
 
-import dbhelper.Statement
+import dbhelper.dsl.Statement
 import java.sql.Connection
 import java.sql.PreparedStatement
 

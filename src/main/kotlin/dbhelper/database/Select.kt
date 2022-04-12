@@ -1,9 +1,8 @@
 package dbhelper.database
 
-import dbhelper.RowSql
-import dbhelper.query.Query
-import dbhelper.query.Row
-import dbhelper.query.RowParser
+import dbhelper.dsl.query.Query
+import dbhelper.dsl.query.Row
+import dbhelper.dsl.query.RowParser
 
 class Select internal constructor(private val transactionManager: TransactionManager, private val query: Query) {
     fun <T> all(parser: RowParser<T>): List<T> {

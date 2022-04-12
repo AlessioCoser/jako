@@ -3,7 +3,7 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
-import dbhelper.query.conditions.Eq.Companion.EQ
+import dbhelper.dsl.conditions.Eq.Companion.EQ
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
