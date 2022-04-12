@@ -49,6 +49,16 @@ class SelectTest {
     }
 
     @Test
+    fun `select first not found`() {
+        val user = db.select {
+            from("users")
+            where("city" EQ "New York")
+        }.first { User(str("email"), str("name"), str("city"), int("age")) }
+
+        assertThat(user).isNull()
+    }
+
+    @Test
     fun `select all`() {
         val users: List<User> = db.select {
             from("users")
