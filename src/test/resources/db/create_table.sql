@@ -35,7 +35,8 @@ INSERT INTO public."users" ("email", "name", "city", "age") VALUES
                                                                 ('paolo@bianchi.it', 'Paolo Bianchi', 'Firenze', 6),
                                                                 ('matteo@renzi.it', 'Matteo Renzi', 'Firenze', 45),
                                                                 ('marco@verdi.it', 'Marco Verdi', 'Milano', 13),
-                                                                ('vittorio@gialli.it', 'Vittorio Gialli', 'Milano', 64);
+                                                                ('vittorio@gialli.it', 'Vittorio Gialli', 'Milano', 64),
+                                                                ('cavallino@cavallini.it', 'Cavallino Cavallini', 'Roma', 2);
 
 INSERT INTO public."pets" ("name", "type", "owner", "age") VALUES
                                                                ('Pluto', 'Dog', 'luigi@verdi.it', 2),

@@ -4,6 +4,7 @@ import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
 import dbhelper.dsl.conditions.Eq.Companion.EQ
+import dbhelper.dsl.insert.InsertBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -34,6 +35,22 @@ class InsertTest {
         }.first { Customer(str("name"), int("age")) }
 
         assertThat(customer).isEqualTo(Customer("name1", 18))
+    }
+
+    @Test
+    fun `insert another city and age with build dsl`() {
+        db.insert(InsertBuilder()
+            .into("customers")
+            .set("name", "name2")
+            .set("age", 99)
+        ).execute()
+
+        val customer = db.select {
+            from("customers")
+            where("name" EQ "name2")
+        }.first { Customer(str("name"), int("age")) }
+
+        assertThat(customer).isEqualTo(Customer("name2", 99))
     }
 }
 
