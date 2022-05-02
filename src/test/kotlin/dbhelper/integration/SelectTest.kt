@@ -11,9 +11,8 @@ import dbhelper.dsl.conditions.Gt.Companion.GT
 import dbhelper.dsl.conditions.Or
 import dbhelper.dsl.conditions.Or.Companion.OR
 import dbhelper.dsl.fields.As.Companion.AS
-import dbhelper.dsl.fields.Column
 import dbhelper.dsl.fields.Column.Companion.col
-import dbhelper.dsl.fields.Count.Companion.COUNT
+import dbhelper.dsl.fields.functions.Count.Companion.COUNT
 import dbhelper.dsl.query.QueryBuilder
 import dbhelper.dsl.query.Row
 import dbhelper.dsl.query.RowParser

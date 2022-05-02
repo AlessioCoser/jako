@@ -5,7 +5,7 @@ import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
 import dbhelper.dsl.fields.As.Companion.AS
 import dbhelper.dsl.fields.Column.Companion.col
-import dbhelper.dsl.fields.Count.Companion.COUNT
+import dbhelper.dsl.fields.functions.Count.Companion.COUNT
 import dbhelper.dsl.query.join.On
 import dbhelper.dsl.query.order.Asc
 import org.junit.jupiter.api.Assertions.assertEquals

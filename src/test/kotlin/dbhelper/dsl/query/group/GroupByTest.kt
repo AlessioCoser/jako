@@ -1,7 +1,7 @@
 package dbhelper.dsl.query.group
 
 import dbhelper.dsl.fields.Column
-import dbhelper.dsl.fields.Count.Companion.COUNT
+import dbhelper.dsl.fields.functions.Count.Companion.COUNT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

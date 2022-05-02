@@ -1,4 +1,7 @@
-package dbhelper.dsl.fields
+package dbhelper.dsl.fields.functions
+
+import dbhelper.dsl.fields.Column
+import dbhelper.dsl.fields.Field
 
 class Max(private val value: Field): Field {
     override fun toString() = "MAX($value)"
