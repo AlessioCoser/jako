@@ -2,6 +2,7 @@ package dbhelper.dsl.fields
 
 class Column(private val value: String): Field {
     override fun toString() = wrap(value)
+    override fun params(): List<Any?> = emptyList()
 
     private fun wrap(value: String): String {
         if(value.contains("(*)") || value == "*" || value.contains("AS")) {

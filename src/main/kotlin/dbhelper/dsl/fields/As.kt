@@ -2,6 +2,7 @@ package dbhelper.dsl.fields
 
 class As(private val column: Field, private val name: Field): Field {
     override fun toString() = "$column AS $name"
+    override fun params() = column.params() + name.params()
 
     companion object {
         @JvmStatic

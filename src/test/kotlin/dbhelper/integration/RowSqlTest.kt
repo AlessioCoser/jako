@@ -3,7 +3,6 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.HikariConnector
 import dbhelper.database.JdbcPostgresConnection
-import dbhelper.dsl.conditions.NotNull.Companion.NOT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

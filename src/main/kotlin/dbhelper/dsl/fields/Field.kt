@@ -2,6 +2,7 @@ package dbhelper.dsl.fields
 
 interface Field {
     override fun toString(): String
+    fun params(): List<Any?>
 
     operator fun plus(i: Int): Field {
         return Raw("${toString()} + $i")

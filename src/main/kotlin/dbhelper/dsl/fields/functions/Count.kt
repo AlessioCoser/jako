@@ -5,6 +5,7 @@ import dbhelper.dsl.fields.Field
 
 class Count(private val value: Field): Field {
     override fun toString() = "COUNT($value)"
+    override fun params() = value.params()
 
     companion object {
         @JvmStatic

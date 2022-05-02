@@ -5,6 +5,7 @@ import dbhelper.dsl.fields.Field
 
 class Max(private val value: Field): Field {
     override fun toString() = "MAX($value)"
+    override fun params() = value.params()
 
     companion object {
         @JvmStatic

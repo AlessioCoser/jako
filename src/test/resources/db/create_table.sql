@@ -13,7 +13,7 @@ CREATE INDEX "ix_customers_name" ON public."customers" USING btree ("name");
 CREATE TABLE public."users" (
                                 "email" varchar(50) NOT NULL,
                                 "name" varchar(50) NOT NULL,
-                                "city" varchar(50) NOT NULL,
+                                "city" varchar(50),
                                 "age" integer NOT NULL,
                                 CONSTRAINT "pk_users" PRIMARY KEY ("email")
 );
@@ -36,7 +36,8 @@ INSERT INTO public."users" ("email", "name", "city", "age") VALUES
                                                                 ('matteo@renzi.it', 'Matteo Renzi', 'Firenze', 45),
                                                                 ('marco@verdi.it', 'Marco Verdi', 'Milano', 13),
                                                                 ('vittorio@gialli.it', 'Vittorio Gialli', 'Milano', 64),
-                                                                ('cavallino@cavallini.it', 'Cavallino Cavallini', 'Roma', 2);
+                                                                ('cavallino@cavallini.it', 'Cavallino Cavallini', 'Roma', 2),
+                                                                ('null@city.it', 'Null City', NULL, 88);
 
 INSERT INTO public."pets" ("name", "type", "owner", "age") VALUES
                                                                ('Pluto', 'Dog', 'luigi@verdi.it', 2),

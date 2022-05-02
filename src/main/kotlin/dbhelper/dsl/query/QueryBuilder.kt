@@ -27,7 +27,7 @@ import dbhelper.dsl.where.Where
 class QueryBuilder: StatementBuilder {
     private var rawQuery: Query? = null
     private var from: From? = null
-    private var fields: Fields = Fields(ALL)
+    private var fields: Field = ALL
     private var where: Where = NoWhere()
     private var joins: Joins = Joins()
     private var having: Having = NoHaving()

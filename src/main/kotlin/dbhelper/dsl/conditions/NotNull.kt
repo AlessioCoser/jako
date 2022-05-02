@@ -7,8 +7,7 @@ class NotNull(private val column: Field): Condition {
     constructor(column: String): this(Column(column))
 
     override fun toString() = "$column IS NOT NULL"
-
-    override fun params() = emptyList<Any?>()
+    override fun params() = column.params()
 
     companion object {
         @JvmStatic

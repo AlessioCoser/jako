@@ -12,6 +12,7 @@ import dbhelper.dsl.conditions.Or
 import dbhelper.dsl.conditions.Or.Companion.OR
 import dbhelper.dsl.fields.As.Companion.AS
 import dbhelper.dsl.fields.Column.Companion.col
+import dbhelper.dsl.fields.functions.Coalesce.Companion.COALESCE
 import dbhelper.dsl.fields.functions.Count.Companion.COUNT
 import dbhelper.dsl.query.QueryBuilder
 import dbhelper.dsl.query.Row
@@ -211,6 +212,17 @@ class SelectTest {
                 User(email = "matteo@renzi.it", fullName = "Matteo Renzi", city = "Firenze", age = 45)
             )
         )
+    }
+
+    @Test
+    fun `select coalesce`() {
+        val coalesceMail = db.select {
+            fields(COALESCE("city", "none") AS "cit")
+            from("users")
+            where("email" EQ "null@city.it")
+        }.first { str("cit") }
+
+        assertThat(coalesceMail).isEqualTo("none")
     }
 }
 

@@ -5,6 +5,7 @@ import dbhelper.dsl.fields.Field
 
 class Avg(private val value: Field): Field {
     override fun toString() = "AVG($value)"
+    override fun params() = value.params()
 
     companion object {
         @JvmStatic

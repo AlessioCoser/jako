@@ -7,9 +7,6 @@ abstract class GenericCondition(
     private val operator: String,
     private val right: Any?
 ) : Condition {
-    override fun toString(): String {
-        return "$left $operator ?"
-    }
-
-    override fun params() = listOf(right)
+    override fun toString() = "$left $operator ?"
+    override fun params() = left.params() + right
 }
