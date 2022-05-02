@@ -5,7 +5,9 @@ import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
 import dbhelper.dsl.fields.As.Companion.AS
 import dbhelper.dsl.fields.Column.Companion.col
+import dbhelper.dsl.fields.functions.Coalesce.Companion.COALESCE
 import dbhelper.dsl.fields.functions.Count.Companion.COUNT
+import dbhelper.dsl.fields.functions.Max.Companion.MAX
 import dbhelper.dsl.query.join.On
 import dbhelper.dsl.query.order.Asc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,7 +42,7 @@ class QueryBuilderTest {
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
-            .fields("name".col, COUNT("*") AS "total")
+            .fields("name".col, COUNT("*") AS "total", COALESCE(MAX("age"), 1) - 1)
             .where(Eq("nationality", "Italian"))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .leftJoin(On("left", "identifier"))
@@ -53,7 +55,7 @@ class QueryBuilderTest {
 
         assertEquals(
             Query(
-                """SELECT "name", COUNT(*) AS "total" """ +
+                """SELECT "name", COUNT(*) AS "total", COALESCE(MAX("age"), ?) - 1 """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
                         """LEFT JOIN "left" USING("identifier") """ +
@@ -62,7 +64,7 @@ class QueryBuilderTest {
                         """GROUP BY "name" """ +
                         """HAVING COUNT(*) > ? """ +
                         """ORDER BY "first" ASC, "second" ASC """ +
-                        """LIMIT 34 OFFSET 6""", listOf("Italian", 12)
+                        """LIMIT 34 OFFSET 6""", listOf(1, "Italian", 12)
             ), query
         )
     }

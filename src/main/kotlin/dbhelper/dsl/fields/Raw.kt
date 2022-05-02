@@ -1,8 +1,8 @@
 package dbhelper.dsl.fields
 
-class Raw(private val value: Any): Field {
+class Raw(private val value: Any, private val params: List<Any?> = emptyList()): Field {
     override fun toString() = value.toString()
-    override fun params(): List<Any?> = emptyList()
+    override fun params(): List<Any?> = params
 
     companion object {
         @JvmStatic
