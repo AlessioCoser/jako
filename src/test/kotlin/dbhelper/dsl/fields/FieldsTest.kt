@@ -21,12 +21,6 @@ class FieldsTest {
     }
 
     @Test
-    fun `fields with AS and aggregate function`() {
-        val fields = Fields("primo" AS "p", "primo.secondo" AS "s", COUNT("secondo") AS "c")
-        assertEquals("\"primo\" AS \"p\", \"primo\".\"secondo\" AS \"s\", COUNT(\"secondo\") AS \"c\"", fields.toString())
-    }
-
-    @Test
     fun `fields with COUNT and asterisk`() {
         val fields = Fields(COUNT("*") AS "c")
         assertEquals("COUNT(*) AS \"c\"", fields.toString())
