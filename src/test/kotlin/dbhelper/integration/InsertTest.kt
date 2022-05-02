@@ -38,18 +38,20 @@ class InsertTest {
     }
 
     @Test
-    fun `insert another city and age with build dsl`() {
-        db.insert(InsertBuilder()
+    fun `return inserted field`() {
+        val insertedName = db.select(InsertBuilder()
             .into("customers")
             .set("name", "name2")
             .set("age", 99)
-        ).execute()
+            .returning("name")
+        ).first { str("name") }
 
         val customer = db.select {
             from("customers")
             where("name" EQ "name2")
         }.first { Customer(str("name"), int("age")) }
 
+        assertThat(insertedName).isEqualTo("name2")
         assertThat(customer).isEqualTo(Customer("name2", 99))
     }
 }

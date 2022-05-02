@@ -1,6 +1,8 @@
 package dbhelper.dsl.insert
 
+import dbhelper.dsl.Returning
 import dbhelper.dsl.StatementBuilder
+import dbhelper.dsl.fields.Field
 import java.sql.Date
 import java.time.LocalDate
 
@@ -8,6 +10,7 @@ class InsertBuilder: StatementBuilder {
     private var rawInsert: Insert? = null
     private var into: Into? = null
     private var insertRow: InsertRow = InsertRow()
+    private var returning: Returning = Returning()
 
     fun raw(statement: String, vararg params: Any?): InsertBuilder {
         rawInsert = Insert(statement, params.toList())
@@ -29,12 +32,21 @@ class InsertBuilder: StatementBuilder {
         return this
     }
 
+    fun returning(vararg fields: String): InsertBuilder {
+        returning = Returning(*fields)
+        return this
+    }
+
+    fun returning(vararg fields: Field): InsertBuilder {
+        returning = Returning(*fields)
+        return this
+    }
+
     override fun build(): Insert {
-        return rawInsert ?: Insert(intoOrThrow(), rowOrThrow())
+        return rawInsert ?: Insert(intoOrThrow(), rowOrThrow(), returning)
     }
 
     private fun rowOrThrow() = if (insertRow.isNotEmpty()) insertRow else throw RuntimeException("Cannot generate insert without values")
-
     private fun intoOrThrow() = into ?: throw RuntimeException("Cannot generate insert without table name")
 
     companion object {

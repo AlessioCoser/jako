@@ -1,5 +1,6 @@
 package dbhelper.database
 
+import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.insert.InsertBuilder
 import dbhelper.dsl.query.QueryBuilder
 import dbhelper.dsl.update.UpdateBuilder
@@ -26,7 +27,7 @@ class Database(val transactionManager: TransactionManager) {
         return insert(fn(InsertBuilder()))
     }
 
-    fun select(query: QueryBuilder): Select {
+    fun select(query: StatementBuilder): Select {
         return Select(transactionManager, query.build())
     }
 

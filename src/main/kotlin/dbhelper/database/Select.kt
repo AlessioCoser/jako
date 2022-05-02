@@ -1,17 +1,17 @@
 package dbhelper.database
 
-import dbhelper.dsl.query.Query
+import dbhelper.dsl.Statement
 import dbhelper.dsl.query.Row
 import dbhelper.dsl.query.RowParser
 
-class Select internal constructor(private val transactionManager: TransactionManager, private val query: Query) {
+class Select internal constructor(private val transactionManager: TransactionManager, private val statement: Statement) {
     fun <T> all(parser: RowParser<T>): List<T> {
         return all { parser.parse(this) }
     }
 
     fun <T> all(parseRow: RowSql.() -> T): List<T> {
         return transactionManager.useConnection {
-            val resultSet = it.prepareStatement(query).executeQuery()
+            val resultSet = it.prepareStatement(statement).executeQuery()
             val items: MutableList<T> = ArrayList()
             while (resultSet.next()) {
                 items.add(parseRow(RowSql(resultSet)))
@@ -26,7 +26,7 @@ class Select internal constructor(private val transactionManager: TransactionMan
 
     fun <T> first(parseRow: Row.() -> T): T? {
         return transactionManager.useConnection {
-            val resultSet = it.prepareStatement(query).executeQuery()
+            val resultSet = it.prepareStatement(statement).executeQuery()
 
             if (resultSet.next()) {
                 parseRow(RowSql(resultSet))

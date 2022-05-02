@@ -215,6 +215,15 @@ class SelectTest {
     }
 
     @Test
+    fun `xxx xxx`() {
+        val all = db.select {
+            raw("""DELETE FROM pets RETURNING *;""")
+        }.all { Pet(str("name"), str("type"), str("owner"), int("age")) }
+
+        assertThat(all).isEqualTo(emptyList<Pet>())
+    }
+
+    @Test
     fun `select coalesce`() {
         val coalesceMail = db.select {
             fields(COALESCE("city", "none") AS "cit")
@@ -226,6 +235,7 @@ class SelectTest {
     }
 }
 
+data class Pet(val name: String, val type: String, val owner: String, val age: Int)
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
 
