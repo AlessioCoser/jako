@@ -1,4 +1,4 @@
-package dbhelper.dsl.fields
+package dbhelper.dsl.fields.functions
 
 import dbhelper.dsl.fields.As.Companion.AS
 import dbhelper.dsl.fields.functions.Avg.Companion.AVG
@@ -13,23 +13,16 @@ import dbhelper.dsl.fields.functions.Sum.Companion.SUM
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class AsFieldTest {
+class EveryFieldTest {
     @Test
-    fun `string AS field`() {
-        val field = "column" AS "c"
-        assertEquals("\"column\" AS \"c\"", field.toString())
+    fun `EVERY field with string`() {
+        val field = EVERY("table.value")
+        assertEquals("EVERY(\"table\".\"value\")", field.toString())
     }
 
     @Test
-    fun `field AS field`() {
-        val field = COUNT("column") AS "c"
-        assertEquals("COUNT(\"column\") AS \"c\"", field.toString())
-    }
-
-    @Test
-    fun `wrap table-column field with as`() {
-        val field = "table.order_index" AS "ord"
-
-        assertEquals("\"table\".\"order_index\" AS \"ord\"", field.toString())
+    fun `EVERY field with column field`() {
+        val field = EVERY("column".col)
+        assertEquals("EVERY(\"column\")", field.toString())
     }
 }

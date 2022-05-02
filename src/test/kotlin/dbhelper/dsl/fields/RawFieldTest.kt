@@ -1,0 +1,22 @@
+package dbhelper.dsl.fields
+
+import dbhelper.dsl.fields.Raw.Companion.raw
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+class RawFieldTest {
+
+    @Test
+    fun `raw field does nothing`() {
+        val field = Raw("UNEXISTING_FN(order_index)")
+
+        assertEquals("UNEXISTING_FN(order_index)", field.toString())
+    }
+
+    @Test
+    fun `create raw field from string`() {
+        val field = "UNEXISTING_FN(order_index)".raw
+
+        assertEquals("UNEXISTING_FN(order_index)", field.toString())
+    }
+}

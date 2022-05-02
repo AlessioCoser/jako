@@ -9,9 +9,9 @@ class Coalesce(private val value: Field, private val default: Field): Field {
 
     companion object {
         @JvmStatic
-        fun COALESCE(fieldName: String, default: Any) = Coalesce(Column(fieldName), Raw(default))
+        fun COALESCE(fieldName: String, default: Int) = Coalesce(Column(fieldName), Raw(default))
 
         @JvmStatic
-        fun COALESCE(fieldName: Field, default: Any) = Coalesce(fieldName, Raw(default))
+        fun COALESCE(fieldName: Field, default: Int) = Coalesce(fieldName, Raw(default))
     }
 }
