@@ -1,6 +1,7 @@
 package dbhelper.dsl.fields
 
 import dbhelper.dsl.fields.Raw.Companion.raw
+import dbhelper.dsl.fields.functions.Coalesce.Companion.COALESCE
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -18,5 +19,13 @@ class RawFieldTest {
         val field = "UNEXISTING_FN(order_index)".raw
 
         assertEquals("UNEXISTING_FN(order_index)", field.toString())
+    }
+
+    @Test
+    fun `raw field pass params`() {
+        val field = Raw(COALESCE("column", "value"))
+
+        assertEquals("COALESCE(\"column\", ?)", field.toString())
+        assertEquals(listOf("value"), field.params())
     }
 }
