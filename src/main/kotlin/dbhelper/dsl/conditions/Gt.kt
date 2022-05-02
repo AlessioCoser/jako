@@ -1,10 +1,15 @@
 package dbhelper.dsl.conditions
 
-class Gt(left: String, right: Int) : GenericCondition(left, ">", right) {
+import dbhelper.dsl.fields.Column
+import dbhelper.dsl.fields.Field
+
+class Gt(left: Field, right: Int) : GenericCondition(left, ">", right) {
+    constructor(left: String, right: Int): this(Column(left), right)
+
     companion object {
         @JvmStatic
         infix fun String.GT(value: Int): Gt {
-            return Gt(this, value)
+            return Gt(Column(this), value)
         }
     }
 }

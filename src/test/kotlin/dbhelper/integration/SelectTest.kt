@@ -10,8 +10,9 @@ import dbhelper.dsl.conditions.Eq.Companion.EQ
 import dbhelper.dsl.conditions.Gt.Companion.GT
 import dbhelper.dsl.conditions.Or
 import dbhelper.dsl.conditions.Or.Companion.OR
-import dbhelper.dsl.fields.Fields.Companion.AS
-import dbhelper.dsl.fields.Fields.Companion.COUNT
+import dbhelper.dsl.fields.As.Companion.AS
+import dbhelper.dsl.fields.Column.Companion.C
+import dbhelper.dsl.fields.CountField.Companion.COUNT
 import dbhelper.dsl.query.QueryBuilder
 import dbhelper.dsl.query.Row
 import dbhelper.dsl.query.RowParser
@@ -181,7 +182,7 @@ class SelectTest {
     @Test
     fun leftJoin() {
         val all = db.select {
-            fields("users.name", COUNT("pets.name") AS "count")
+            fields(C("users.name"), COUNT("pets.name") AS "count")
             from("users")
             where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
             leftJoin("pets" ON "pets.owner" EQ "users.email")

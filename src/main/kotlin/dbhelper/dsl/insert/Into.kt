@@ -1,7 +1,8 @@
 package dbhelper.dsl.insert
 
-import dbhelper.dsl.fields.Fields.Companion.wrap
+import dbhelper.dsl.fields.Column
+
 
 class Into(private val table: String) {
-    override fun toString() = " INTO ${table.wrap()}"
+    override fun toString() = " INTO ${Column(table)}"
 }

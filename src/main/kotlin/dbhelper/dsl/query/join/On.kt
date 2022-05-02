@@ -1,6 +1,6 @@
 package dbhelper.dsl.query.join
 
-import dbhelper.dsl.fields.Fields.Companion.wrap
+import dbhelper.dsl.fields.Column
 
 class On(private val table: String, private val field1: String, private val field2: String? = null) {
 
@@ -8,9 +8,9 @@ class On(private val table: String, private val field1: String, private val fiel
 
     override fun toString(): String {
         if (field2 == null) {
-            return "${table.wrap()} USING(${field1.wrap()})"
+            return "${Column(table)} USING(${Column(field1)})"
         }
-        return "${table.wrap()} ON ${field1.wrap()} = ${field2.wrap()}"
+        return "${Column(table)} ON ${Column(field1)} = ${Column(field2)}"
     }
 
     companion object {

@@ -2,7 +2,7 @@ package dbhelper.dsl.update
 
 import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
-import dbhelper.dsl.fields.Fields.Companion.wrap
+import dbhelper.dsl.fields.Column
 import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
@@ -11,7 +11,7 @@ import java.time.LocalDate
 
 class UpdateBuilder: StatementBuilder {
     private var rawUpdate: Update? = null
-    private var table: String? = null
+    private var table: Column? = null
     private val fields: SetFields = SetFields()
     private var where: Where = NoWhere()
 
@@ -21,7 +21,7 @@ class UpdateBuilder: StatementBuilder {
     }
 
     fun from(table: String): UpdateBuilder {
-        this.table = table.wrap()
+        this.table = Column(table)
         return this
     }
 
@@ -46,7 +46,7 @@ class UpdateBuilder: StatementBuilder {
 
     private fun fieldsOrThrow() = if(fields.isNotEmpty()) fields else throw RuntimeException("Cannot generate update without values")
 
-    private fun tableOrThrow(): String = table ?: throw RuntimeException("Cannot generate update without table name")
+    private fun tableOrThrow(): Column = table ?: throw RuntimeException("Cannot generate update without table name")
 
     companion object {
         @JvmStatic

@@ -2,6 +2,7 @@ package dbhelper.dsl.query
 
 import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
+import dbhelper.dsl.fields.Field
 import dbhelper.dsl.fields.Fields
 import dbhelper.dsl.query.group.Group
 import dbhelper.dsl.query.group.GroupBy
@@ -44,6 +45,11 @@ class QueryBuilder: StatementBuilder {
     }
 
     fun fields(vararg fields: String): QueryBuilder {
+        this.fields = Fields(*fields)
+        return this
+    }
+
+    fun fields(vararg fields: Field): QueryBuilder {
         this.fields = Fields(fields.toList())
         return this
     }

@@ -1,7 +1,7 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.fields.Fields.Companion.wrap
+import dbhelper.dsl.fields.Column
 
 class From(private val table: String) {
-    override fun toString() = " FROM ${table.wrap()}"
+    override fun toString() = " FROM ${Column(table)}"
 }
