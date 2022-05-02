@@ -1,9 +1,14 @@
 package dbhelper.dsl.fields
 
 import dbhelper.dsl.fields.As.Companion.AS
-import dbhelper.dsl.fields.CoalesceField.Companion.COALESCE
-import dbhelper.dsl.fields.Column.Companion.C
-import dbhelper.dsl.fields.MaxField.Companion.MAX
+import dbhelper.dsl.fields.Avg.Companion.AVG
+import dbhelper.dsl.fields.Coalesce.Companion.COALESCE
+import dbhelper.dsl.fields.Count.Companion.COUNT
+import dbhelper.dsl.fields.Every.Companion.EVERY
+import dbhelper.dsl.fields.Max.Companion.MAX
+import dbhelper.dsl.fields.Min.Companion.MIN
+import dbhelper.dsl.fields.Raw.Companion.raw
+import dbhelper.dsl.fields.Sum.Companion.SUM
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -13,48 +18,48 @@ class FieldsTest {
         val fields = Fields("primo", "secondo")
         assertEquals("\"primo\", \"secondo\"", fields.toString())
     }
-//
-//    @Test
-//    fun `fields with AS and aggregate function`() {
-//        val fields = Fields(listOf("primo" AS "p", "primo.secondo" AS "s", COUNT("secondo") AS "c"))
-//        assertEquals("\"primo\" AS \"p\", \"primo\".\"secondo\" AS \"s\", count(\"secondo\") AS \"c\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with COUNT and asterisk`() {
-//        val fields = Fields(listOf(COUNT("*") AS "c"))
-//        assertEquals("count(*) AS \"c\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with AVG`() {
-//        val fields = Fields(listOf(AVG("field") AS "name"))
-//        assertEquals("avg(\"field\") AS \"name\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with EVERY`() {
-//        val fields = Fields(listOf(EVERY("field") AS "name"))
-//        assertEquals("every(\"field\") AS \"name\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with MAX`() {
-//        val fields = Fields(listOf(MAX("field") AS "name"))
-//        assertEquals("max(\"field\") AS \"name\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with MIN`() {
-//        val fields = Fields(listOf(MIN("field") AS "name"))
-//        assertEquals("min(\"field\") AS \"name\"", fields.toString())
-//    }
-//
-//    @Test
-//    fun `fields with SUM`() {
-//        val fields = Fields(listOf(SUM("field") AS "name"))
-//        assertEquals("sum(\"field\") AS \"name\"", fields.toString())
-//    }
+
+    @Test
+    fun `fields with AS and aggregate function`() {
+        val fields = Fields("primo" AS "p", "primo.secondo" AS "s", COUNT("secondo") AS "c")
+        assertEquals("\"primo\" AS \"p\", \"primo\".\"secondo\" AS \"s\", COUNT(\"secondo\") AS \"c\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with COUNT and asterisk`() {
+        val fields = Fields(COUNT("*") AS "c")
+        assertEquals("COUNT(*) AS \"c\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with AVG`() {
+        val fields = Fields(AVG("field") AS "name")
+        assertEquals("AVG(\"field\") AS \"name\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with EVERY`() {
+        val fields = Fields(EVERY("field") AS "name")
+        assertEquals("EVERY(\"field\") AS \"name\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with MAX`() {
+        val fields = Fields(MAX("field") AS "name")
+        assertEquals("MAX(\"field\") AS \"name\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with MIN`() {
+        val fields = Fields(MIN("field") AS "name")
+        assertEquals("MIN(\"field\") AS \"name\"", fields.toString())
+    }
+
+    @Test
+    fun `fields with SUM`() {
+        val fields = Fields(SUM("field") AS "name")
+        assertEquals("SUM(\"field\") AS \"name\"", fields.toString())
+    }
 
     @Test
     fun `do not quote when already present an aggregate function`() {
@@ -87,5 +92,12 @@ class FieldsTest {
         val field = "table.order_index" AS "ord"
 
         assertEquals("\"table\".\"order_index\" AS \"ord\"", field.toString())
+    }
+
+    @Test
+    fun ttt() {
+        val field = "UNEXISTING_FN(order_index)".raw
+
+        assertEquals("UNEXISTING_FN(order_index)", field.toString())
     }
 }

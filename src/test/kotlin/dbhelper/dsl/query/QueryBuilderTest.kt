@@ -4,8 +4,8 @@ import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
 import dbhelper.dsl.fields.As.Companion.AS
-import dbhelper.dsl.fields.Column.Companion.C
-import dbhelper.dsl.fields.CountField.Companion.COUNT
+import dbhelper.dsl.fields.Column.Companion.col
+import dbhelper.dsl.fields.Count.Companion.COUNT
 import dbhelper.dsl.query.join.On
 import dbhelper.dsl.query.order.Asc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,7 +40,7 @@ class QueryBuilderTest {
     fun `all together in right order`() {
         val query = QueryBuilder()
             .from("people")
-            .fields(C("name"), COUNT("*") AS "total")
+            .fields("name".col, COUNT("*") AS "total")
             .where(Eq("nationality", "Italian"))
             .join(On("bank_account", "people.id", "bank_account.person_id"))
             .leftJoin(On("left", "identifier"))

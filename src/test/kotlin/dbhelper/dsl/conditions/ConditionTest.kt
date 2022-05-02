@@ -4,6 +4,7 @@ import dbhelper.dsl.conditions.And.Companion.AND
 import dbhelper.dsl.conditions.Eq.Companion.EQ
 import dbhelper.dsl.conditions.Gt.Companion.GT
 import dbhelper.dsl.conditions.Or.Companion.OR
+import dbhelper.dsl.fields.Column.Companion.col
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -33,6 +34,22 @@ class ConditionTest {
     }
 
     @Test
+    fun `eq str using dsl 2`() {
+        val condition = "field".col EQ "value"
+
+        assertEquals("\"field\" = ?", condition.toString())
+        assertEquals(listOf("value"), condition.params())
+    }
+
+    @Test
+    fun `eq str using dsl 3`() {
+        val condition = "field".col EQ 1
+
+        assertEquals("\"field\" = ?", condition.toString())
+        assertEquals(listOf(1), condition.params())
+    }
+
+    @Test
     fun `eq int using dsl`() {
         val condition = "field" EQ 1
 
@@ -51,6 +68,14 @@ class ConditionTest {
     @Test
     fun `gt using dsl`() {
         val condition = "field" GT 2
+
+        assertEquals("\"field\" > ?", condition.toString())
+        assertEquals(listOf(2), condition.params())
+    }
+
+    @Test
+    fun `gt using dsl 2`() {
+        val condition = "field".col GT 2
 
         assertEquals("\"field\" > ?", condition.toString())
         assertEquals(listOf(2), condition.params())

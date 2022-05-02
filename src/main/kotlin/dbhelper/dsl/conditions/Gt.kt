@@ -11,5 +11,10 @@ class Gt(left: Field, right: Int) : GenericCondition(left, ">", right) {
         infix fun String.GT(value: Int): Gt {
             return Gt(Column(this), value)
         }
+
+        @JvmStatic
+        infix fun Field.GT(value: Int): Gt {
+            return Gt(this, value)
+        }
     }
 }

@@ -1,7 +1,7 @@
 package dbhelper.dsl.query.group
 
-import dbhelper.dsl.fields.Column.Companion.C
-import dbhelper.dsl.fields.CountField.Companion.COUNT
+import dbhelper.dsl.fields.Column
+import dbhelper.dsl.fields.Count.Companion.COUNT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -27,7 +27,7 @@ class GroupByTest {
 
     @Test
     fun `group by aggregate function`() {
-        val groupBy = GroupBy(C("field1"), COUNT("field2"))
+        val groupBy = GroupBy(Column("field1"), COUNT("field2"))
 
         assertEquals(" GROUP BY \"field1\", COUNT(\"field2\")", groupBy.toString())
     }
