@@ -1,10 +1,11 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.Statement
+import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Field
 import dbhelper.dsl.fields.Field.Companion.ALL
 import dbhelper.dsl.fields.Fields
+import dbhelper.dsl.fields.Raw
 import dbhelper.dsl.query.group.Group
 import dbhelper.dsl.query.group.GroupBy
 import dbhelper.dsl.query.group.NoGroup
@@ -24,7 +25,7 @@ import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 
-class Query: Statement {
+class Query: StatementBuilder() {
     private var from: From? = null
     private var fields: Field = ALL
     private var where: Where = NoWhere()
@@ -34,8 +35,7 @@ class Query: Statement {
     private var groupBy: Group = NoGroup()
     private var limit: Limit = NoLimit()
 
-    override fun toString() = "SELECT $fields${fromOrThrow()}$joins$where$groupBy$having$orderBy$limit"
-    override fun params(): List<Any?> = fields.params() + where.params() + having.params()
+    override fun blocks() = listOf(Raw("SELECT "), fields, fromOrThrow(), joins, where, groupBy, having, orderBy, limit)
 
     fun from(table: String): Query {
         this.from = From(table)
