@@ -7,4 +7,4 @@
  * in the user manual at https://docs.gradle.org/6.2/userguide/multi_project_builds.html
  */
 
-rootProject.name = "dbhelper"
+rootProject.name = "jako"
