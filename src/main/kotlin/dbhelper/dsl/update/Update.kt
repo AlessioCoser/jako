@@ -10,20 +10,12 @@ import java.sql.Date
 import java.time.LocalDate
 
 class Update: Statement {
-    private var rawText: String? = null
-    private var rawParams: List<Any?>? = null
     private var table: Column? = null
     private val fields: SetFields = SetFields()
     private var where: Where = NoWhere()
 
-    override fun toString() = rawText ?: "UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where"
-    override fun params(): List<Any?> = rawParams ?: (fields.params() + where.params())
-
-    fun raw(statement: String, vararg params: Any?): Update {
-        rawText = statement
-        rawParams = params.toList()
-        return this
-    }
+    override fun toString() = "UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where"
+    override fun params(): List<Any?> = fields.params() + where.params()
 
     fun from(table: String): Update {
         this.table = Column(table)

@@ -25,8 +25,6 @@ import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 
 class Query: Statement {
-    private var rawText: String? = null
-    private var rawParams: List<Any?>? = null
     private var from: From? = null
     private var fields: Field = ALL
     private var where: Where = NoWhere()
@@ -36,14 +34,8 @@ class Query: Statement {
     private var groupBy: Group = NoGroup()
     private var limit: Limit = NoLimit()
 
-    override fun toString() = rawText ?: "SELECT $fields${fromOrThrow()}$joins$where$groupBy$having$orderBy$limit"
-    override fun params(): List<Any?> = rawParams ?: (fields.params() + where.params() + having.params())
-
-    fun raw(statement: String, vararg params: Any?): Query {
-        rawText = statement
-        rawParams = params.toList()
-        return this
-    }
+    override fun toString() = "SELECT $fields${fromOrThrow()}$joins$where$groupBy$having$orderBy$limit"
+    override fun params(): List<Any?> = fields.params() + where.params() + having.params()
 
     fun from(table: String): Query {
         this.from = From(table)

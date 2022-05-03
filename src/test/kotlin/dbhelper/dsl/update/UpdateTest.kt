@@ -19,34 +19,6 @@ class UpdateTest {
     }
 
     @Test
-    fun `update raw statement`() {
-        val insert = Update()
-            .raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
-
-        assertEquals("UPDATE table SET column1 = ?, column2 = ?", insert.toString())
-        assertEquals(listOf("1", 2), insert.params())
-    }
-
-    @Test
-    fun `update raw wins over other insert`() {
-        val insert = Update()
-            .from("table")
-            .set("column1", "1")
-            .raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
-
-        assertEquals("UPDATE table SET column1 = ?, column2 = ?", insert.toString())
-        assertEquals(listOf("1", 2), insert.params())
-    }
-
-    @Test
-    fun `update raw statement statically`() {
-        val insert = Update().raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
-
-        assertEquals("UPDATE table SET column1 = ?, column2 = ?", insert.toString())
-        assertEquals(listOf("1", 2), insert.params())
-    }
-
-    @Test
     fun `update without values`() {
         val message = assertThrows(RuntimeException::class.java) {
             Update().from("table").toString()

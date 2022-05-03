@@ -1,6 +1,5 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
 import dbhelper.dsl.fields.As.Companion.AS
@@ -65,48 +64,5 @@ class QueryTest {
                 """ORDER BY "first" ASC, "second" ASC """ +
                 """LIMIT 34 OFFSET 6""", query.toString())
         assertEquals(listOf(1, "Italian", 12), query.params())
-    }
-
-    @Test
-    fun `raw overwrites all statements before used`() {
-        val query = Query()
-            .from("people")
-            .fields("name", "count(name) AS total")
-            .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
-            .join(On("bank_account", "people.id", "bank_account.person_id"))
-            .groupBy("name")
-            .having(Gt("count(name)", 12))
-            .orderBy(Asc("first", "second"))
-            .limit(34, 6)
-            .raw("SELECT * FROM customers")
-
-        assertEquals("SELECT * FROM customers", query.toString())
-        assertEquals(emptyList<Any?>(), query.params())
-    }
-
-    @Test
-    fun `raw can be used alone`() {
-        val query = Query()
-            .raw("SELECT * FROM customers")
-
-        assertEquals("SELECT * FROM customers", query.toString())
-        assertEquals(emptyList<Any?>(), query.params())
-    }
-
-    @Test
-    fun `raw can be used with some parameters`() {
-        val query = Query()
-            .raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
-
-        assertEquals("SELECT * FROM customers WHERE age < ? AND age > ?", query.toString())
-        assertEquals(listOf(20, 30), query.params())
-    }
-
-    @Test
-    fun `raw can be used statically`() {
-        val query = Query().raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
-
-        assertEquals("SELECT * FROM customers WHERE age < ? AND age > ?", query.toString())
-        assertEquals(listOf(20, 30), query.params())
     }
 }

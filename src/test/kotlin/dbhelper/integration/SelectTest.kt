@@ -3,6 +3,7 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.HikariConnector
 import dbhelper.database.JdbcPostgresConnection
+import dbhelper.dsl.RawStatement
 import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.And.Companion.AND
 import dbhelper.dsl.conditions.Eq
@@ -201,7 +202,7 @@ class SelectTest {
 
     @Test
     fun `query raw`() {
-        val all = db.select(Query().raw("""SELECT * FROM users WHERE city = 'Firenze';"""))
+        val all = db.select(RawStatement("""SELECT * FROM users WHERE city = 'Firenze';"""))
             .all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(all).isEqualTo(
@@ -215,7 +216,7 @@ class SelectTest {
 
     @Test
     fun `select a delete statement with returning`() {
-        val all = db.select(Query().raw("""DELETE FROM pets_deletable RETURNING *;"""))
+        val all = db.select(RawStatement("""DELETE FROM pets_deletable RETURNING *;"""))
             .all { Pet(str("name"), str("type"), int("age")) }
 
         assertThat(all).isEqualTo(listOf(Pet(name="Pluto", type="Dog", age=2), Pet(name="Fido", type="Dog", age=3)))

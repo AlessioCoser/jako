@@ -7,20 +7,12 @@ import java.sql.Date
 import java.time.LocalDate
 
 class Insert: Statement {
-    private var rawText: String? = null
-    private var rawParams: List<Any?>? = null
     private var into: Into? = null
     private var insertRow: InsertRow = InsertRow()
     private var returning: Returning = Returning()
 
-    override fun toString() = rawText ?: "INSERT${intoOrThrow()}${rowOrThrow()}$returning"
-    override fun params(): List<Any?> = rawParams ?: (insertRow.params() + returning.params())
-
-    fun raw(statement: String, vararg params: Any?): Insert {
-        rawText = statement
-        rawParams = params.toList()
-        return this
-    }
+    override fun toString() = "INSERT${intoOrThrow()}${rowOrThrow()}$returning"
+    override fun params(): List<Any?> = insertRow.params() + returning.params()
 
     fun into(table: String): Insert {
         this.into = Into(table)
