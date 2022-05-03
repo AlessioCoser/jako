@@ -1,6 +1,5 @@
 package dbhelper.dsl.query
 
-import dbhelper.dsl.Statement
 import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
@@ -19,7 +18,7 @@ class QueryTest {
     @Test
     fun `cannot build query without table name`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Query().build()
+            Query().toString()
         }.message
 
         assertEquals("Cannot generate query without table name", message)
@@ -27,16 +26,18 @@ class QueryTest {
 
     @Test
     fun `build simple query`() {
-        val query = Query().from("people").build()
+        val query = Query().from("people")
 
-        assertEquals(Statement("SELECT * FROM \"people\"", emptyList()), query)
+        assertEquals("SELECT * FROM \"people\"", query.toString())
+        assertEquals(emptyList<Any?>(), query.params())
     }
 
     @Test
     fun `build single query`() {
-        val query = Query().from("people").single().build()
+        val query = Query().from("people").single()
 
-        assertEquals(Statement("SELECT * FROM \"people\" LIMIT 1", emptyList()), query)
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toString())
+        assertEquals(emptyList<Any?>(), query.params())
     }
 
     @Test
@@ -52,22 +53,18 @@ class QueryTest {
             .having(Gt(COUNT("*"), 12))
             .orderBy(Asc("first", "second"))
             .limit(34, 6)
-            .build()
 
-        assertEquals(
-            Statement(
-                """SELECT "name", COUNT(*) AS "total", COALESCE(MAX("age"), ?) - 1 """ +
-                        """FROM "people" """ +
-                        """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
-                        """LEFT JOIN "left" USING("identifier") """ +
-                        """RIGHT JOIN "right" ON "people"."id" = "bank_account"."person_id" """ +
-                        """WHERE "nationality" = ? """ +
-                        """GROUP BY "name" """ +
-                        """HAVING COUNT(*) > ? """ +
-                        """ORDER BY "first" ASC, "second" ASC """ +
-                        """LIMIT 34 OFFSET 6""", listOf(1, "Italian", 12)
-            ), query
-        )
+        assertEquals("""SELECT "name", COUNT(*) AS "total", COALESCE(MAX("age"), ?) - 1 """ +
+                """FROM "people" """ +
+                """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
+                """LEFT JOIN "left" USING("identifier") """ +
+                """RIGHT JOIN "right" ON "people"."id" = "bank_account"."person_id" """ +
+                """WHERE "nationality" = ? """ +
+                """GROUP BY "name" """ +
+                """HAVING COUNT(*) > ? """ +
+                """ORDER BY "first" ASC, "second" ASC """ +
+                """LIMIT 34 OFFSET 6""", query.toString())
+        assertEquals(listOf(1, "Italian", 12), query.params())
     }
 
     @Test
@@ -82,33 +79,34 @@ class QueryTest {
             .orderBy(Asc("first", "second"))
             .limit(34, 6)
             .raw("SELECT * FROM customers")
-            .build()
 
-        assertEquals(Statement("SELECT * FROM customers", emptyList()), query)
+        assertEquals("SELECT * FROM customers", query.toString())
+        assertEquals(emptyList<Any?>(), query.params())
     }
 
     @Test
     fun `raw can be used alone`() {
         val query = Query()
             .raw("SELECT * FROM customers")
-            .build()
 
-        assertEquals(Statement("SELECT * FROM customers", emptyList()), query)
+        assertEquals("SELECT * FROM customers", query.toString())
+        assertEquals(emptyList<Any?>(), query.params())
     }
 
     @Test
     fun `raw can be used with some parameters`() {
         val query = Query()
             .raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
-            .build()
 
-        assertEquals(Statement("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
+        assertEquals("SELECT * FROM customers WHERE age < ? AND age > ?", query.toString())
+        assertEquals(listOf(20, 30), query.params())
     }
 
     @Test
     fun `raw can be used statically`() {
-        val query = Query.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
+        val query = Query().raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
 
-        assertEquals(Statement("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
+        assertEquals("SELECT * FROM customers WHERE age < ? AND age > ?", query.toString())
+        assertEquals(listOf(20, 30), query.params())
     }
 }

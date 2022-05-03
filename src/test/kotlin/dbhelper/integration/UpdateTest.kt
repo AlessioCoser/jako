@@ -28,13 +28,11 @@ class UpdateTest {
             .from("users")
             .set("age", 3)
             .where("email" EQ "cavallino@cavallini.it")
-            .build()
         )
 
         val newAge = db.select(Query()
             .from("users")
             .where("email" EQ "cavallino@cavallini.it")
-            .build()
         ).first { int("age") }
 
         assertThat(newAge).isEqualTo(3)
@@ -47,13 +45,11 @@ class UpdateTest {
                 .from("users")
                 .set("age", 4)
                 .where("email" EQ "cavallino@cavallini.it")
-                .build()
         )
 
         val newAge = db.select(Query()
             .from("users")
             .where("email" EQ "cavallino@cavallini.it")
-            .build()
         ).first { int("age") }
 
         assertThat(newAge).isEqualTo(4)

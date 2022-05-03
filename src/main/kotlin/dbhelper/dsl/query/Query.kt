@@ -1,7 +1,6 @@
 package dbhelper.dsl.query
 
 import dbhelper.dsl.Statement
-import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Field
 import dbhelper.dsl.fields.Field.Companion.ALL
@@ -25,8 +24,9 @@ import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 
-class Query: StatementBuilder {
-    private var rawQuery: Statement? = null
+class Query: Statement {
+    private var rawText: String? = null
+    private var rawParams: List<Any?>? = null
     private var from: From? = null
     private var fields: Field = ALL
     private var where: Where = NoWhere()
@@ -36,8 +36,12 @@ class Query: StatementBuilder {
     private var groupBy: Group = NoGroup()
     private var limit: Limit = NoLimit()
 
+    override fun toString() = rawText ?: "SELECT $fields${fromOrThrow()}$joins$where$groupBy$having$orderBy$limit"
+    override fun params(): List<Any?> = rawParams ?: (fields.params() + where.params() + having.params())
+
     fun raw(statement: String, vararg params: Any?): Query {
-        rawQuery = Statement(statement, params.toList())
+        rawText = statement
+        rawParams = params.toList()
         return this
     }
 
@@ -98,14 +102,5 @@ class Query: StatementBuilder {
 
     fun single() = limit(1)
 
-    override fun build(): Statement {
-        return rawQuery ?: Statement("SELECT $fields${fromOrThrow()}$joins$where$groupBy$having$orderBy$limit", fields.params() + where.params() + having.params())
-    }
-
     private fun fromOrThrow(): From = from ?: throw RuntimeException("Cannot generate query without table name")
-
-    companion object {
-        @JvmStatic
-        fun raw(statement: String, vararg params: Any?) = Query().raw(statement, *params).build()
-    }
 }

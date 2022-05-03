@@ -1,7 +1,6 @@
 package dbhelper.dsl.update
 
 import dbhelper.dsl.Statement
-import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Column
 import dbhelper.dsl.where.GenericWhere
@@ -10,14 +9,19 @@ import dbhelper.dsl.where.Where
 import java.sql.Date
 import java.time.LocalDate
 
-class Update: StatementBuilder {
-    private var rawUpdate: Statement? = null
+class Update: Statement {
+    private var rawText: String? = null
+    private var rawParams: List<Any?>? = null
     private var table: Column? = null
     private val fields: SetFields = SetFields()
     private var where: Where = NoWhere()
 
+    override fun toString() = rawText ?: "UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where"
+    override fun params(): List<Any?> = rawParams ?: (fields.params() + where.params())
+
     fun raw(statement: String, vararg params: Any?): Update {
-        rawUpdate = Statement(statement, params.toList())
+        rawText = statement
+        rawParams = params.toList()
         return this
     }
 
@@ -41,16 +45,7 @@ class Update: StatementBuilder {
         return this
     }
 
-    override fun build(): Statement {
-        return rawUpdate ?: Statement("UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where", fields.params() + where.params())
-    }
-
     private fun fieldsOrThrow() = if(fields.isNotEmpty()) fields else throw RuntimeException("Cannot generate update without values")
 
     private fun tableOrThrow(): Column = table ?: throw RuntimeException("Cannot generate update without table name")
-
-    companion object {
-        @JvmStatic
-        fun raw(statement: String, vararg params: Any?) = Update().raw(statement, *params).build()
-    }
 }

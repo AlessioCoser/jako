@@ -28,13 +28,11 @@ class InsertTest {
             .into("customers")
             .set("name", "name1")
             .set("age", 18)
-            .build()
         )
 
         val customer = db.select(Query()
             .from("customers")
             .where("name" EQ "name1")
-            .build()
         ).first { Customer(str("name"), int("age")) }
 
         assertThat(customer).isEqualTo(Customer("name1", 18))
@@ -47,13 +45,11 @@ class InsertTest {
             .set("name", "name2")
             .set("age", 99)
             .returning("name")
-            .build()
         ).first { str("name") }
 
         val customer = db.select(Query()
             .from("customers")
             .where("name" EQ "name2")
-            .build()
         ).first { Customer(str("name"), int("age")) }
 
         assertThat(insertedName).isEqualTo("name2")

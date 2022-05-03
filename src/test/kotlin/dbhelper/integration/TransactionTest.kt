@@ -32,7 +32,6 @@ class TransactionTest {
                     .into("customers")
                     .set("name", "transaction_test")
                     .set("age", 18)
-                    .build()
                 )
 
                 assertThat(customerIsPresent("transaction_test")).isTrue
@@ -48,7 +47,6 @@ class TransactionTest {
         val customer = db.select(Query()
             .from("customers")
             .where("name" EQ name)
-            .build()
         ).first { Customer(str("name"), int("age")) }
 
         return customer != null

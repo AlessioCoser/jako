@@ -29,7 +29,7 @@ class RowSqlTest {
 
     @Test
     fun `select types non null`() {
-        val types: Types? = db.select(Query().from("types").build()).first {
+        val types: Types? = db.select(Query().from("types")).first {
             Types(
                 int("id"),
                 str("string"),
@@ -55,7 +55,7 @@ class RowSqlTest {
 
     @Test
     fun `select types`() {
-        val types: List<Types> = db.select(Query().from("types").build()).all {
+        val types: List<Types> = db.select(Query().from("types")).all {
             Types(
                 int("id"),
                 strOrNull("string"),
@@ -84,7 +84,7 @@ class RowSqlTest {
 
     @Test
     fun `select timestamps`() {
-        val arr: List<Timestamps?> = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone").build())
+        val arr: List<Timestamps?> = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone"))
             .all { Timestamps(
                 timestampOrNull("timestamp"),
                 timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
@@ -101,7 +101,7 @@ class RowSqlTest {
 
     @Test
     fun `select timestamps non null`() {
-        val found: Timestamps = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone").build())
+        val found: Timestamps = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone"))
             .first { Timestamps(
                 timestamp("timestamp"),
                 timestamp("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
@@ -117,7 +117,7 @@ class RowSqlTest {
 
     @Test
     fun `select bytearrays`() {
-        val arr: List<ByteArray?> = db.select(Query().from("types").fields("bytes").build())
+        val arr: List<ByteArray?> = db.select(Query().from("types").fields("bytes"))
             .all { bytesOrNull("bytes") }
 
         assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), arr[0]!!.toTypedArray())
@@ -126,7 +126,7 @@ class RowSqlTest {
 
     @Test
     fun `select bytearrays non null`() {
-        val bytearray: ByteArray = db.select(Query().from("types").fields("bytes").build())
+        val bytearray: ByteArray = db.select(Query().from("types").fields("bytes"))
             .first { bytes("bytes") }!!
 
         assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), bytearray.toTypedArray())

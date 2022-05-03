@@ -45,7 +45,6 @@ class SelectTest {
         val user = db.select(Query()
             .from("users")
             .where(("city" EQ "Milano") AND ("age" GT 18))
-            .build()
         ).first { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
@@ -56,7 +55,6 @@ class SelectTest {
         val user = db.select(Query()
             .from("users")
             .where("city" EQ "New York")
-            .build()
         ).first { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(user).isNull()
@@ -68,7 +66,6 @@ class SelectTest {
             .from("users")
             .where("city" EQ "Firenze")
             .limit(2)
-            .build()
         ).all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(users).isEqualTo(
@@ -85,7 +82,6 @@ class SelectTest {
             .from("users")
             .fields("email")
             .where("city" EQ "Lucca")
-            .build()
         ).first { str("email") }
 
         assertThat(userEmail).isEqualTo("luigi@verdi.it")
@@ -97,7 +93,6 @@ class SelectTest {
             .from("users")
             .where(("city" EQ "Firenze") OR ("city" EQ "Lucca"))
             .limit(3)
-            .build()
         ).all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(users).isEqualTo(
@@ -117,7 +112,6 @@ class SelectTest {
             .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
             .join("pets" ON "pets.owner" EQ "users.email")
             .groupBy("email")
-            .build()
         ).all { UserPetsCount(str("name"), int("count")) }
 
         assertThat(all).isEqualTo(
@@ -142,7 +136,6 @@ class SelectTest {
                 .join(On("pets", "pets.owner", "users.email"))
                 .groupBy("email")
                 .orderBy(ASC("name"))
-                .build()
         ).all(UserPetsCountRowParser())
 
         assertThat(all).isEqualTo(
@@ -167,7 +160,6 @@ class SelectTest {
                 .join(On("pets", "pets.owner", "users.email"))
                 .groupBy("email")
                 .orderBy(Asc("name"))
-                .build()
         ).first(UserPetsCountRowParser())
 
         assertThat(user).isEqualTo(UserPetsCount(fullName = "Luigi Verdi", pets = 2))
@@ -183,7 +175,6 @@ class SelectTest {
                 .join("pets" ON "pets.owner" EQ "users.email")
                 .groupBy("email")
                 .orderBy(Asc("name"))
-                .build()
         ).first(UserPetsCountRowParser())
 
         assertThat(user).isEqualTo(UserPetsCount(fullName = "Luigi Verdi", pets = 2))
@@ -198,7 +189,6 @@ class SelectTest {
             .leftJoin("pets" ON "pets.owner" EQ "users.email")
             .groupBy("email")
             .orderBy(DESC("name"))
-            .build()
         ).all { UserPetsCount(str("name"), int("count")) }
 
         assertThat(all).isEqualTo(
@@ -211,7 +201,7 @@ class SelectTest {
 
     @Test
     fun `query raw`() {
-        val all = db.select(Query.raw("""SELECT * FROM users WHERE city = 'Firenze';"""))
+        val all = db.select(Query().raw("""SELECT * FROM users WHERE city = 'Firenze';"""))
             .all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(all).isEqualTo(
@@ -225,7 +215,7 @@ class SelectTest {
 
     @Test
     fun `select a delete statement with returning`() {
-        val all = db.select(Query.raw("""DELETE FROM pets_deletable RETURNING *;"""))
+        val all = db.select(Query().raw("""DELETE FROM pets_deletable RETURNING *;"""))
             .all { Pet(str("name"), str("type"), int("age")) }
 
         assertThat(all).isEqualTo(listOf(Pet(name="Pluto", type="Dog", age=2), Pet(name="Fido", type="Dog", age=3)))
@@ -237,7 +227,6 @@ class SelectTest {
             .fields(COALESCE("city", "none") AS "cit")
             .from("users")
             .where("email" EQ "null@city.it")
-            .build()
         ).first { str("cit") }
 
         assertThat(coalesceMail).isEqualTo("none")

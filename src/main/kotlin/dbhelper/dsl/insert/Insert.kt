@@ -2,19 +2,23 @@ package dbhelper.dsl.insert
 
 import dbhelper.dsl.Returning
 import dbhelper.dsl.Statement
-import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.fields.Field
 import java.sql.Date
 import java.time.LocalDate
 
-class Insert: StatementBuilder {
-    private var rawInsert: Statement? = null
+class Insert: Statement {
+    private var rawText: String? = null
+    private var rawParams: List<Any?>? = null
     private var into: Into? = null
     private var insertRow: InsertRow = InsertRow()
     private var returning: Returning = Returning()
 
+    override fun toString() = rawText ?: "INSERT${intoOrThrow()}${rowOrThrow()}$returning"
+    override fun params(): List<Any?> = rawParams ?: (insertRow.params() + returning.params())
+
     fun raw(statement: String, vararg params: Any?): Insert {
-        rawInsert = Statement(statement, params.toList())
+        rawText = statement
+        rawParams = params.toList()
         return this
     }
 
@@ -43,15 +47,6 @@ class Insert: StatementBuilder {
         return this
     }
 
-    override fun build(): Statement {
-        return rawInsert ?: Statement("INSERT${intoOrThrow()}${rowOrThrow()}$returning", insertRow.params() + returning.params())
-    }
-
     private fun rowOrThrow() = if (insertRow.isNotEmpty()) insertRow else throw RuntimeException("Cannot generate insert without values")
     private fun intoOrThrow() = into ?: throw RuntimeException("Cannot generate insert without table name")
-
-    companion object {
-        @JvmStatic
-        fun raw(statement: String, vararg params: Any?) = Insert().raw(statement, *params).build()
-    }
 }
