@@ -1,6 +1,8 @@
 package dbhelper.dsl.where
 
-interface Where {
+import dbhelper.dsl.StatementBlock
+
+interface Where: StatementBlock {
     override fun toString(): String
-    fun params(): List<Any?>
+    override fun params(): List<Any?>
 }

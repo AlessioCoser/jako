@@ -1,8 +1,10 @@
 package dbhelper.dsl.fields
 
-interface Field {
+import dbhelper.dsl.StatementBlock
+
+interface Field: StatementBlock {
     override fun toString(): String
-    fun params(): List<Any?>
+    override fun params(): List<Any?>
 
     operator fun plus(i: Int): Field {
         return Raw("${toString()} + $i", params())

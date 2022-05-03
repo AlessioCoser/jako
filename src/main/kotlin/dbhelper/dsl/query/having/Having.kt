@@ -1,6 +1,8 @@
 package dbhelper.dsl.query.having
 
-interface Having {
+import dbhelper.dsl.StatementBlock
+
+interface Having: StatementBlock {
     override fun toString(): String
-    fun params(): List<Any?>
+    override fun params(): List<Any?>
 }

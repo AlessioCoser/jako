@@ -1,6 +1,6 @@
 package dbhelper.dsl
 
-interface Statement {
+interface Statement: StatementBlock {
     override fun toString(): String
-    fun params(): List<Any?>
+    override fun params(): List<Any?>
 }

@@ -1,6 +1,8 @@
 package dbhelper.dsl.conditions
 
-interface Condition {
+import dbhelper.dsl.StatementBlock
+
+interface Condition: StatementBlock {
     override fun toString(): String
-    fun params(): List<Any?>
+    override fun params(): List<Any?>
 }
