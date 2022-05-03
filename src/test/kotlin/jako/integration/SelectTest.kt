@@ -2,8 +2,10 @@ package jako.integration
 
 import jako.database.Database
 import jako.database.HikariConnector
-import jako.database.JdbcPostgresConnection
+import jako.database.JdbcConnection
 import jako.dsl.RawStatement
+import jako.dsl.Row
+import jako.dsl.RowParser
 import jako.dsl.conditions.And
 import jako.dsl.conditions.And.Companion.AND
 import jako.dsl.conditions.Eq
@@ -16,8 +18,6 @@ import jako.dsl.fields.Column.Companion.col
 import jako.dsl.fields.functions.Coalesce.Companion.COALESCE
 import jako.dsl.fields.functions.Count.Companion.COUNT
 import jako.dsl.query.Query
-import jako.dsl.Row
-import jako.dsl.RowParser
 import jako.dsl.query.join.On
 import jako.dsl.query.join.On.Companion.EQ
 import jako.dsl.query.join.On.Companion.ON
@@ -38,8 +38,19 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
-    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val connectionConfig = JdbcConnection.postgresql("localhost:5432/tests", "user", "password")
     private val db = Database.connect(HikariConnector(connectionConfig))
+
+    @Test
+    fun `select using a simple connection`() {
+        val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+        val userNames = db.select(Query().from("users")).all { str("name") }
+
+        assertThat(userNames).isEqualTo(listOf(
+            "Mario Rossi", "Luigi Verdi", "Paolo Bianchi", "Matteo Renzi",
+            "Marco Verdi", "Vittorio Gialli", "Cavallino Cavallini", "Null City"
+        ))
+    }
 
     @Test
     fun `select with where`() {

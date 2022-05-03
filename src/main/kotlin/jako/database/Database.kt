@@ -18,6 +18,16 @@ class Database(val transactionManager: TransactionManager) {
 
     companion object {
         @JvmStatic
+        fun connect(connectionString: String): Database {
+            return connect(JdbcConnection(connectionString))
+        }
+
+        @JvmStatic
+        fun connect(jdbcConnection: JdbcConnection): Database {
+            return connect(SimpleConnector(jdbcConnection))
+        }
+
+        @JvmStatic
         fun connect(connector: DatabaseConnector): Database {
             return Database(TransactionManager { connector.connection })
         }

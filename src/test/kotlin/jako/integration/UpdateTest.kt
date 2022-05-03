@@ -1,7 +1,7 @@
 package jako.integration
 
 import jako.database.Database
-import jako.database.JdbcPostgresConnection
+import jako.database.JdbcConnection
 import jako.database.SimpleConnector
 import jako.dsl.conditions.Eq.Companion.EQ
 import jako.dsl.query.Query
@@ -19,7 +19,7 @@ class UpdateTest {
         val postgres = ContainerPostgres()
     }
 
-    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val connectionConfig = JdbcConnection.postgresql("localhost:5432/tests", "user", "password")
     private val db = Database.connect(SimpleConnector(connectionConfig))
 
     @Test

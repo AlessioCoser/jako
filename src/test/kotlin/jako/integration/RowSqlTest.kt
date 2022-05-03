@@ -2,7 +2,7 @@ package jako.integration
 
 import jako.database.Database
 import jako.database.HikariConnector
-import jako.database.JdbcPostgresConnection
+import jako.database.JdbcConnection
 import jako.dsl.query.Query
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -24,7 +24,7 @@ class RowSqlTest {
         val postgres = ContainerPostgres()
     }
 
-    private val connectionConfig = JdbcPostgresConnection("localhost:5432/tests", "user", "password")
+    private val connectionConfig = JdbcConnection.postgresql("localhost:5432/tests", "user", "password")
     private val db = Database.connect(HikariConnector(connectionConfig))
 
     @Test
