@@ -1,5 +1,6 @@
 package dbhelper.dsl.query
 
+import dbhelper.dsl.Statement
 import dbhelper.dsl.conditions.And
 import dbhelper.dsl.conditions.Eq
 import dbhelper.dsl.conditions.Gt
@@ -14,11 +15,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
-class QueryBuilderTest {
+class QueryTest {
     @Test
     fun `cannot build query without table name`() {
         val message = assertThrows(RuntimeException::class.java) {
-            QueryBuilder().build()
+            Query().build()
         }.message
 
         assertEquals("Cannot generate query without table name", message)
@@ -26,21 +27,21 @@ class QueryBuilderTest {
 
     @Test
     fun `build simple query`() {
-        val query = QueryBuilder().from("people").build()
+        val query = Query().from("people").build()
 
-        assertEquals(Query("SELECT * FROM \"people\"", emptyList()), query)
+        assertEquals(Statement("SELECT * FROM \"people\"", emptyList()), query)
     }
 
     @Test
     fun `build single query`() {
-        val query = QueryBuilder().from("people").single().build()
+        val query = Query().from("people").single().build()
 
-        assertEquals(Query("SELECT * FROM \"people\" LIMIT 1", emptyList()), query)
+        assertEquals(Statement("SELECT * FROM \"people\" LIMIT 1", emptyList()), query)
     }
 
     @Test
     fun `all together in right order`() {
-        val query = QueryBuilder()
+        val query = Query()
             .from("people")
             .fields("name".col, COUNT("*") AS "total", COALESCE(MAX("age"), 1) - 1)
             .where(Eq("nationality", "Italian"))
@@ -54,7 +55,7 @@ class QueryBuilderTest {
             .build()
 
         assertEquals(
-            Query(
+            Statement(
                 """SELECT "name", COUNT(*) AS "total", COALESCE(MAX("age"), ?) - 1 """ +
                         """FROM "people" """ +
                         """INNER JOIN "bank_account" ON "people"."id" = "bank_account"."person_id" """ +
@@ -71,7 +72,7 @@ class QueryBuilderTest {
 
     @Test
     fun `raw overwrites all statements before used`() {
-        val query = QueryBuilder()
+        val query = Query()
             .from("people")
             .fields("name", "count(name) AS total")
             .where(And(Eq("nationality", "Italian"), Gt("age", 20)))
@@ -83,31 +84,31 @@ class QueryBuilderTest {
             .raw("SELECT * FROM customers")
             .build()
 
-        assertEquals(Query("SELECT * FROM customers", emptyList()), query)
+        assertEquals(Statement("SELECT * FROM customers", emptyList()), query)
     }
 
     @Test
     fun `raw can be used alone`() {
-        val query = QueryBuilder()
+        val query = Query()
             .raw("SELECT * FROM customers")
             .build()
 
-        assertEquals(Query("SELECT * FROM customers", emptyList()), query)
+        assertEquals(Statement("SELECT * FROM customers", emptyList()), query)
     }
 
     @Test
     fun `raw can be used with some parameters`() {
-        val query = QueryBuilder()
+        val query = Query()
             .raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
             .build()
 
-        assertEquals(Query("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
+        assertEquals(Statement("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
     }
 
     @Test
     fun `raw can be used statically`() {
-        val query = QueryBuilder.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
+        val query = Query.raw("SELECT * FROM customers WHERE age < ? AND age > ?", 20, 30)
 
-        assertEquals(Query("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
+        assertEquals(Statement("SELECT * FROM customers WHERE age < ? AND age > ?", listOf(20, 30)), query)
     }
 }

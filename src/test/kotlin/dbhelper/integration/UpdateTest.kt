@@ -4,7 +4,7 @@ import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
 import dbhelper.dsl.conditions.Eq.Companion.EQ
-import dbhelper.dsl.update.UpdateBuilder
+import dbhelper.dsl.update.Update
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -40,7 +40,7 @@ class UpdateTest {
     @Test
     fun `update using builder dsl`() {
         db.update(
-            UpdateBuilder()
+            Update()
                 .from("users")
                 .set("age", 4)
                 .where("email" EQ "cavallino@cavallini.it")

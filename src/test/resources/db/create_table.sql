@@ -94,3 +94,13 @@ VALUES
      '\\000'::bytea
     ),
     (null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+CREATE TABLE public."pets_deletable" (
+       "name" varchar(50) NOT NULL,
+       "type" varchar(50) NOT NULL,
+       "age" integer NOT NULL,
+       CONSTRAINT "pk_pets_deletable" PRIMARY KEY ("name")
+);
+INSERT INTO public."pets_deletable" ("name", "type", "age") VALUES
+                         ('Pluto', 'Dog', 2),
+                         ('Fido', 'Dog', 3);

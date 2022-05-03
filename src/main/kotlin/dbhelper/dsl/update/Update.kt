@@ -1,13 +1,56 @@
 package dbhelper.dsl.update
 
 import dbhelper.dsl.Statement
+import dbhelper.dsl.StatementBuilder
+import dbhelper.dsl.conditions.Condition
 import dbhelper.dsl.fields.Column
+import dbhelper.dsl.where.GenericWhere
+import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
+import java.sql.Date
+import java.time.LocalDate
 
-class Update(override val statement: String, override val params: List<Any?>): Statement {
-    constructor(
-        table: Column,
-        fields: SetFields,
-        where: Where
-    ) : this("UPDATE $table$fields$where", fields.params().plus(where.params()))
+class Update: StatementBuilder {
+    private var rawUpdate: Statement? = null
+    private var table: Column? = null
+    private val fields: SetFields = SetFields()
+    private var where: Where = NoWhere()
+
+    fun raw(statement: String, vararg params: Any?): Update {
+        rawUpdate = Statement(statement, params.toList())
+        return this
+    }
+
+    fun from(table: String): Update {
+        this.table = Column(table)
+        return this
+    }
+
+    fun where(condition: Condition): Update {
+        where = GenericWhere(condition)
+        return this
+    }
+
+    fun set(column: String, value: Any?): Update {
+        fields.add(SetColumn(column, value))
+        return this
+    }
+
+    fun set(column: String, value: LocalDate?): Update {
+        fields.add(SetColumn(column, if (value == null) null else Date.valueOf(value)))
+        return this
+    }
+
+    override fun build(): Statement {
+        return rawUpdate ?: Statement("UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where", fields.params() + where.params())
+    }
+
+    private fun fieldsOrThrow() = if(fields.isNotEmpty()) fields else throw RuntimeException("Cannot generate update without values")
+
+    private fun tableOrThrow(): Column = table ?: throw RuntimeException("Cannot generate update without table name")
+
+    companion object {
+        @JvmStatic
+        fun raw(statement: String, vararg params: Any?) = Update().raw(statement, *params).build()
+    }
 }

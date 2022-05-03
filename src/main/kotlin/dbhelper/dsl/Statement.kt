@@ -1,6 +1,3 @@
 package dbhelper.dsl
 
-interface Statement {
-    val statement: String
-    val params: List<Any?>
-}
+data class Statement(val statement: String, val params: List<Any?>)

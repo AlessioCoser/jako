@@ -1,9 +1,9 @@
 package dbhelper.database
 
 import dbhelper.dsl.StatementBuilder
-import dbhelper.dsl.insert.InsertBuilder
-import dbhelper.dsl.query.QueryBuilder
-import dbhelper.dsl.update.UpdateBuilder
+import dbhelper.dsl.insert.Insert
+import dbhelper.dsl.query.Query
+import dbhelper.dsl.update.Update
 
 
 class Database(val transactionManager: TransactionManager) {
@@ -11,28 +11,28 @@ class Database(val transactionManager: TransactionManager) {
         return transactionManager.useTransaction(func)
     }
 
-    fun update(statement: UpdateBuilder): Execute {
-        return Execute(transactionManager, statement.build())
+    fun update(builder: Update): Execute {
+        return Execute(transactionManager, builder.build())
     }
 
-    fun update(fn: UpdateBuilder.() -> UpdateBuilder): Execute {
-        return update(fn(UpdateBuilder()))
+    fun update(fn: Update.() -> Update): Execute {
+        return update(fn(Update()))
     }
 
-    fun insert(statement: InsertBuilder): Execute {
-        return Execute(transactionManager, statement.build())
+    fun insert(builder: Insert): Execute {
+        return Execute(transactionManager, builder.build())
     }
 
-    fun insert(fn: InsertBuilder.() -> InsertBuilder): Execute {
-        return insert(fn(InsertBuilder()))
+    fun insert(fn: Insert.() -> Insert): Execute {
+        return insert(fn(Insert()))
     }
 
-    fun select(query: StatementBuilder): Select {
-        return Select(transactionManager, query.build())
+    fun select(statement: StatementBuilder): Select {
+        return Select(transactionManager, statement.build())
     }
 
-    fun select(fn: QueryBuilder.() -> QueryBuilder): Select {
-        return select(fn(QueryBuilder()))
+    fun select(fn: Query.() -> Query): Select {
+        return select(fn(Query()))
     }
 
     companion object {

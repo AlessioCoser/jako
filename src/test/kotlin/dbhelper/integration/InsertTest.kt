@@ -4,7 +4,7 @@ import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
 import dbhelper.dsl.conditions.Eq.Companion.EQ
-import dbhelper.dsl.insert.InsertBuilder
+import dbhelper.dsl.insert.Insert
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
@@ -39,7 +39,7 @@ class InsertTest {
 
     @Test
     fun `return inserted field`() {
-        val insertedName = db.select(InsertBuilder()
+        val insertedName = db.select(Insert()
             .into("customers")
             .set("name", "name2")
             .set("age", 99)

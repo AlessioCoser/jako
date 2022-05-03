@@ -14,7 +14,7 @@ import dbhelper.dsl.fields.As.Companion.AS
 import dbhelper.dsl.fields.Column.Companion.col
 import dbhelper.dsl.fields.functions.Coalesce.Companion.COALESCE
 import dbhelper.dsl.fields.functions.Count.Companion.COUNT
-import dbhelper.dsl.query.QueryBuilder
+import dbhelper.dsl.query.Query
 import dbhelper.dsl.query.Row
 import dbhelper.dsl.query.RowParser
 import dbhelper.dsl.query.join.On
@@ -124,7 +124,7 @@ class SelectTest {
     @Test
     fun allJavaSyntax() {
         val all: List<UserPetsCount> = db.select(
-            QueryBuilder()
+            Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
                 .where(
@@ -148,7 +148,7 @@ class SelectTest {
     @Test
     fun firstJavaSyntax() {
         val user = db.select(
-            QueryBuilder()
+            Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
                 .where(
@@ -168,7 +168,7 @@ class SelectTest {
     @Test
     fun firstJavaHybridSyntax() {
         val user: UserPetsCount? = db.select(
-            QueryBuilder()
+            Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
                 .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
@@ -215,12 +215,12 @@ class SelectTest {
     }
 
     @Test
-    fun `xxx xxx`() {
+    fun `select a delete statement with returning`() {
         val all = db.select {
-            raw("""DELETE FROM pets RETURNING *;""")
-        }.all { Pet(str("name"), str("type"), str("owner"), int("age")) }
+            raw("""DELETE FROM pets_deletable RETURNING *;""")
+        }.all { Pet(str("name"), str("type"), int("age")) }
 
-        assertThat(all).isEqualTo(emptyList<Pet>())
+        assertThat(all).isEqualTo(listOf(Pet(name="Pluto", type="Dog", age=2), Pet(name="Fido", type="Dog", age=3)))
     }
 
     @Test
@@ -235,7 +235,7 @@ class SelectTest {
     }
 }
 
-data class Pet(val name: String, val type: String, val owner: String, val age: Int)
+data class Pet(val name: String, val type: String, val age: Int)
 data class User(val email: String, val fullName: String, val city: String, val age: Int)
 data class UserPetsCount(val fullName: String, val pets: Int)
 

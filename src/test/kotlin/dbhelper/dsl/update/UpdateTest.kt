@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test
 import java.sql.Date
 import java.time.LocalDate
 
-class UpdateBuilderTest {
+class UpdateTest {
     @Test
     fun `update into single param foreach column`() {
-        val insert = UpdateBuilder()
+        val insert = Update()
             .from("table").set("column1", "1").set("column2", 2).set("column3", "3").build()
 
         assertEquals("UPDATE \"table\" SET \"column1\" = ?, \"column2\" = ?, \"column3\" = ?", insert.statement)
@@ -20,7 +20,7 @@ class UpdateBuilderTest {
 
     @Test
     fun `update raw statement`() {
-        val insert = UpdateBuilder()
+        val insert = Update()
             .raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2).build()
 
         assertEquals("UPDATE table SET column1 = ?, column2 = ?", insert.statement)
@@ -29,7 +29,7 @@ class UpdateBuilderTest {
 
     @Test
     fun `update raw wins over other insert`() {
-        val insert = UpdateBuilder()
+        val insert = Update()
             .from("table")
             .set("column1", "1")
             .raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
@@ -41,7 +41,7 @@ class UpdateBuilderTest {
 
     @Test
     fun `update raw statement statically`() {
-        val insert = UpdateBuilder.raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
+        val insert = Update.raw("UPDATE table SET column1 = ?, column2 = ?", "1", 2)
 
         assertEquals("UPDATE table SET column1 = ?, column2 = ?", insert.statement)
         assertEquals(listOf("1", 2), insert.params)
@@ -50,7 +50,7 @@ class UpdateBuilderTest {
     @Test
     fun `update without values`() {
         val message = assertThrows(RuntimeException::class.java) {
-            UpdateBuilder().from("table").build()
+            Update().from("table").build()
         }.message
 
         assertThat(message).isEqualTo("Cannot generate update without values")
@@ -58,7 +58,7 @@ class UpdateBuilderTest {
 
     @Test
     fun `update local-date`() {
-        val insert = UpdateBuilder()
+        val insert = Update()
             .from("table")
             .set("column1", LocalDate.of(2022, 4, 1))
             .build()
@@ -69,7 +69,7 @@ class UpdateBuilderTest {
 
     @Test
     fun `update with where statement `() {
-        val insert = UpdateBuilder()
+        val insert = Update()
             .from("table")
             .set("column1", 0)
             .where("column1" GT 10)
