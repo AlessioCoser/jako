@@ -1,24 +1,22 @@
 package dbhelper.dsl.update
 
-import dbhelper.dsl.Statement
+import dbhelper.dsl.StatementBuilder
 import dbhelper.dsl.conditions.Condition
-import dbhelper.dsl.fields.Column
 import dbhelper.dsl.where.GenericWhere
 import dbhelper.dsl.where.NoWhere
 import dbhelper.dsl.where.Where
 import java.sql.Date
 import java.time.LocalDate
 
-class Update: Statement {
-    private var table: Column? = null
+class Update: StatementBuilder() {
+    private var table: UpdateTable? = null
     private val fields: SetFields = SetFields()
     private var where: Where = NoWhere()
 
-    override fun toString() = "UPDATE ${tableOrThrow()}${fieldsOrThrow()}$where"
-    override fun params(): List<Any?> = fields.params() + where.params()
+    override fun blocks() = listOf(updateTableOrThrow(), fieldsOrThrow(), where)
 
     fun from(table: String): Update {
-        this.table = Column(table)
+        this.table = UpdateTable(table)
         return this
     }
 
@@ -39,5 +37,5 @@ class Update: Statement {
 
     private fun fieldsOrThrow() = if(fields.isNotEmpty()) fields else throw RuntimeException("Cannot generate update without values")
 
-    private fun tableOrThrow(): Column = table ?: throw RuntimeException("Cannot generate update without table name")
+    private fun updateTableOrThrow() = table ?: throw RuntimeException("Cannot generate update without table name")
 }
