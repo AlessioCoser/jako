@@ -1,5 +1,6 @@
 package dbhelper.dsl.insert
 
+import dbhelper.dsl.fields.Column.Companion.col
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -34,5 +35,27 @@ class InsertTest {
 
         assertEquals("""INSERT INTO "table" ("column1") VALUES (?)""", insert.toString())
         assertEquals(listOf(Date.valueOf("2022-04-01")), insert.params())
+    }
+
+    @Test
+    fun `insert with returning Field`() {
+        val insert = Insert()
+            .into("table")
+            .set("column1", "value1")
+            .returning("id".col)
+
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id"""", insert.toString())
+        assertEquals(listOf("value1"), insert.params())
+    }
+
+    @Test
+    fun `insert with returning String`() {
+        val insert = Insert()
+            .into("table")
+            .set("column1", "value1")
+            .returning("id")
+
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id"""", insert.toString())
+        assertEquals(listOf("value1"), insert.params())
     }
 }
