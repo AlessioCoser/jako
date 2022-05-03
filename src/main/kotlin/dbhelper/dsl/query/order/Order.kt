@@ -1,6 +1,9 @@
 package dbhelper.dsl.query.order
 
-interface Order {
+import dbhelper.dsl.StatementBlock
+
+interface Order: StatementBlock {
     override fun toString(): String
+    override fun params(): List<Any?> = emptyList()
 }
 

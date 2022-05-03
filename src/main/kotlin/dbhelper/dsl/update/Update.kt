@@ -28,12 +28,12 @@ class Update: Statement {
     }
 
     fun set(column: String, value: Any?): Update {
-        fields.add(SetColumn(column, value))
+        fields.add(SetField(column, value))
         return this
     }
 
     fun set(column: String, value: LocalDate?): Update {
-        fields.add(SetColumn(column, if (value == null) null else Date.valueOf(value)))
+        fields.add(SetField(column, if (value == null) null else Date.valueOf(value)))
         return this
     }
 

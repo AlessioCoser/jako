@@ -1,6 +1,6 @@
 package dbhelper.dsl.query.join
 
-class Joins {
+class Joins: Join {
     private val joins: MutableList<Join> = mutableListOf()
 
     override fun toString(): String {
@@ -9,6 +9,7 @@ class Joins {
         }
         return joins.joinToString(prefix = " ", separator = " ") { "$it" }
     }
+
     fun join(on: On) = join(InnerJoin(on))
     fun leftJoin(on: On) = join(LeftJoin(on))
     fun rightJoin(on: On) = join(RightJoin(on))

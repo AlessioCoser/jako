@@ -1,6 +1,8 @@
 package dbhelper.dsl.insert
 
-class InsertRow {
+import dbhelper.dsl.StatementBlock
+
+class InsertRow: StatementBlock {
     private val cols: MutableList<InsertColumn> = mutableListOf()
 
     fun add(column: InsertColumn): InsertRow {
@@ -10,11 +12,8 @@ class InsertRow {
 
     fun isNotEmpty() = cols.isNotEmpty()
 
-    override fun toString(): String {
-        return " (${columnNames()}) VALUES (${placeholders()})"
-    }
-
-    fun params(): List<Any?> = cols.map { it.value }
+    override fun toString() = " (${columnNames()}) VALUES (${placeholders()})"
+    override fun params(): List<Any?> = cols.map { it.value }
 
     private fun columnNames() = cols.joinToString(prefix = "\"", separator = "\", \"", postfix = "\"") { it.name }
 

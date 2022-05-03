@@ -1,9 +1,11 @@
 package dbhelper.dsl.update
 
-class SetFields {
-    private val cols: MutableList<SetColumn> = mutableListOf()
+import dbhelper.dsl.StatementBlock
 
-    fun add(column: SetColumn): SetFields {
+class SetFields: StatementBlock {
+    private val cols: MutableList<SetField> = mutableListOf()
+
+    fun add(column: SetField): SetFields {
         cols.add(column)
         return this
     }
@@ -11,6 +13,5 @@ class SetFields {
     fun isNotEmpty() = cols.isNotEmpty()
 
     override fun toString() = " SET " + cols.joinToString(", ")
-
-    fun params() = cols.map { it.value }
+    override fun params() = cols.flatMap { it.params() }
 }
