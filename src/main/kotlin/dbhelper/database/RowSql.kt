@@ -1,6 +1,6 @@
 package dbhelper.database
 
-import dbhelper.dsl.query.Row
+import dbhelper.dsl.Row
 import java.sql.ResultSet
 import java.sql.Time
 import java.sql.Timestamp

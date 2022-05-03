@@ -16,8 +16,8 @@ import dbhelper.dsl.fields.Column.Companion.col
 import dbhelper.dsl.fields.functions.Coalesce.Companion.COALESCE
 import dbhelper.dsl.fields.functions.Count.Companion.COUNT
 import dbhelper.dsl.query.Query
-import dbhelper.dsl.query.Row
-import dbhelper.dsl.query.RowParser
+import dbhelper.dsl.Row
+import dbhelper.dsl.RowParser
 import dbhelper.dsl.query.join.On
 import dbhelper.dsl.query.join.On.Companion.EQ
 import dbhelper.dsl.query.join.On.Companion.ON

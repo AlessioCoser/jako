@@ -1,4 +1,4 @@
-package dbhelper.dsl.query
+package dbhelper.dsl
 
 import java.sql.Date
 import java.sql.Time
