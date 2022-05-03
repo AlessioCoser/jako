@@ -3,6 +3,7 @@ package dbhelper.integration
 import dbhelper.database.Database
 import dbhelper.database.HikariConnector
 import dbhelper.database.JdbcPostgresConnection
+import dbhelper.dsl.query.Query
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -28,9 +29,7 @@ class RowSqlTest {
 
     @Test
     fun `select types non null`() {
-        val types: Types? = db.select {
-            from("types")
-        }.first {
+        val types: Types? = db.select(Query().from("types").build()).first {
             Types(
                 int("id"),
                 str("string"),
@@ -56,9 +55,7 @@ class RowSqlTest {
 
     @Test
     fun `select types`() {
-        val types: List<Types> = db.select {
-            from("types")
-        }.all {
+        val types: List<Types> = db.select(Query().from("types").build()).all {
             Types(
                 int("id"),
                 strOrNull("string"),
@@ -87,15 +84,13 @@ class RowSqlTest {
 
     @Test
     fun `select timestamps`() {
-        val arr: List<Timestamps?> = db.select {
-            from("types")
-            fields("timestamp", "timestamp_no_zone")
-        }.all { Timestamps(
-            timestampOrNull("timestamp"),
-            timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
-            timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
-            timestampOrNull("timestamp_no_zone")
-        ) }
+        val arr: List<Timestamps?> = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone").build())
+            .all { Timestamps(
+                timestampOrNull("timestamp"),
+                timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
+                timestampOrNull("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
+                timestampOrNull("timestamp_no_zone")
+            ) }
 
         assertEquals(Timestamp.valueOf("2013-03-21 16:10:59.897666"), arr[0]!!.zone)
         assertEquals(Timestamp.valueOf("2013-03-21 11:10:59.897666"), arr[0]!!.noZoneUtc)
@@ -106,15 +101,13 @@ class RowSqlTest {
 
     @Test
     fun `select timestamps non null`() {
-        val found: Timestamps = db.select {
-            from("types")
-            fields("timestamp", "timestamp_no_zone")
-        }.first { Timestamps(
-            timestamp("timestamp"),
-            timestamp("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
-            timestamp("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
-            timestamp("timestamp_no_zone")
-        ) }!!
+        val found: Timestamps = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone").build())
+            .first { Timestamps(
+                timestamp("timestamp"),
+                timestamp("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("UTC"))),
+                timestamp("timestamp_no_zone", Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))),
+                timestamp("timestamp_no_zone")
+            ) }!!
 
         assertEquals(Timestamp.valueOf("2013-03-21 16:10:59.897666"), found.zone)
         assertEquals(Timestamp.valueOf("2013-03-21 11:10:59.897666"), found.noZoneUtc)
@@ -124,10 +117,8 @@ class RowSqlTest {
 
     @Test
     fun `select bytearrays`() {
-        val arr: List<ByteArray?> = db.select {
-            from("types")
-            fields("bytes")
-        }.all { bytesOrNull("bytes") }
+        val arr: List<ByteArray?> = db.select(Query().from("types").fields("bytes").build())
+            .all { bytesOrNull("bytes") }
 
         assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), arr[0]!!.toTypedArray())
         assertNull(arr[1])
@@ -135,10 +126,8 @@ class RowSqlTest {
 
     @Test
     fun `select bytearrays non null`() {
-        val bytearray: ByteArray = db.select {
-            from("types")
-            fields("bytes")
-        }.first { bytes("bytes") }!!
+        val bytearray: ByteArray = db.select(Query().from("types").fields("bytes").build())
+            .first { bytes("bytes") }!!
 
         assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), bytearray.toTypedArray())
     }

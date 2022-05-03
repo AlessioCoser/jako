@@ -4,6 +4,7 @@ import dbhelper.database.Database
 import dbhelper.database.JdbcPostgresConnection
 import dbhelper.database.SimpleConnector
 import dbhelper.dsl.conditions.Eq.Companion.EQ
+import dbhelper.dsl.query.Query
 import dbhelper.dsl.update.Update
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -23,33 +24,37 @@ class UpdateTest {
 
     @Test
     fun `update user age`() {
-        db.update {
-            from("users")
-            set("age", 3)
-            where("email" EQ "cavallino@cavallini.it")
-        }.execute()
+        db.execute(Update()
+            .from("users")
+            .set("age", 3)
+            .where("email" EQ "cavallino@cavallini.it")
+            .build()
+        )
 
-        val newAge = db.select {
-            from("users")
-            where("email" EQ "cavallino@cavallini.it")
-        }.first { int("age") }
+        val newAge = db.select(Query()
+            .from("users")
+            .where("email" EQ "cavallino@cavallini.it")
+            .build()
+        ).first { int("age") }
 
         assertThat(newAge).isEqualTo(3)
     }
 
     @Test
     fun `update using builder dsl`() {
-        db.update(
+        db.execute(
             Update()
                 .from("users")
                 .set("age", 4)
                 .where("email" EQ "cavallino@cavallini.it")
-        ).execute()
+                .build()
+        )
 
-        val newAge = db.select {
-            from("users")
-            where("email" EQ "cavallino@cavallini.it")
-        }.first { int("age") }
+        val newAge = db.select(Query()
+            .from("users")
+            .where("email" EQ "cavallino@cavallini.it")
+            .build()
+        ).first { int("age") }
 
         assertThat(newAge).isEqualTo(4)
     }
