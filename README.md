@@ -56,7 +56,7 @@ class Docs {
 }
 ```
 
-## How to build a simple select statement
+## How to execute a simple select statement
 In order to run this test you have to start a postgresql server to the "localhost:5432" with the necessary data.
 ```kotlin
 import jako.database.Database
