@@ -3,6 +3,42 @@
 
 **All the examples are written as tests using JUnit5.**
 
+## How to add JAKO to your project
+[![](https://jitpack.io/v/AlessioCoser/jako.svg)](https://jitpack.io/#AlessioCoser/jako)
+
+### Gradle
+- Add JitPack in your root build.gradle at the end of repositories:
+```
+repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+}
+```
+
+- Add the dependency
+```
+implementation 'com.github.AlessioCoser:jako:0.0.4'
+```
+
+### Maven
+- Add the JitPack repository to your build file
+```
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+- Add the dependency
+```
+<dependency>
+    <groupId>com.github.AlessioCoser</groupId>
+    <artifactId>jako</artifactId>
+    <version>0.0.4</version>
+</dependency>
+```
+
 ## How to build a simple select statement
 ```kotlin
 import jako.dsl.conditions.Eq.Companion.EQ
