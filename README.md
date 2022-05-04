@@ -18,7 +18,7 @@ repositories {
 - Add the dependency along with postgresql driver
 ```
 implementation 'org.postgresql:postgresql:42.3.3'
-implementation 'com.github.AlessioCoser:jako:0.0.4'
+implementation 'com.github.AlessioCoser:jako:0.0.5'
 ```
 
 ### Maven
@@ -41,7 +41,7 @@ implementation 'com.github.AlessioCoser:jako:0.0.4'
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 </dependency>
 ```
 
