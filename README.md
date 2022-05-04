@@ -37,3 +37,45 @@ class Docs {
     }
 }
 ```
+
+## Custom Connectors
+Create a database Instance:
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+```
+Creating a database instance in the above way, the library use a SimpleConnector which adopt the standard `DriverManager.getConnection()` method to get a new database connection.
+
+If you want to use this library in production we recommend to use a CustomConnector so you can use your connection pool library.
+
+In the example below we will create a Connector for [HikariCP](https://github.com/brettwooldridge/HikariCP) 
+
+### Example with HikariCP
+#### 1. Add HikariCP to the project dependencies
+Add to dependencies:
+```
+"com.zaxxer:HikariCP:4.0.3"
+```
+Or for Java11 compatibility
+```
+"com.zaxxer:HikariCP:5.0.1"
+```
+#### 2. Create the custom Connector
+```kotlin
+class HikariConnector(jdbcConnection: JdbcConnection, connectionPoolSize: Int = 10): DatabaseConnector {
+    private val dataSource = HikariDataSource()
+    override val connection: Connection
+        get() = dataSource.connection
+
+    init {
+        dataSource.driverClassName = "org.postgresql.Driver"
+        dataSource.jdbcUrl = jdbcConnection.connection
+        dataSource.maximumPoolSize = connectionPoolSize // start with this: ((2 * core_count) + number_of_disks)
+    }
+}
+```
+
+#### 3. Use it
+```kotlin
+val connectionConfig = JdbcConnection("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+val db = Database.connect(HikariConnector(connectionConfig))
+```

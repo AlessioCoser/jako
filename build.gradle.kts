@@ -15,7 +15,6 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.postgresql:postgresql:42.3.3")
-    implementation("com.zaxxer:HikariCP:4.0.3") // 5.0.1 for java11 compatibility
 
     testImplementation("net.wuerl.kotlin:assertj-core-kotlin:0.2.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

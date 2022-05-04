@@ -1,7 +1,6 @@
 package jako.integration
 
 import jako.database.Database
-import jako.database.HikariConnector
 import jako.database.JdbcConnection
 import jako.dsl.conditions.Eq.Companion.EQ
 import jako.dsl.insert.Insert
@@ -21,8 +20,7 @@ class TransactionTest {
         val postgres = ContainerPostgres()
     }
 
-    private val connectionConfig = JdbcConnection.postgresql("localhost:5432/tests", "user", "password")
-    private val db = Database.connect(HikariConnector(connectionConfig))
+    private val db = Database.connect(JdbcConnection.postgresql("localhost:5432/tests", "user", "password"))
 
     @Test
     fun `transaction failure`() {

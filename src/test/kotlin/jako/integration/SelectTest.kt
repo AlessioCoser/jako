@@ -1,7 +1,6 @@
 package jako.integration
 
 import jako.database.Database
-import jako.database.HikariConnector
 import jako.database.JdbcConnection
 import jako.dsl.RawStatement
 import jako.dsl.Row
@@ -38,8 +37,7 @@ class SelectTest {
         val postgres = ContainerPostgres()
     }
 
-    private val connectionConfig = JdbcConnection.postgresql("localhost:5432/tests", "user", "password")
-    private val db = Database.connect(HikariConnector(connectionConfig))
+    private val db = Database.connect(JdbcConnection.postgresql("localhost:5432/tests", "user", "password"))
 
     @Test
     fun `select using a simple connection`() {
