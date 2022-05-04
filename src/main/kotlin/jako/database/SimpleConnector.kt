@@ -3,7 +3,8 @@ package jako.database
 import java.sql.Connection
 import java.sql.DriverManager
 
-class SimpleConnector(private val jdbcPostgresConnection: JdbcConnection): DatabaseConnector {
-    override val connection: Connection
-        get() = DriverManager.getConnection(jdbcPostgresConnection.connection)
+class SimpleConnector(private val jdbcConnectionString: String): DatabaseConnector {
+    override fun connection(): Connection {
+        return DriverManager.getConnection(jdbcConnectionString)
+    }
 }

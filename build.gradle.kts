@@ -14,8 +14,8 @@ repositories {
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.postgresql:postgresql:42.3.3")
 
+    testImplementation("org.postgresql:postgresql:42.3.3")
     testImplementation("net.wuerl.kotlin:assertj-core-kotlin:0.2.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")

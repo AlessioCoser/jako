@@ -62,14 +62,14 @@ Or for Java11 compatibility
 #### 2. Create the custom Connector
 ```kotlin
 class HikariConnector(jdbcConnection: JdbcConnection, connectionPoolSize: Int = 10): DatabaseConnector {
-    private val dataSource = HikariDataSource()
-    override val connection: Connection
-        get() = dataSource.connection
+    private val dataSource = HikariDataSource().also {
+        it.driverClassName = "org.postgresql.Driver"
+        it.jdbcUrl = jdbcConnection.connection
+        it.maximumPoolSize = connectionPoolSize // start with this: ((2 * core_count) + number_of_disks)
+    }
 
-    init {
-        dataSource.driverClassName = "org.postgresql.Driver"
-        dataSource.jdbcUrl = jdbcConnection.connection
-        dataSource.maximumPoolSize = connectionPoolSize // start with this: ((2 * core_count) + number_of_disks)
+    override fun connection(): Connection {
+        return dataSource.connection
     }
 }
 ```
