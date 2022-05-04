@@ -15,8 +15,9 @@ repositories {
 }
 ```
 
-- Add the dependency
+- Add the dependency along with postgresql driver
 ```
+implementation 'org.postgresql:postgresql:42.3.3'
 implementation 'com.github.AlessioCoser:jako:0.0.4'
 ```
 
@@ -30,8 +31,13 @@ implementation 'com.github.AlessioCoser:jako:0.0.4'
     </repository>
 </repositories>
 ```
-- Add the dependency
+- Add the dependency along with postgresql driver
 ```
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.3.3</version>
+</dependency>
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
