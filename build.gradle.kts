@@ -6,8 +6,8 @@ plugins {
     `maven-publish`
 }
 
-version = "0.0.2"
-group = "com.alessiocoser.jako"
+version = "0.0.3"
+group = "com.alessiocoser"
 
 repositories {
     mavenCentral()
@@ -33,5 +33,18 @@ tasks {
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("library") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri("${buildDir}/publishing-repository")
+        }
     }
 }
