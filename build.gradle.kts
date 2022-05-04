@@ -5,6 +5,8 @@ plugins {
     `java-library`
 }
 
+version = "0.0.1"
+
 repositories {
     jcenter()
 }
@@ -19,7 +21,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
-    testImplementation("org.testcontainers:junit-jupiter:1.17.1")
+    testImplementation("org.testcontainers:junit-jupiter:1.16.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.8.2")
 }
 
