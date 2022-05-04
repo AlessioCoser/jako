@@ -1,6 +1,6 @@
 package jako.dsl.query.join
 
-class Joins: Join {
+internal class Joins: Join {
     private val joins: MutableList<Join> = mutableListOf()
 
     override fun toString(): String {

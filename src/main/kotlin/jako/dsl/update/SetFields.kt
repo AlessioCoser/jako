@@ -2,7 +2,7 @@ package jako.dsl.update
 
 import jako.dsl.StatementBlock
 
-class SetFields: StatementBlock {
+internal class SetFields: StatementBlock {
     private val cols: MutableList<SetField> = mutableListOf()
 
     fun add(column: SetField): SetFields {

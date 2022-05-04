@@ -1,3 +1,3 @@
 package jako.dsl.insert
 
-data class InsertColumn(val name: String, val value: Any?)
+internal data class InsertColumn(val name: String, val value: Any?)

@@ -1,6 +1,6 @@
 package jako.dsl.query.having
 
-class NoHaving: Having {
+internal class NoHaving: Having {
     override fun toString() = ""
     override fun params() = emptyList<String>()
 }

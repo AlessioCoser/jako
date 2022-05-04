@@ -1,5 +1,5 @@
 package jako.dsl.query.group
 
-class NoGroup: Group {
+internal class NoGroup: Group {
     override fun toString() = ""
 }

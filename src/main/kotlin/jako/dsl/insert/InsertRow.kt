@@ -2,7 +2,7 @@ package jako.dsl.insert
 
 import jako.dsl.StatementBlock
 
-class InsertRow: StatementBlock {
+internal class InsertRow: StatementBlock {
     private val cols: MutableList<InsertColumn> = mutableListOf()
 
     fun add(column: InsertColumn): InsertRow {

@@ -1,5 +1,5 @@
 package jako.dsl.query.limit
 
-class NoLimit : Limit {
+internal class NoLimit : Limit {
     override fun toString() = ""
 }

@@ -4,7 +4,7 @@ import jako.dsl.fields.Column
 import jako.dsl.fields.Field
 
 
-class Returning(private vararg val fields: Field): StatementBlock {
+internal class Returning(private vararg val fields: Field): StatementBlock {
     constructor(): this(*emptyList<Field>().toTypedArray())
     constructor(vararg fields: String): this(*(fields.map { Column(it) }).toTypedArray())
 
