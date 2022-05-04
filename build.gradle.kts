@@ -3,12 +3,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.21"
     `java-library`
+    `maven-publish`
 }
 
-version = "0.0.1"
+version = "0.0.2"
+group = "com.alessiocoser.jako"
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
