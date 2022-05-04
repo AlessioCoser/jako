@@ -4,6 +4,10 @@ import jako.dsl.Statement
 
 
 class Database(val transactionManager: TransactionManager) {
+    init {
+        transactionManager.check()
+    }
+
     inline fun <T> useTransaction(func: (Transaction) -> T): T {
         return transactionManager.useTransaction(func)
     }

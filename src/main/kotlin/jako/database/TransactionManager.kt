@@ -7,6 +7,10 @@ class TransactionManager(private val connector: () -> Connection) {
     private val threadLocal = ThreadLocal<Transaction>()
     val currentTransaction: Transaction? get() = threadLocal.get()
 
+    fun check() {
+        useConnection { }
+    }
+
     fun newTransaction(): Transaction {
         if (currentTransaction != null) {
             throw IllegalStateException("Current thread is already in a transaction.")
