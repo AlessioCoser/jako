@@ -6,12 +6,8 @@ import jako.dsl.fields.Field
 class Count(private val value: Field): Field {
     override fun toString() = "COUNT($value)"
     override fun params() = value.params()
-
-    companion object {
-        @JvmStatic
-        fun COUNT(fieldName: String) = Count(Column(fieldName))
-
-        @JvmStatic
-        fun COUNT(field: Field) = Count(field)
-    }
 }
+
+fun COUNT(fieldName: String) = Count(Column(fieldName))
+
+fun COUNT(field: Field) = Count(field)

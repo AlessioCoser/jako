@@ -1,8 +1,8 @@
 package jako.dsl.fields.functions
 
-import jako.dsl.fields.Column.Companion.col
-import jako.dsl.fields.Value.Companion.value
-import jako.dsl.fields.functions.Max.Companion.MAX
+import jako.dsl.fields.col
+import jako.dsl.fields.value
+import jako.dsl.fields.functions.MAX
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

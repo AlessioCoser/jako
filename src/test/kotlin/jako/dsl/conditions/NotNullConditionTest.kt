@@ -1,6 +1,6 @@
 package jako.dsl.conditions
 
-import jako.dsl.conditions.NotNull.Companion.NOT
+import jako.dsl.conditions.NOT
 import jako.dsl.fields.Column
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

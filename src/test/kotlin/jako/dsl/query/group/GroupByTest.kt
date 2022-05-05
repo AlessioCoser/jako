@@ -1,7 +1,7 @@
 package jako.dsl.query.group
 
 import jako.dsl.fields.Column
-import jako.dsl.fields.functions.Count.Companion.COUNT
+import jako.dsl.fields.functions.COUNT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

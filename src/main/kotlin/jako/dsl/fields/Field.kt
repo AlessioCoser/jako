@@ -13,8 +13,6 @@ interface Field: StatementBlock {
     operator fun minus(i: Int): Field {
         return Raw("${toString()} - $i", params())
     }
-
-    companion object {
-        val ALL: Field = Raw("*")
-    }
 }
+
+val ALL: Field = Raw("*")

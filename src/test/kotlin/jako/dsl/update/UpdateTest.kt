@@ -1,6 +1,6 @@
 package jako.dsl.update
 
-import jako.dsl.conditions.Gt.Companion.GT
+import jako.dsl.conditions.GT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

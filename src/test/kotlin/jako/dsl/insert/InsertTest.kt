@@ -1,6 +1,6 @@
 package jako.dsl.insert
 
-import jako.dsl.fields.Column.Companion.col
+import jako.dsl.fields.col
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

@@ -2,8 +2,8 @@ package jako.dsl.query
 
 import jako.dsl.StatementBuilder
 import jako.dsl.conditions.Condition
+import jako.dsl.fields.ALL
 import jako.dsl.fields.Field
-import jako.dsl.fields.Field.Companion.ALL
 import jako.dsl.fields.Fields
 import jako.dsl.fields.Raw
 import jako.dsl.query.group.Group

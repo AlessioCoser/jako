@@ -2,7 +2,7 @@ package jako.integration
 
 import jako.database.Database
 import jako.database.JdbcConnectionString
-import jako.dsl.conditions.Eq.Companion.EQ
+import jako.dsl.conditions.EQ
 import jako.dsl.insert.Insert
 import jako.dsl.query.Query
 import org.assertj.core.api.Assertions.assertThat

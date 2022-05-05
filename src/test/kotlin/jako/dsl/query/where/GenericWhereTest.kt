@@ -1,6 +1,6 @@
 package jako.dsl.query.where
 
-import jako.dsl.conditions.Eq.Companion.EQ
+import jako.dsl.conditions.EQ
 import jako.dsl.where.GenericWhere
 import jako.dsl.where.NoWhere
 import org.junit.jupiter.api.Assertions.assertEquals

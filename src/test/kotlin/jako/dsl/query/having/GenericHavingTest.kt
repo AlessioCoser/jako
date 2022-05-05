@@ -1,6 +1,6 @@
 package jako.dsl.query.having
 
-import jako.dsl.conditions.Eq.Companion.EQ
+import jako.dsl.conditions.EQ
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

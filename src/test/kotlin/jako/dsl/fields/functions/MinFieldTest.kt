@@ -1,8 +1,8 @@
 package jako.dsl.fields.functions
 
-import jako.dsl.fields.Column.Companion.col
-import jako.dsl.fields.Value.Companion.value
-import jako.dsl.fields.functions.Min.Companion.MIN
+import jako.dsl.fields.col
+import jako.dsl.fields.value
+import jako.dsl.fields.functions.MIN
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

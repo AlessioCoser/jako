@@ -19,10 +19,7 @@ class Column(private val value: String): Field {
         }
         return """"${value.replace(".", "\".\"")}""""
     }
-
-    companion object {
-        @JvmStatic
-        val String.col: Field
-            get() = Column(this)
-    }
 }
+
+val String.col: Field
+    get() = Column(this)

@@ -12,14 +12,12 @@ class On(private val table: String, private val field1: String, private val fiel
         }
         return "${Column(table)} ON ${Column(field1)} = ${Column(field2)}"
     }
+}
 
-    companion object {
-        infix fun On.EQ(field2: String): On {
-            return On(this, field2)
-        }
+infix fun On.EQ(field2: String): On {
+    return On(this, field2)
+}
 
-        infix fun String.ON(field1: String): On {
-            return On(this, field1)
-        }
-    }
+infix fun String.ON(field1: String): On {
+    return On(this, field1)
 }

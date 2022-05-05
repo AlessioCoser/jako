@@ -2,11 +2,11 @@ package jako.dsl.query
 
 import jako.dsl.conditions.Eq
 import jako.dsl.conditions.Gt
-import jako.dsl.fields.As.Companion.AS
-import jako.dsl.fields.Column.Companion.col
-import jako.dsl.fields.functions.Coalesce.Companion.COALESCE
-import jako.dsl.fields.functions.Count.Companion.COUNT
-import jako.dsl.fields.functions.Max.Companion.MAX
+import jako.dsl.fields.AS
+import jako.dsl.fields.col
+import jako.dsl.fields.functions.COALESCE
+import jako.dsl.fields.functions.COUNT
+import jako.dsl.fields.functions.MAX
 import jako.dsl.query.join.On
 import jako.dsl.query.order.Asc
 import org.junit.jupiter.api.Assertions.assertEquals

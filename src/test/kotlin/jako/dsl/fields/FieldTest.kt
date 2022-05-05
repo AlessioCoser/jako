@@ -1,6 +1,6 @@
 package jako.dsl.fields
 
-import jako.dsl.fields.functions.Coalesce.Companion.COALESCE
+import jako.dsl.fields.functions.COALESCE
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
