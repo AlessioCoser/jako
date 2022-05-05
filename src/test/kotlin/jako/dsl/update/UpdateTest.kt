@@ -1,5 +1,6 @@
 package jako.dsl.update
 
+import jako.dsl.conditions.EQ
 import jako.dsl.conditions.GT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,16 +13,20 @@ class UpdateTest {
     @Test
     fun `update into single param foreach column`() {
         val insert = Update()
-            .from("table").set("column1", "1").set("column2", 2).set("column3", "3")
+            .table("users")
+            .set("age", 31)
+            .where("id" EQ 1)
 
-        assertEquals("UPDATE \"table\" SET \"column1\" = ?, \"column2\" = ?, \"column3\" = ?", insert.toString())
-        assertEquals(listOf("1", 2, "3"), insert.params())
+        println(insert.toString())
+        // UPDATE "users" SET "age" = ? WHERE "id" = ?
+        println(insert.params())
+        // [31, 1]
     }
 
     @Test
     fun `update without values`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Update().from("table").toString()
+            Update().table("table").toString()
         }.message
 
         assertThat(message).isEqualTo("Cannot generate update without values")
@@ -30,7 +35,7 @@ class UpdateTest {
     @Test
     fun `update local-date`() {
         val insert = Update()
-            .from("table")
+            .table("table")
             .set("column1", LocalDate.of(2022, 4, 1))
 
         assertEquals("""UPDATE "table" SET "column1" = ?""", insert.toString())
@@ -40,7 +45,7 @@ class UpdateTest {
     @Test
     fun `update with where statement `() {
         val insert = Update()
-            .from("table")
+            .table("table")
             .set("column1", 0)
             .where("column1" GT 10)
 

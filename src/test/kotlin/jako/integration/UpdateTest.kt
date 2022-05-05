@@ -25,7 +25,7 @@ class UpdateTest {
     @Test
     fun `update user age`() {
         db.execute(Update()
-            .from("users")
+            .table("users")
             .set("age", 3)
             .where("email" EQ "cavallino@cavallini.it")
         )
@@ -42,7 +42,7 @@ class UpdateTest {
     fun `update using builder dsl`() {
         db.execute(
             Update()
-                .from("users")
+                .table("users")
                 .set("age", 4)
                 .where("email" EQ "cavallino@cavallini.it")
         )

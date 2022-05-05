@@ -15,7 +15,7 @@ class Update: StatementBuilder() {
 
     override fun blocks() = listOf(updateTableOrThrow(), fieldsOrThrow(), where)
 
-    fun from(table: String): Update {
+    fun table(table: String): Update {
         this.table = UpdateTable(table)
         return this
     }

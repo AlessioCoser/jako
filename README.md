@@ -1,29 +1,28 @@
 # JAKO: Just Another Kotlin Orm (PostgreSQL)
-![Daikon](./jako.png)
+![JAKO](./jako.png)
 
-**All the examples are written as tests using JUnit5.**
-
-## How to add JAKO to your project
+## Add JAKO to your project
 [![](https://jitpack.io/v/AlessioCoser/jako.svg)](https://jitpack.io/#AlessioCoser/jako)
 
 ### Gradle
 - Add JitPack in your root build.gradle at the end of repositories:
-```
+```groovy
 repositories {
-    ...
     maven { url 'https://jitpack.io' }
 }
 ```
 
 - Add the dependency along with postgresql driver
-```
-implementation 'org.postgresql:postgresql:42.3.3'
-implementation 'com.github.AlessioCoser:jako:0.0.5'
+```groovy
+dependencies {
+    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'com.github.AlessioCoser:jako:0.0.8'
+}
 ```
 
 ### Maven
 - Add the JitPack repository to your build file
-```
+```xml
 <repositories>
     <repository>
         <id>jitpack.io</id>
@@ -32,7 +31,7 @@ implementation 'com.github.AlessioCoser:jako:0.0.5'
 </repositories>
 ```
 - Add the dependency along with postgresql driver
-```
+```xml
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -41,73 +40,115 @@ implementation 'com.github.AlessioCoser:jako:0.0.5'
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.8</version>
 </dependency>
 ```
 
-## How to build a simple select statement
+## Getting Started
+### Build
+#### Query
 ```kotlin
-import jako.dsl.conditions.Eq.Companion.EQ
-import jako.dsl.query.Query
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+val query = Query()
+    .from("users")
+    .join("pets" ON "pets.owner" EQ "users.id")
+    .where(("city" EQ "Milano") AND ("age" GT 3))
 
-class Docs {
-    @Test fun `build a select statement with a simple condition`() {
-        val statement = Query().from("users").where("city" EQ "Milano")
+println(query.toString())
+// SELECT * FROM "users" INNER JOIN "pets" ON "pets"."owner" = "users"."id" WHERE ("city" = ? AND "age" > ?)
+println(query.params())
+// [Milano, 3]
+```
+#### Insert
+```kotlin
+val insert = Insert()
+    .into("users")
+    .set("id", 1)
+    .set("name", "Mario")
+    .set("city", "Milano")
+    .set("age", 30)
 
-        assertEquals("""SELECT * FROM "users" WHERE "city" = ?""", statement.toString())
-        assertEquals(listOf("Milano"), statement.params())
-    }
-}
+println(insert.toString())
+// INSERT INTO "users" ("id", "name", "city", "age") VALUES (?, ?, ?, ?)
+println(insert.params())
+// [1, Mario, Milano, 30]
+```
+#### Update
+```kotlin
+val update = Update()
+    .table("users")
+    .set("age", 31)
+    .where("id" EQ 1)
+
+println(update.toString())
+// UPDATE "users" SET "age" = ? WHERE "id" = ?
+println(update.params())
+// [31, 1]
 ```
 
-## How to execute a simple select statement
-In order to run this test you have to start a postgresql server to the "localhost:5432" with the necessary data.
+### Execute
+#### Query
+Select **all** `id` fields from `users` as Ints.
+
 ```kotlin
-import jako.database.Database
-import jako.dsl.query.Query
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val query = Query().from("users")
 
-class Docs {
-    @Test fun `select all ids of table`() {
-        val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
-        val tableIds = db.select(Query().from("table")).all { int("id") }
+val tableIds: List<Int> = db.select(query).all { int("id") }
+```
+Select **first** `id` as Int from `users`.
 
-        assertEquals(listOf(1, 2, 3), tableIds)
-    }
-}
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val query = Query().from("users")
+
+val tableIds: Int? = db.select(query).first { int("id") }
+```
+
+#### Another Statement
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val insert = Insert()
+    .into("customers")
+    .set("name", "Carlo")
+    .set("age", 18)
+
+db.execute(insert)
 ```
 
 ## Custom Connectors
-Create a database Instance:
+If you create a database instance without a custom connector the library use a SimpleConnector which adopt the standard `DriverManager.getConnection()` method to get a new database connection.
+
 ```kotlin
 val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
 ```
-Creating a database instance in the above way, the library use a SimpleConnector which adopt the standard `DriverManager.getConnection()` method to get a new database connection.
 
-If you want to use this library in production we recommend to use a CustomConnector so you can use your connection pool library.
+If you want to use this library in production we recommend to use a CustomConnector so you can use your connection pool/cache library.
 
-In the example below we will create a Connector for [HikariCP](https://github.com/brettwooldridge/HikariCP) 
+So you have to create a database instance in this way:
+```kotlin
+val customConnector: DatabaseConnector = MyCustomConnector("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+val db = Database.connect(customConnector)
+```
 
-### Example with HikariCP
+In the example below we will create a Connector for [HikariCP](https://github.com/brettwooldridge/HikariCP)
+
+### HikariCP Custom Connector Example
 #### 1. Add HikariCP to the project dependencies
 Add to dependencies:
-```
+```groovy
 "com.zaxxer:HikariCP:4.0.3"
+// for java 11 compatibility use the version 5.0.1
 ```
-Or for Java11 compatibility
-```
-"com.zaxxer:HikariCP:5.0.1"
-```
+
 #### 2. Create the custom Connector
+
 ```kotlin
-class HikariConnector(jdbcConnection: JdbcConnection, connectionPoolSize: Int = 10): DatabaseConnector {
+class HikariConnector(jdbcUrl: String, poolSize: Int = 10) : DatabaseConnector {
     private val dataSource = HikariDataSource().also {
         it.driverClassName = "org.postgresql.Driver"
-        it.jdbcUrl = jdbcConnection.connection
-        it.maximumPoolSize = connectionPoolSize // start with this: ((2 * core_count) + number_of_disks)
+        it.jdbcUrl = jdbcUrl
+        it.maximumPoolSize = poolSize 
+        // start with this: ((2 * core_count) + number_of_disks)
     }
 
     override fun connection(): Connection {
@@ -118,6 +159,6 @@ class HikariConnector(jdbcConnection: JdbcConnection, connectionPoolSize: Int = 
 
 #### 3. Use it
 ```kotlin
-val connectionConfig = JdbcConnection("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
-val db = Database.connect(HikariConnector(connectionConfig))
+val customConnector: DatabaseConnector = HikariConnector("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+val db = Database.connect(customConnector)
 ```
