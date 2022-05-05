@@ -1,6 +1,16 @@
 # JAKO: Just Another Kotlin Orm (PostgreSQL)
 ![JAKO](./jako.png)
 
+JAKO is a simple, minimal, no-dependency library to build and execute postgresql statements using a fluent dsl.
+
+Main features:
+- Easy to use
+- Statement builders totally independent of execution
+- Easy to use custom connectors (like HikariCP or others)
+- No need to define table structures
+- `RawStatement` class in order to execute not yet supported SQL syntax
+- fluent transactions
+
 ## Add JAKO to your project
 [![](https://jitpack.io/v/AlessioCoser/jako.svg)](https://jitpack.io/#AlessioCoser/jako)
 
@@ -103,6 +113,13 @@ val query = Query().from("users")
 
 val tableIds: Int? = db.select(query).first { int("id") }
 ```
+Use **RawStatement** to Select **first** `id`. (use this for SQL syntax not yet supported by the library)
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val query = RawStatement("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano"))
+
+val tableIds: Int? = db.select(query).first { int("id") }
+```
 
 #### Another Statement
 ```kotlin
@@ -113,6 +130,19 @@ val insert = Insert()
     .set("age", 18)
 
 db.execute(insert)
+```
+
+## Execute two insert in Transaction
+Using `useTransaction` method you can run all db execute safely.
+When something goes wrong and an execution throws an exception the changes are automatically rollbacked.
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+
+db.useTransaction {
+    db.execute(Insert().into("users").set("name", "Mario"))
+    db.execute(Insert().into("users").set("name", "Paolo"))
+    db.execute(Insert().into("users").set("name", "Carlo"))
+}
 ```
 
 ## Custom Connectors
