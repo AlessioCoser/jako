@@ -129,7 +129,7 @@ val insert = Insert()
 db.execute(insert)
 ```
 
-## Execute two insert in Transaction
+## Execute statements in Transaction
 Using `useTransaction` method you can run all db execute safely.
 When something goes wrong and an execution throws an exception the changes are automatically rollbacked.
 ```kotlin
