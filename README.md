@@ -26,7 +26,7 @@ repositories {
 ```groovy
 dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
-    implementation 'com.github.AlessioCoser:jako:0.0.8'
+    implementation 'com.github.AlessioCoser:jako:0.0.9'
 }
 ```
 
@@ -50,7 +50,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
 </dependency>
 ```
 
@@ -58,8 +58,7 @@ dependencies {
 ### Build
 #### Query
 ```kotlin
-val query = Query()
-    .from("users")
+val query = Query.from("users")
     .join("pets" ON "pets.owner" EQ "users.id")
     .where(("city" EQ "Milano") AND ("age" GT 3))
 
@@ -70,8 +69,7 @@ println(query.params())
 ```
 #### Insert
 ```kotlin
-val insert = Insert()
-    .into("users")
+val insert = Insert.into("users")
     .set("id", 1)
     .set("name", "Mario")
     .set("city", "Milano")
@@ -84,8 +82,7 @@ println(insert.params())
 ```
 #### Update
 ```kotlin
-val update = Update()
-    .table("users")
+val update = Update.table("users")
     .set("age", 31)
     .where("id" EQ 1)
 

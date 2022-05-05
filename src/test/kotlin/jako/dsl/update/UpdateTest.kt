@@ -12,7 +12,7 @@ import java.time.LocalDate
 class UpdateTest {
     @Test
     fun `update into single param foreach column`() {
-        val insert = Update()
+        val insert = Update
             .table("users")
             .set("age", 31)
             .where("id" EQ 1)

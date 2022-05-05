@@ -25,7 +25,7 @@ class QueryTest {
 
     @Test
     fun `build simple query`() {
-        val query = Query().from("people")
+        val query = Query.from("people")
 
         assertEquals("SELECT * FROM \"people\"", query.toString())
         assertEquals(emptyList<Any?>(), query.params())

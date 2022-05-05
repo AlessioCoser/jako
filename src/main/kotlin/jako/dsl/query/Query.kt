@@ -95,4 +95,10 @@ class Query: StatementBuilder() {
     fun single() = limit(1)
 
     private fun fromOrThrow(): From = from ?: throw RuntimeException("Cannot generate query without table name")
+
+    companion object {
+        fun from(table: String): Query {
+            return Query().from(table)
+        }
+    }
 }

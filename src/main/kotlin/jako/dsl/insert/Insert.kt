@@ -40,4 +40,10 @@ class Insert: StatementBuilder() {
 
     private fun rowOrThrow() = if (insertRow.isNotEmpty()) insertRow else throw RuntimeException("Cannot generate insert without values")
     private fun insertIntoOrThrow() = insertInto ?: throw RuntimeException("Cannot generate insert without table name")
+
+    companion object {
+        fun into(table: String): Insert {
+            return Insert().into(table)
+        }
+    }
 }
