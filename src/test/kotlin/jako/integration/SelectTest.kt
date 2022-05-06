@@ -5,13 +5,7 @@ import jako.database.JdbcConnectionString
 import jako.dsl.RawStatement
 import jako.dsl.Row
 import jako.dsl.RowParser
-import jako.dsl.conditions.And
-import jako.dsl.conditions.AND
-import jako.dsl.conditions.Eq
-import jako.dsl.conditions.EQ
-import jako.dsl.conditions.GT
-import jako.dsl.conditions.Or
-import jako.dsl.conditions.OR
+import jako.dsl.conditions.*
 import jako.dsl.fields.AS
 import jako.dsl.fields.col
 import jako.dsl.fields.functions.COALESCE
@@ -54,7 +48,7 @@ class SelectTest {
     fun `select with where`() {
         val user = db.select(Query()
             .from("users")
-            .where(("city" EQ "Milano") AND ("age" GT 18))
+            .where(("city" ENDS_WITH "lano") AND ("age" GT 18))
         ).first { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(user).isEqualTo(User("vittorio@gialli.it", "Vittorio Gialli", "Milano", 64))
