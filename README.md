@@ -98,7 +98,7 @@ Select **all** `id` fields from `users` as Ints.
 
 ```kotlin
 val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
-val query = Query().from("users")
+val query = Query.from("users")
 
 val tableIds: List<Int> = db.select(query).all { int("id") }
 ```
@@ -106,7 +106,7 @@ Select **first** `id` as Int from `users`.
 
 ```kotlin
 val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
-val query = Query().from("users")
+val query = Query.from("users")
 
 val tableIds: Int? = db.select(query).first { int("id") }
 ```
