@@ -41,9 +41,9 @@ class InsertTest {
         val insert = Insert()
             .into("table")
             .set("column1", "value1")
-            .returning("id".col)
+            .returning("id".col, "name".col)
 
-        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id"""", insert.toString())
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toString())
         assertEquals(listOf("value1"), insert.params())
     }
 
@@ -52,9 +52,9 @@ class InsertTest {
         val insert = Insert()
             .into("table")
             .set("column1", "value1")
-            .returning("id")
+            .returning("id", "name")
 
-        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id"""", insert.toString())
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toString())
         assertEquals(listOf("value1"), insert.params())
     }
 }

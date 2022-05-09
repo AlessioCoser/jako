@@ -6,6 +6,8 @@ import jako.dsl.RawStatement
 import jako.dsl.Row
 import jako.dsl.RowParser
 import jako.dsl.conditions.*
+import jako.dsl.delete.Delete
+import jako.dsl.fields.ALL
 import jako.dsl.fields.AS
 import jako.dsl.fields.col
 import jako.dsl.fields.functions.COALESCE
@@ -219,7 +221,7 @@ class SelectTest {
 
     @Test
     fun `select a delete statement with returning`() {
-        val all = db.select(RawStatement("""DELETE FROM pets_deletable RETURNING *;"""))
+        val all = db.select(Delete.from("pets_deletable").returning(ALL))
             .all { Pet(str("name"), str("type"), int("age")) }
 
         assertThat(all).isEqualTo(listOf(Pet(name="Pluto", type="Dog", age=2), Pet(name="Fido", type="Dog", age=3)))
