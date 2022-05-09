@@ -1,7 +1,5 @@
 package jako.dsl.query.join
 
-import jako.dsl.query.join.EQ
-import jako.dsl.query.join.ON
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

@@ -5,7 +5,6 @@ import jako.dsl.StatementBuilder
 import jako.dsl.conditions.Condition
 import jako.dsl.fields.Field
 import jako.dsl.fields.Raw
-import jako.dsl.insert.Insert
 import jako.dsl.query.From
 import jako.dsl.where.GenericWhere
 import jako.dsl.where.NoWhere

@@ -1,7 +1,5 @@
 package jako.dsl.fields.functions
 
-import jako.dsl.fields.functions.COALESCE
-import jako.dsl.fields.functions.MAX
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

@@ -13,11 +13,11 @@ import jako.dsl.fields.col
 import jako.dsl.fields.functions.COALESCE
 import jako.dsl.fields.functions.COUNT
 import jako.dsl.query.Query
-import jako.dsl.query.join.On
 import jako.dsl.query.join.EQ
 import jako.dsl.query.join.ON
-import jako.dsl.query.order.Asc
+import jako.dsl.query.join.On
 import jako.dsl.query.order.ASC
+import jako.dsl.query.order.Asc
 import jako.dsl.query.order.DESC
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

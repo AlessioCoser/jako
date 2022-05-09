@@ -2,7 +2,6 @@ package jako.dsl.fields.functions
 
 import jako.dsl.fields.col
 import jako.dsl.fields.value
-import jako.dsl.fields.functions.AVG
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

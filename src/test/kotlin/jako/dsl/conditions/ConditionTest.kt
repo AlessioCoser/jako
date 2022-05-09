@@ -1,9 +1,5 @@
 package jako.dsl.conditions
 
-import jako.dsl.conditions.AND
-import jako.dsl.conditions.EQ
-import jako.dsl.conditions.GT
-import jako.dsl.conditions.OR
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

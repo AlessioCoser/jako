@@ -3,7 +3,6 @@ package jako.dsl.delete
 import jako.dsl.conditions.EQ
 import jako.dsl.conditions.GT
 import jako.dsl.fields.col
-import jako.dsl.insert.Insert
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

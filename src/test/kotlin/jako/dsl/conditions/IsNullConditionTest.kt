@@ -1,6 +1,5 @@
 package jako.dsl.conditions
 
-import jako.dsl.conditions.IS
 import jako.dsl.fields.Column
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

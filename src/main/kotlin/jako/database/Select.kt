@@ -1,8 +1,8 @@
 package jako.database
 
-import jako.dsl.Statement
 import jako.dsl.Row
 import jako.dsl.RowParser
+import jako.dsl.Statement
 
 class Select internal constructor(private val transactionManager: TransactionManager, private val statement: Statement) {
     fun <T> all(parser: RowParser<T>): List<T> {

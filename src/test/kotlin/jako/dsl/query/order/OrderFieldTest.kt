@@ -1,7 +1,5 @@
 package jako.dsl.query.order
 
-import jako.dsl.query.order.ASC
-import jako.dsl.query.order.DESC
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

@@ -1,6 +1,5 @@
 package jako.dsl.fields
 
-import jako.dsl.fields.AS
 import jako.dsl.fields.functions.COUNT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
