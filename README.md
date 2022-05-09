@@ -91,6 +91,16 @@ println(update.toString())
 println(update.params())
 // [31, 1]
 ```
+#### Delete
+```kotlin
+val delete = Delete.from("users")
+    .where("id" EQ 1)
+
+println(insert.toString())
+// DELETE FROM "users" WHERE "id" = ?
+println(insert.params())
+// [1]
+```
 
 ### Execute
 #### Query
