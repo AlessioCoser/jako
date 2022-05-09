@@ -15,20 +15,20 @@ class GroupByTest {
     fun `groupBy single field`() {
         val groupBy = GroupBy(listOf("field1"))
 
-        assertEquals(" GROUP BY \"field1\"", groupBy.toString())
+        assertEquals("GROUP BY \"field1\"", groupBy.toString())
     }
 
     @Test
     fun `group by multiple fields`() {
         val groupBy = GroupBy(listOf("field1", "fie.ld2"))
 
-        assertEquals(" GROUP BY \"field1\", \"fie\".\"ld2\"", groupBy.toString())
+        assertEquals("GROUP BY \"field1\", \"fie\".\"ld2\"", groupBy.toString())
     }
 
     @Test
     fun `group by aggregate function`() {
         val groupBy = GroupBy(Column("field1"), COUNT("field2"))
 
-        assertEquals(" GROUP BY \"field1\", COUNT(\"field2\")", groupBy.toString())
+        assertEquals("GROUP BY \"field1\", COUNT(\"field2\")", groupBy.toString())
     }
 }

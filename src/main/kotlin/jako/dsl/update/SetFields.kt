@@ -10,8 +10,6 @@ internal class SetFields: StatementBlock {
         return this
     }
 
-    fun isNotEmpty() = cols.isNotEmpty()
-
-    override fun toString() = " SET " + cols.joinToString(", ")
+    override fun toString() = if (cols.isNotEmpty()) "SET " + cols.joinToString(", ") else ""
     override fun params() = cols.flatMap { it.params() }
 }

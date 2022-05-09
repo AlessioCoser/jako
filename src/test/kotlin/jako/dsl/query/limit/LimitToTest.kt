@@ -13,13 +13,13 @@ class LimitToTest {
     fun `limit starting from the first element`() {
         val limit = LimitTo(18)
 
-        assertEquals(" LIMIT 18", limit.toString())
+        assertEquals("LIMIT 18", limit.toString())
     }
 
     @Test
     fun `limit with offset`() {
         val limit = LimitTo(18, 6)
 
-        assertEquals(" LIMIT 18 OFFSET 6", limit.toString())
+        assertEquals("LIMIT 18 OFFSET 6", limit.toString())
     }
 }

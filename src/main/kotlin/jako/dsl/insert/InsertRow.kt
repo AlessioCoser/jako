@@ -10,9 +10,7 @@ internal class InsertRow: StatementBlock {
         return this
     }
 
-    fun isNotEmpty() = cols.isNotEmpty()
-
-    override fun toString() = " (${columnNames()}) VALUES (${placeholders()})"
+    override fun toString() = if(cols.isNotEmpty()) "(${columnNames()}) VALUES (${placeholders()})" else ""
     override fun params(): List<Any?> = cols.map { it.value }
 
     private fun columnNames() = cols.joinToString(prefix = "\"", separator = "\", \"", postfix = "\"") { it.name }

@@ -19,7 +19,7 @@ class GenericWhereTest {
     fun `where statement`() {
         val where = GenericWhere("test" EQ "value")
 
-        assertEquals(" WHERE \"test\" = ?", where.toString())
+        assertEquals("WHERE \"test\" = ?", where.toString())
         assertEquals(listOf("value"), where.params())
     }
 }

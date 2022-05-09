@@ -16,7 +16,7 @@ class JoinsTest {
         val joins = Joins()
         joins.join(On("table", "field1"))
 
-        assertEquals(" INNER JOIN \"table\" USING(\"field1\")", joins.toString())
+        assertEquals("INNER JOIN \"table\" USING(\"field1\")", joins.toString())
     }
 
     @Test
@@ -26,8 +26,8 @@ class JoinsTest {
         joins.join(On("another", "field2"))
 
         assertEquals(
-            " INNER JOIN \"table\" USING(\"field1\")" +
-            " INNER JOIN \"another\" USING(\"field2\")",
+            "INNER JOIN \"table\" USING(\"field1\") " +
+            "INNER JOIN \"another\" USING(\"field2\")",
             joins.toString()
         )
     }
@@ -37,7 +37,7 @@ class JoinsTest {
         val joins = Joins()
         joins.leftJoin(On("table", "field1"))
 
-        assertEquals(" LEFT JOIN \"table\" USING(\"field1\")", joins.toString())
+        assertEquals("LEFT JOIN \"table\" USING(\"field1\")", joins.toString())
     }
 
     @Test
@@ -45,6 +45,6 @@ class JoinsTest {
         val joins = Joins()
         joins.rightJoin(On("table", "field1"))
 
-        assertEquals(" RIGHT JOIN \"table\" USING(\"field1\")", joins.toString())
+        assertEquals("RIGHT JOIN \"table\" USING(\"field1\")", joins.toString())
     }
 }

@@ -7,7 +7,7 @@ internal class Joins: Join {
         if(joins.isEmpty()) {
             return ""
         }
-        return joins.joinToString(prefix = " ", separator = " ") { "$it" }
+        return joins.joinToString(separator = " ") { "$it" }
     }
 
     fun join(on: On) = join(InnerJoin(on))

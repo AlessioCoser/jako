@@ -17,7 +17,7 @@ class GenericHavingTest {
     fun `having statement`() {
         val having = GenericHaving("test" EQ "value")
 
-        assertEquals(" HAVING \"test\" = ?", having.toString())
+        assertEquals("HAVING \"test\" = ?", having.toString())
         assertEquals(listOf("value"), having.params())
     }
 }

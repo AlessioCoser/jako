@@ -35,7 +35,7 @@ class Query: StatementBuilder() {
     private var groupBy: Group = NoGroup()
     private var limit: Limit = NoLimit()
 
-    override fun blocks() = listOf(Raw("SELECT "), fields, fromOrThrow(), joins, where, groupBy, having, orderBy, limit)
+    override fun blocks() = listOf(Raw("SELECT"), fields, fromOrThrow(), joins, where, groupBy, having, orderBy, limit)
 
     fun from(table: String): Query {
         this.from = From(table)

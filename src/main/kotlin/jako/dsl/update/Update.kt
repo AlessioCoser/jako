@@ -35,7 +35,7 @@ class Update: StatementBuilder() {
         return this
     }
 
-    private fun fieldsOrThrow() = if(fields.isNotEmpty()) fields else throw RuntimeException("Cannot generate update without values")
+    private fun fieldsOrThrow() = if(fields.isPresent()) fields else throw RuntimeException("Cannot generate update without values")
 
     private fun updateTableOrThrow() = table ?: throw RuntimeException("Cannot generate update without table name")
 

@@ -12,7 +12,7 @@ internal class Returning(private vararg val fields: Field): StatementBlock {
         if (fields.isEmpty()) {
             return ""
         }
-        return " RETURNING ${fields.joinToString(separator = ", ") { it.toString() }}"
+        return "RETURNING ${fields.joinToString(separator = ", ") { it.toString() }}"
     }
     override fun params(): List<Any?> = fields.flatMap { it.params() }
 }
