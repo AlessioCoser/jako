@@ -121,7 +121,7 @@ val tableIds: Int? = db.select(query).first { int("id") }
 #### Another Statement
 ```kotlin
 val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
-val insert = Insert()
+val insert = Insert
     .into("customers")
     .set("name", "Carlo")
     .set("age", 18)
@@ -136,9 +136,9 @@ When something goes wrong and an execution throws an exception the changes are a
 val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
 
 db.useTransaction {
-    db.execute(Insert().into("users").set("name", "Mario"))
-    db.execute(Insert().into("users").set("name", "Paolo"))
-    db.execute(Insert().into("users").set("name", "Carlo"))
+    db.execute(Insert.into("users").set("name", "Mario"))
+    db.execute(Insert.into("users").set("name", "Paolo"))
+    db.execute(Insert.into("users").set("name", "Carlo"))
 }
 ```
 
