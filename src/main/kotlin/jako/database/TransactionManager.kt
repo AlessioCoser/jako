@@ -24,17 +24,13 @@ class TransactionManager(private val connector: () -> Connection) {
     }
 
     inline fun <T> useConnection(func: (Connection) -> T): T {
-        try {
-            val transaction = currentTransaction
-            val connection = transaction?.connection ?: newConnection()
+        val transaction = currentTransaction
+        val connection = transaction?.connection ?: newConnection()
 
-            try {
-                return func(connection)
-            } finally {
-                if (transaction == null) connection.close()
-            }
-        } catch (e: SQLException) {
-            throw e
+        try {
+            return func(connection)
+        } finally {
+            if (transaction == null) connection.close()
         }
     }
 

@@ -4,6 +4,7 @@ import jako.database.utils.MockedConnectionGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.sql.SQLException
 
 class TransactionManagerTest {
 
@@ -175,10 +176,10 @@ class TransactionManagerTest {
         val generator = MockedConnectionGenerator()
         val manager = TransactionManager(generator.connector())
 
-        assertThrows(RuntimeException::class.java) {
+        assertThrows(SQLException::class.java) {
             manager.useConnection { connection ->
                 assertThat(connection.isClosed).isFalse()
-                throw RuntimeException()
+                throw SQLException()
             }
         }
 
