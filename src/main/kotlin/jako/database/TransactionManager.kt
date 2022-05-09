@@ -46,9 +46,6 @@ class TransactionManager(private val connector: () -> Connection) {
 
         try {
             return func(transaction)
-        } catch (e: SQLException) {
-            throwable = e
-            throw throwable
         } catch (e: Throwable) {
             throwable = e
             throw throwable
