@@ -120,13 +120,6 @@ val query = Query.from("users")
 
 val tableIds: Int? = db.select(query).first { int("id") }
 ```
-Use **RawStatement** to Select **first** `id`. (use this for SQL syntax not yet supported by the library)
-```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
-val query = RawStatement("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano"))
-
-val tableIds: Int? = db.select(query).first { int("id") }
-```
 
 #### Another Statement
 ```kotlin
@@ -137,6 +130,16 @@ val insert = Insert
     .set("age", 18)
 
 db.execute(insert)
+```
+
+#### Raw Statement
+Use **RawStatement** for SQL syntax not yet supported by the library.
+
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val query = RawStatement("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano"))
+
+val tableIds: Int? = db.select(query).first { int("id") }
 ```
 
 ## Execute statements in Transaction
