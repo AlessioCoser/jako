@@ -1,5 +1,7 @@
 package jako.dsl.query.join
 
+import jako.dsl.fields.AS
+import jako.dsl.fields.Field
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -46,5 +48,13 @@ class JoinsTest {
         joins.rightJoin(On("table", "field1"))
 
         assertEquals("RIGHT JOIN \"table\" USING(\"field1\")", joins.toString())
+    }
+
+    @Test
+    fun `joins with as`() {
+        val joins = Joins()
+        joins.leftJoin("table" AS "t" ON "field1" EQ "field2")
+
+        assertEquals("LEFT JOIN \"table\" AS \"t\" ON \"field1\" = \"field2\"", joins.toString())
     }
 }

@@ -1,16 +1,22 @@
 package jako.dsl.query.join
 
+import jako.dsl.StatementBlock
 import jako.dsl.fields.Column
+import jako.dsl.fields.Field
 
-class On(private val table: String, private val field1: String, private val field2: String? = null) {
-
+class On(private val table: Field, private val field1: String, private val field2: String? = null): StatementBlock {
+    constructor(table: String, field1: String, field2: String? = null) : this(Column(table), field1, field2)
     constructor(join: On, field2: String) : this(join.table, join.field1, field2)
 
     override fun toString(): String {
         if (field2 == null) {
-            return "${Column(table)} USING(${Column(field1)})"
+            return "$table USING(${Column(field1)})"
         }
-        return "${Column(table)} ON ${Column(field1)} = ${Column(field2)}"
+        return "$table ON ${Column(field1)} = ${Column(field2)}"
+    }
+
+    override fun params(): List<Any?> {
+        return table.params()
     }
 }
 
@@ -21,3 +27,9 @@ infix fun On.EQ(field2: String): On {
 infix fun String.ON(field1: String): On {
     return On(this, field1)
 }
+
+
+infix fun Field.ON(field1: String): On {
+    return On(this, field1)
+}
+
