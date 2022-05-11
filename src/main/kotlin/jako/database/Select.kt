@@ -12,11 +12,11 @@ class Select internal constructor(private val transactionManager: TransactionMan
     fun <T> all(parseRow: RowSql.() -> T): List<T> {
         return transactionManager.useConnection {
             val resultSet = it.prepareStatement(statement).executeQuery()
-            val items: MutableList<T> = ArrayList()
+            val items: MutableList<T> = mutableListOf()
             while (resultSet.next()) {
                 items.add(parseRow(RowSql(resultSet)))
             }
-            items
+            items.toList()
         }
     }
 
