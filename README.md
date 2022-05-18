@@ -155,6 +155,23 @@ db.useTransaction {
 }
 ```
 
+## Print resulting query
+#### Enable statement printing
+```kotlin
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+db.printStatements(true)
+db.select(Query().from("users")).all { strOrNull("city") }
+// prints to stdout:
+// SELECT * FROM "users"
+```
+
+#### Change print destination
+```kotlin
+val connectionString = "jdbc:postgresql://localhost:5432/database?user=user&password=password"
+val db = Database.connect(connectionString, System.out)
+// System.out is the default, you can provide another implementation of PrintStream
+```
+
 ## Custom Connectors
 If you create a database instance without a custom connector the library use a SimpleConnector which adopt the standard `DriverManager.getConnection()` method to get a new database connection.
 
