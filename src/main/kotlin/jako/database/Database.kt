@@ -1,11 +1,19 @@
 package jako.database
 
 import jako.dsl.Statement
+import java.io.PrintStream
 
 
-class Database(val transactionManager: TransactionManager) {
+class Database(private val connector: DatabaseConnector, printStream: PrintStream = System.out) {
+    val transactionManager = TransactionManager { connector.connection() }
+    private val statementPrinter = StatementPrinter(printStream)
+
     init {
         transactionManager.check()
+    }
+
+    fun printStatements(enabled: Boolean) {
+        statementPrinter.enabled = enabled
     }
 
     inline fun <T> useTransaction(func: (Transaction) -> T): T {
@@ -13,22 +21,22 @@ class Database(val transactionManager: TransactionManager) {
     }
 
     fun execute(statement: Statement) {
-        return Execute(transactionManager, statement).execute()
+        return Execute(transactionManager, statementPrinter, statement).execute()
     }
 
     fun select(statement: Statement): Select {
-        return Select(transactionManager, statement)
+        return Select(transactionManager, statementPrinter, statement)
     }
 
     companion object {
         @JvmStatic
-        fun connect(jdbcConnectionString: String): Database {
-            return connect(SimpleConnector(jdbcConnectionString))
+        fun connect(jdbcConnectionString: String, printStream: PrintStream = System.out): Database {
+            return connect(SimpleConnector(jdbcConnectionString), printStream)
         }
 
         @JvmStatic
-        fun connect(connector: DatabaseConnector): Database {
-            return Database(TransactionManager { connector.connection() })
+        fun connect(connector: DatabaseConnector, printStream: PrintStream = System.out): Database {
+            return Database(connector, printStream)
         }
     }
 }
