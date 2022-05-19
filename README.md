@@ -26,7 +26,7 @@ repositories {
 ```groovy
 dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
-    implementation 'com.github.AlessioCoser:jako:0.0.9'
+    implementation 'com.github.AlessioCoser:jako:0.0.13'
 }
 ```
 
@@ -50,7 +50,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.9</version>
+    <version>0.0.13</version>
 </dependency>
 ```
 
