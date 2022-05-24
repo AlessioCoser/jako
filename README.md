@@ -1,12 +1,13 @@
 # JAKO: Just Another Kotlin Orm (PostgreSQL)
 ![JAKO](./jako.png)
 
-JAKO is a simple, minimal, no-dependency library to build and execute postgresql statements using a fluent dsl.
+JAKO is a simple, minimal, no-dependency library to build and execute postgresql statements using a fluent syntax.
 
 Main features:
+- No dependencies
 - Easy to use
 - Statement builders totally independent of execution
-- Easy to use custom connectors (like HikariCP or others)
+- Easy to create custom connectors (like HikariCP or others)
 - No need to define table structures
 - `RawStatement` class in order to execute not yet supported SQL syntax
 - fluent transactions
