@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.lang.IllegalStateException
 import java.sql.Date
 import java.sql.Time
 import java.sql.Timestamp
@@ -81,6 +82,96 @@ class RowSqlTest {
     }
 
     @Test
+    fun `throws exception when str is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { str("string") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.str(\"string\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when boolean is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { bool("boolean") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.bool(\"boolean\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when short is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { short("short") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.short(\"short\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when int is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { int("int") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.int(\"int\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when long is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { long("long") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.long(\"long\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when float is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { float("float") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.float(\"float\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when double is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { double("double") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.double(\"double\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when date is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { date("date") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.date(\"date\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when localDate is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { localDate("local_date") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.localDate(\"local_date\") must not be null")
+    }
+
+    @Test
+    fun `throws exception when time is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types")).all { time("time") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.time(\"time\") must not be null")
+    }
+
+    @Test
     fun `select timestamps`() {
         val arr: List<Timestamps?> = db.select(Query().from("types").fields("timestamp", "timestamp_no_zone"))
             .all { Timestamps(
@@ -114,6 +205,16 @@ class RowSqlTest {
     }
 
     @Test
+    fun `throws exception when timestamps are null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types").fields("timestamp", "timestamp_no_zone"))
+                .all { timestamp("timestamp") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.timestamp(\"timestamp\") must not be null")
+    }
+
+    @Test
     fun `select bytearrays`() {
         val arr: List<ByteArray?> = db.select(Query().from("types").fields("bytes"))
             .all { bytesOrNull("bytes") }
@@ -128,6 +229,16 @@ class RowSqlTest {
             .first { bytes("bytes") }!!
 
         assertArrayEquals(byteArrayOf(92, 48, 48, 48).toTypedArray(), bytearray.toTypedArray())
+    }
+
+    @Test
+    fun `throws exception when bytearray is null`() {
+        val errorMessage = assertThrows(IllegalStateException::class.java) {
+            db.select(Query().from("types").fields("bytes"))
+                .all { bytes("bytes") }
+        }.message
+
+        assertThat(errorMessage).isEqualTo("Row.bytes(\"bytes\") must not be null")
     }
 }
 
