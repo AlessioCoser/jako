@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
 }
 
-version = "0.0.9"
+version = "0.0.13"
 group = "com.alessiocoser"
 
 repositories {
