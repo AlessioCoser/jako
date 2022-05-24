@@ -52,46 +52,47 @@ publishing {
 val new: String by project
 tasks.register("release") {
     doFirst {
-        val newVersion = getProperty("new")?.toString()
+        val current = version.toString()
+        val next = project.getProperty("new")?.toString()
 
-        if (newVersion == null || isNotNewVersion(newVersion)) {
-            println("Invalid new version: `$newVersion`. New version must be present and higher to current version `$version`\n")
+        if (next == null || next.isNotGreaterThan(current)) {
+            println("Invalid new version: `$next`. New version must be present and higher to current version `$current`\n")
             println("USAGE:")
-            println("gradle release -Pnew=[>$version]")
+            println("gradle release -Pnew=[>$current]")
             return@doFirst
         }
 
-        exec("sed", "-i", "-e", "s|'com.github.AlessioCoser:jako:.*'|'com.github.AlessioCoser:jako:$newVersion'|g", "README.md")
-        exec("sed", "-i", "-e", "s|<version>.*</version>|<version>$newVersion</version>|g", "README.md")
-        exec("sed", "-i", "-e", "s|version = \"[0-9]*\\.[0-9]*\\.[0-9]*\"|version = \"$newVersion\"|g", "build.gradle.kts")
-        exec("git", "commit", "-am", "TAG $newVersion")
-        exec("git", "tag", newVersion)
+        exec("sed", "-i", "-e", "s|'com.github.AlessioCoser:jako:.*'|'com.github.AlessioCoser:jako:$next'|g", "README.md")
+        exec("sed", "-i", "-e", "s|<version>.*</version>|<version>$next</version>|g", "README.md")
+        exec("sed", "-i", "-e", "s|version = \"[0-9]*\\.[0-9]*\\.[0-9]*\"|version = \"$next\"|g", "build.gradle.kts")
+        exec("git", "commit", "-am", "RELEASE $next")
+        exec("git", "tag", next)
         exec("git", "push", "--tags", "origin", "main")
-
-        println(newVersion)
+        println("New version `$next` released")
     }
 }
 
-fun Task.isNotNewVersion(newVersion: String): Boolean {
-    val (newMajor, newMinor, newPatch) = newVersion.split(".").toList()
-    val (major, minor, patch) = version.toString().split(".").toList()
-    return (newMajor.toInt() < major.toInt()) ||
-            (newMajor.toInt() == major.toInt() && newMinor.toInt() < minor.toInt()) ||
-            (newMajor.toInt() == major.toInt() && newMinor.toInt() == minor.toInt() && newPatch.toInt() <= patch.toInt())
+fun String.isNotGreaterThan(other: String): Boolean {
+    return !isGreaterThan(other)
 }
 
-fun Task.getProperty(name: String): Any? {
-    return try {
-        return project.properties[name]
-    } catch (t: Throwable) {
-        null
-    }
+fun String.isGreaterThan(other: String): Boolean {
+    val (newMajor, newMinor, newPatch) = split(".").toList()
+    val (major, minor, patch) = other.split(".").toList()
+    return (newMajor.toInt() > major.toInt()) ||
+            (newMajor.toInt() == major.toInt() && newMinor.toInt() > minor.toInt()) ||
+            (newMajor.toInt() == major.toInt() && newMinor.toInt() == minor.toInt() && newPatch.toInt() > patch.toInt())
+}
+
+fun Project.getProperty(name: String): Any? {
+    return try { return properties[name] } catch (t: Throwable) { null }
 }
 
 fun exec(vararg parts: String) {
-    println(parts.joinToString(" "))
     val process = Runtime.getRuntime().exec(parts)
-    val out = process.inputStream.reader(Charsets.UTF_8).readLines()
     val err = process.errorStream.reader(Charsets.UTF_8).readLines()
-    println(err)
+    if (err.isNotEmpty()) {
+        println("Error on command: $parts")
+        err.forEach { println(it) }
+    }
 }
