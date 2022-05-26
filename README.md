@@ -1,4 +1,4 @@
-# JAKO: Just Another Kotlin Orm (PostgreSQL)
+# JAKO: Just Another Kotlin ORM (PostgreSQL)
 ![JAKO](./jako.png)
 
 JAKO is a simple, minimal, no-dependency library to build and execute postgresql statements using a fluent syntax.
