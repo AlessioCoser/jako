@@ -207,7 +207,21 @@ class SelectTest {
 
     @Test
     fun `query raw`() {
-        val all = db.select(RawStatement("""SELECT * FROM users WHERE city = 'Firenze';"""))
+        val all = db.select(RawStatement("""SELECT * FROM users WHERE city = ?;""", listOf("Firenze")))
+            .all { User(str("email"), str("name"), str("city"), int("age")) }
+
+        assertThat(all).isEqualTo(
+            listOf(
+                User(email = "mario@rossi.it", fullName = "Mario Rossi", city = "Firenze", age = 35),
+                User(email = "paolo@bianchi.it", fullName = "Paolo Bianchi", city = "Firenze", age = 6),
+                User(email = "matteo@renzi.it", fullName = "Matteo Renzi", city = "Firenze", age = 45)
+            )
+        )
+    }
+
+    @Test
+    fun `query raw without the RawStatement instantiation`() {
+        val all = db.select("""SELECT * FROM users WHERE city = 'Firenze';""")
             .all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(all).isEqualTo(

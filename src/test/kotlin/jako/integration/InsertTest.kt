@@ -39,6 +39,18 @@ class InsertTest {
     }
 
     @Test
+    fun `insert city and age with a RawStatement`() {
+        db.execute("""INSERT INTO customers(name, age) VALUES (?, ?)""", listOf("name9", 99))
+
+        val customer = db.select(Query()
+            .from("customers")
+            .where("name" EQ "name9")
+        ).first { Customer(str("name"), int("age")) }
+
+        assertThat(customer).isEqualTo(Customer("name9", 99))
+    }
+
+    @Test
     fun `return inserted field`() {
         val insertedName = db.select(Insert()
             .into("customers")

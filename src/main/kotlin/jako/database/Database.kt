@@ -1,5 +1,6 @@
 package jako.database
 
+import jako.dsl.RawStatement
 import jako.dsl.Statement
 import java.io.PrintStream
 
@@ -24,8 +25,16 @@ class Database(private val connector: DatabaseConnector, printStream: PrintStrea
         return Execute(transactionManager, statementPrinter, statement).execute()
     }
 
+    fun execute(statement: String, params: List<Any?> = emptyList()) {
+        return Execute(transactionManager, statementPrinter, RawStatement(statement, params)).execute()
+    }
+
     fun select(statement: Statement): Select {
         return Select(transactionManager, statementPrinter, statement)
+    }
+
+    fun select(statement: String, params: List<Any?> = emptyList()): Select {
+        return Select(transactionManager, statementPrinter, RawStatement(statement, params))
     }
 
     companion object {
