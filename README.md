@@ -134,14 +134,13 @@ val insert = Insert
 db.execute(insert)
 ```
 
-#### Raw Statement
-Use **RawStatement** for SQL syntax not yet supported by the library.
+#### Use your custom SQL string
+Use your custom SQL string for SQL syntax not yet supported by the query builder.
 
 ```kotlin
 val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
-val query = RawStatement("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano"))
 
-val tableIds: Int? = db.select(query).first { int("id") }
+val tableIds: Int? = db.select("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano")).first { int("id") }
 ```
 
 ## Execute statements in Transaction
