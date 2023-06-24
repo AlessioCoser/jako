@@ -1,7 +1,6 @@
 package jako.database
 
 import java.sql.Connection
-import java.sql.SQLException
 
 class TransactionManager(private val connector: () -> Connection) {
     private val threadLocal = ThreadLocal<Transaction>()
