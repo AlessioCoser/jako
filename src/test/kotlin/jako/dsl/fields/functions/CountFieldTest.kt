@@ -8,12 +8,12 @@ class CountFieldTest {
     @Test
     fun `COUNT field with table-value`() {
         val field = COUNT("table.value")
-        assertEquals("COUNT(\"table\".\"value\")", field.toString())
+        assertEquals("COUNT(\"table\".\"value\")", field.toSQL())
     }
 
     @Test
     fun `COUNT field with column as field`() {
         val field = COUNT("column".col)
-        assertEquals("COUNT(\"column\")", field.toString())
+        assertEquals("COUNT(\"column\")", field.toSQL())
     }
 }

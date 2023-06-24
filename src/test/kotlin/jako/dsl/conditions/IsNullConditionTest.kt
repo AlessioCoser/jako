@@ -1,5 +1,6 @@
 package jako.dsl.conditions
 
+import jako.dsl.Dialect.All.MYSQL
 import jako.dsl.fields.Column
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -9,7 +10,8 @@ class IsNullConditionTest {
     fun `string is null`() {
         val condition = IsNull("field")
 
-        assertEquals("\"field\" IS NULL", condition.toString())
+        assertEquals("\"field\" IS NULL", condition.toSQL())
+        assertEquals("`field` IS NULL", condition.toSQL(MYSQL))
         assertEquals(emptyList<Any?>(), condition.params())
     }
 
@@ -17,13 +19,13 @@ class IsNullConditionTest {
     fun `string is null using dsl`() {
         val condition = "field" IS null
 
-        assertEquals("\"field\" IS NULL", condition.toString())
+        assertEquals("\"field\" IS NULL", condition.toSQL())
     }
 
     @Test
     fun `field is null using dsl`() {
         val condition = Column("field") IS null
 
-        assertEquals("\"field\" IS NULL", condition.toString())
+        assertEquals("\"field\" IS NULL", condition.toSQL())
     }
 }

@@ -11,7 +11,7 @@ class GenericWhereTest {
     fun `empty where`() {
         val where = NoWhere()
 
-        assertEquals("", where.toString())
+        assertEquals("", where.toSQL())
         assertEquals(emptyList<Any?>(), where.params())
     }
 
@@ -19,7 +19,7 @@ class GenericWhereTest {
     fun `where statement`() {
         val where = GenericWhere("test" EQ "value")
 
-        assertEquals("WHERE \"test\" = ?", where.toString())
+        assertEquals("WHERE \"test\" = ?", where.toSQL())
         assertEquals(listOf("value"), where.params())
     }
 }

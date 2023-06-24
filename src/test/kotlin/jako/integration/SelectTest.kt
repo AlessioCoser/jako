@@ -1,10 +1,12 @@
 package jako.integration
 
 import jako.database.Database
-import jako.database.JdbcConnectionString
+import jako.database.JdbcConnectionString.postgresql
+import jako.database.JdbcConnectionString.mysql
 import jako.dsl.RawStatement
 import jako.dsl.Row
 import jako.dsl.RowParser
+import jako.dsl.Dialect.All.MYSQL
 import jako.dsl.conditions.*
 import jako.dsl.delete.Delete
 import jako.dsl.fields.ALL
@@ -31,9 +33,12 @@ class SelectTest {
     companion object {
         @Container
         val postgres = ContainerPostgres()
+        @Container
+        val mysqlDb = ContainerMysql()
     }
 
-    private val db = Database.connect(JdbcConnectionString.postgresql("localhost:5432/tests", "user", "password"))
+    private val psql = Database.connect(postgresql("localhost:5432/tests", "user", "password"))
+    private val mysql = Database.connect(mysql("localhost:3306/tests", "root", "password"), MYSQL)
 
     @Test
     fun `select using a simple connection`() {
@@ -48,7 +53,7 @@ class SelectTest {
 
     @Test
     fun `select with where`() {
-        val user = db.select(Query()
+        val user = psql.select(Query()
             .from("users")
             .where(("city" ENDS_WITH "lano") AND ("age" GT 18))
         ).first { User(str("email"), str("name"), str("city"), int("age")) }
@@ -58,7 +63,7 @@ class SelectTest {
 
     @Test
     fun `select first not found`() {
-        val user = db.select(Query()
+        val user = psql.select(Query()
             .from("users")
             .where("city" EQ "New York")
         ).first { User(str("email"), str("name"), str("city"), int("age")) }
@@ -68,7 +73,7 @@ class SelectTest {
 
     @Test
     fun `select all`() {
-        val users: List<User> = db.select(Query()
+        val users: List<User> = psql.select(Query()
             .from("users")
             .where("city" EQ "Firenze")
             .limit(2)
@@ -84,7 +89,7 @@ class SelectTest {
 
     @Test
     fun `select only one field`() {
-        val userEmail = db.select(Query()
+        val userEmail = psql.select(Query()
             .from("users")
             .fields("email")
             .where("city" EQ "Lucca")
@@ -95,7 +100,7 @@ class SelectTest {
 
     @Test
     fun `select multiple cities`() {
-        val users = db.select(Query()
+        val users = psql.select(Query()
             .from("users")
             .where(("city" EQ "Firenze") OR ("city" EQ "Lucca"))
             .limit(3)
@@ -112,7 +117,25 @@ class SelectTest {
 
     @Test
     fun join() {
-        val all: List<UserPetsCount> = db.select(Query()
+        val all: List<UserPetsCount> = psql.select(Query()
+            .fields("users.name", "count(pets.name) as count")
+            .from("users")
+            .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
+            .join("pets" ON "pets.owner" EQ "users.email")
+            .groupBy("email")
+        ).all { UserPetsCount(str("name"), int("count")) }
+
+        assertThat(all).isEqualTo(
+            listOf(
+                UserPetsCount(fullName = "Luigi Verdi", pets = 2)
+            )
+        )
+    }
+
+
+    @Test
+    fun mysqlJoin() {
+        val all: List<UserPetsCount> = mysql.select(Query()
             .fields("users.name", "count(pets.name) as count")
             .from("users")
             .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
@@ -129,7 +152,7 @@ class SelectTest {
 
     @Test
     fun allJavaSyntax() {
-        val all: List<UserPetsCount> = db.select(
+        val all: List<UserPetsCount> = psql.select(
             Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
@@ -153,7 +176,27 @@ class SelectTest {
 
     @Test
     fun firstJavaSyntax() {
-        val user = db.select(
+        val user = psql.select(
+            Query()
+                .fields("users.name", "count(pets.name) as count")
+                .from("users")
+                .where(
+                    Or(
+                        And(Eq("email", "mario@rossi.it"), Eq("city", "Firenze")),
+                        Eq("users.age", 28)
+                    )
+                )
+                .join(On("pets", "pets.owner", "users.email"))
+                .groupBy("email")
+                .orderBy(Asc("name"))
+        ).first(UserPetsCountRowParser())
+
+        assertThat(user).isEqualTo(UserPetsCount(fullName = "Luigi Verdi", pets = 2))
+    }
+
+    @Test
+    fun mysqlFirstJavaSyntax() {
+        val user = mysql.select(
             Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
@@ -173,7 +216,7 @@ class SelectTest {
 
     @Test
     fun firstJavaHybridSyntax() {
-        val user: UserPetsCount? = db.select(
+        val user: UserPetsCount? = psql.select(
             Query()
                 .fields("users.name", "count(pets.name) as count")
                 .from("users")
@@ -188,7 +231,26 @@ class SelectTest {
 
     @Test
     fun leftJoin() {
-        val all = db.select(Query()
+        val all = psql.select(Query()
+            .fields("users.name".col, COUNT("pets.name") AS "count")
+            .from("users")
+            .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
+            .leftJoin("pets" ON "pets.owner" EQ "users.email")
+            .groupBy("email")
+            .orderBy(DESC("name"))
+        ).all { UserPetsCount(str("name"), int("count")) }
+
+        assertThat(all).isEqualTo(
+            listOf(
+                UserPetsCount(fullName = "Mario Rossi", pets = 0),
+                UserPetsCount(fullName = "Luigi Verdi", pets = 2)
+            )
+        )
+    }
+
+    @Test
+    fun mysqlLeftJoin() {
+        val all = mysql.select(Query()
             .fields("users.name".col, COUNT("pets.name") AS "count")
             .from("users")
             .where((("email" EQ "mario@rossi.it") AND ("city" EQ "Firenze")) OR ("users.age" EQ 28))
@@ -207,7 +269,7 @@ class SelectTest {
 
     @Test
     fun `query raw`() {
-        val all = db.select(RawStatement("""SELECT * FROM users WHERE city = ?;""", listOf("Firenze")))
+        val all = psql.select(RawStatement("""SELECT * FROM users WHERE city = ?;""", listOf("Firenze")))
             .all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(all).isEqualTo(
@@ -221,7 +283,7 @@ class SelectTest {
 
     @Test
     fun `query raw without the RawStatement instantiation`() {
-        val all = db.select("""SELECT * FROM users WHERE city = 'Firenze';""")
+        val all = psql.select("""SELECT * FROM users WHERE city = 'Firenze';""")
             .all { User(str("email"), str("name"), str("city"), int("age")) }
 
         assertThat(all).isEqualTo(
@@ -235,7 +297,7 @@ class SelectTest {
 
     @Test
     fun `select a delete statement with returning`() {
-        val all = db.select(Delete.from("pets_deletable").returning(ALL))
+        val all = psql.select(Delete.from("pets_deletable").returning(ALL))
             .all { Pet(str("name"), str("type"), int("age")) }
 
         assertThat(all).isEqualTo(listOf(Pet(name="Pluto", type="Dog", age=2), Pet(name="Fido", type="Dog", age=3)))
@@ -243,7 +305,18 @@ class SelectTest {
 
     @Test
     fun `select coalesce`() {
-        val coalesceMail = db.select(Query()
+        val coalesceMail = psql.select(Query()
+            .fields(COALESCE("city", "none") AS "cit")
+            .from("users")
+            .where("email" EQ "null@city.it")
+        ).first { str("cit") }
+
+        assertThat(coalesceMail).isEqualTo("none")
+    }
+
+    @Test
+    fun `mysql select coalesce`() {
+        val coalesceMail = mysql.select(Query()
             .fields(COALESCE("city", "none") AS "cit")
             .from("users")
             .where("email" EQ "null@city.it")

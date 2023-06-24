@@ -2,6 +2,7 @@ package jako.integration
 
 import jako.database.Database
 import jako.database.JdbcConnectionString
+import jako.dsl.Dialect
 import jako.dsl.conditions.EQ
 import jako.dsl.insert.Insert
 import jako.dsl.query.Query
@@ -17,10 +18,10 @@ class TransactionTest {
 
     companion object {
         @Container
-        val postgres = ContainerPostgres()
+        val databaseInstance = ContainerMysql()
     }
 
-    private val db = Database.connect(JdbcConnectionString.postgresql("localhost:5432/tests", "user", "password"))
+    private val db = Database.connect(JdbcConnectionString.mysql("localhost:3306/tests", "root", "password"), Dialect.MYSQL)
 
     @Test
     fun `transaction failure`() {

@@ -64,7 +64,7 @@ val query = Query.from("users")
     .join("pets" ON "pets.owner" EQ "users.id")
     .where(("city" EQ "Milano") AND ("age" GT 3))
 
-println(query.toString())
+println(query.toSQL())
 // SELECT * FROM "users" INNER JOIN "pets" ON "pets"."owner" = "users"."id" WHERE ("city" = ? AND "age" > ?)
 println(query.params())
 // [Milano, 3]
@@ -77,7 +77,7 @@ val insert = Insert.into("users")
     .set("city", "Milano")
     .set("age", 30)
 
-println(insert.toString())
+println(insert.toSQL())
 // INSERT INTO "users" ("id", "name", "city", "age") VALUES (?, ?, ?, ?)
 println(insert.params())
 // [1, Mario, Milano, 30]
@@ -88,7 +88,7 @@ val update = Update.table("users")
     .set("age", 31)
     .where("id" EQ 1)
 
-println(update.toString())
+println(update.toSQL())
 // UPDATE "users" SET "age" = ? WHERE "id" = ?
 println(update.params())
 // [31, 1]
@@ -98,7 +98,7 @@ println(update.params())
 val delete = Delete.from("users")
     .where("id" EQ 1)
 
-println(insert.toString())
+println(insert.toSQL())
 // DELETE FROM "users" WHERE "id" = ?
 println(insert.params())
 // [1]

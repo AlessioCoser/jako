@@ -1,11 +1,12 @@
 package jako.dsl.fields.functions
 
+import jako.dsl.Dialect
 import jako.dsl.fields.Column
 import jako.dsl.fields.Field
 import jako.dsl.fields.Value
 
 class Coalesce(private val value: Field, private val default: Field): Field {
-    override fun toString() = "COALESCE($value, $default)"
+    override fun toSQL(dialect: Dialect) = "COALESCE(${value.toSQL(dialect)}, ${default.toSQL(dialect)})"
     override fun params() = value.params() + default.params()
 }
 

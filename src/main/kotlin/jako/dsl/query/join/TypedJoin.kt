@@ -1,7 +1,9 @@
 package jako.dsl.query.join
 
+import jako.dsl.Dialect
+
 internal sealed class TypedJoin(private val type: String, private val on: On) : Join {
-    override fun toString() = "$type $on"
+    override fun toSQL(dialect: Dialect) = "$type ${on.toSQL(dialect)}"
     override fun params() = on.params()
 }
 

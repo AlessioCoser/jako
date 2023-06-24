@@ -1,5 +1,7 @@
 package jako.dsl.query.group
 
+import jako.dsl.Dialect
+
 internal class NoGroup: Group {
-    override fun toString() = ""
+    override fun toSQL(dialect: Dialect) = ""
 }

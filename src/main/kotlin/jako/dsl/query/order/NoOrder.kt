@@ -1,5 +1,7 @@
 package jako.dsl.query.order
 
+import jako.dsl.Dialect
+
 class NoOrder: Order {
-    override fun toString() = ""
+    override fun toSQL(dialect: Dialect) = ""
 }

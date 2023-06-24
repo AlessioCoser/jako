@@ -1,7 +1,9 @@
 package jako.dsl.fields
 
+import jako.dsl.Dialect
+
 class As(private val column: Field, private val name: Field): Field {
-    override fun toString() = "$column AS $name"
+    override fun toSQL(dialect: Dialect) = "${column.toSQL(dialect)} AS ${name.toSQL(dialect)}"
     override fun params() = column.params() + name.params()
 }
 

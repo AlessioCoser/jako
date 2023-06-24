@@ -1,17 +1,18 @@
 package jako.dsl.fields
 
+import jako.dsl.Dialect
 import jako.dsl.StatementBlock
 
 interface Field: StatementBlock {
-    override fun toString(): String
+    override fun toSQL(dialect: Dialect): String
     override fun params(): List<Any?>
 
     operator fun plus(i: Int): Field {
-        return Raw("${toString()} + $i", params())
+        return Raw("${toSQL()} + $i", params())
     }
 
     operator fun minus(i: Int): Field {
-        return Raw("${toString()} - $i", params())
+        return Raw("${toSQL()} - $i", params())
     }
 }
 

@@ -9,7 +9,7 @@ class GenericHavingTest {
     fun `empty having`() {
         val having = NoHaving()
 
-        assertEquals("", having.toString())
+        assertEquals("", having.toSQL())
         assertEquals(emptyList<Any?>(), having.params())
     }
 
@@ -17,7 +17,7 @@ class GenericHavingTest {
     fun `having statement`() {
         val having = GenericHaving("test" EQ "value")
 
-        assertEquals("HAVING \"test\" = ?", having.toString())
+        assertEquals("HAVING \"test\" = ?", having.toSQL())
         assertEquals(listOf("value"), having.params())
     }
 }

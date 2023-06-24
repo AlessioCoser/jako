@@ -18,6 +18,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     testImplementation("org.postgresql:postgresql:42.6.0")
+    testImplementation("mysql:mysql-connector-java:8.0.15")
     testImplementation("net.wuerl.kotlin:assertj-core-kotlin:0.2.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")

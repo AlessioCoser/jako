@@ -1,13 +1,16 @@
 package jako.integration
 
 import jako.database.Database
-import jako.database.JdbcConnectionString
+import jako.database.JdbcConnectionString.mysql
+import jako.database.JdbcConnectionString.postgresql
 import jako.database.SimpleConnector
+import jako.dsl.Dialect.All.MYSQL
 import jako.dsl.conditions.EQ
 import jako.dsl.insert.Insert
 import jako.dsl.query.Query
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
@@ -16,21 +19,25 @@ class InsertTest {
 
     companion object {
         @Container
-        val postgres = ContainerPostgres()
+        val postgresDb = ContainerPostgres()
+        @Container
+        val mysqlDb = ContainerMysql()
     }
 
-    private val connectionConfig = JdbcConnectionString.postgresql("localhost:5432/tests", "user", "password")
-    private val db = Database.connect(SimpleConnector(connectionConfig))
+    private val psql = Database.connect(SimpleConnector(postgresql("localhost:5432/tests", "user", "password")))
+
+    private val mysql = Database.connect(SimpleConnector(mysql("localhost:3306/tests", "root", "password")), MYSQL)
+
 
     @Test
     fun `insert city and age`() {
-        db.execute(Insert()
+        psql.execute(Insert()
             .into("customers")
             .set("name", "name1")
             .set("age", 18)
         )
 
-        val customer = db.select(Query()
+        val customer = psql.select(Query()
             .from("customers")
             .where("name" EQ "name1")
         ).first { Customer(str("name"), int("age")) }
@@ -40,9 +47,9 @@ class InsertTest {
 
     @Test
     fun `insert city and age with a RawStatement`() {
-        db.execute("""INSERT INTO customers(name, age) VALUES (?, ?)""", listOf("name9", 99))
+        psql.execute("""INSERT INTO customers(name, age) VALUES (?, ?)""", listOf("name9", 99))
 
-        val customer = db.select(Query()
+        val customer = psql.select(Query()
             .from("customers")
             .where("name" EQ "name9")
         ).first { Customer(str("name"), int("age")) }
@@ -52,20 +59,51 @@ class InsertTest {
 
     @Test
     fun `return inserted field`() {
-        val insertedName = db.select(Insert()
+        val insertedName = psql.select(Insert()
             .into("customers")
             .set("name", "name2")
             .set("age", 99)
             .returning("name")
         ).first { str("name") }
 
-        val customer = db.select(Query()
+        val customer = psql.select(Query()
             .from("customers")
             .where("name" EQ "name2")
         ).first { Customer(str("name"), int("age")) }
 
         assertThat(insertedName).isEqualTo("name2")
         assertThat(customer).isEqualTo(Customer("name2", 99))
+    }
+
+
+    @Test
+    fun `mysql insert city and age`() {
+        mysql.execute(Insert()
+            .into("customers")
+            .set("name", "name1")
+            .set("age", 18)
+        )
+
+        val customer = mysql.select(Query()
+            .from("customers")
+            .where("name" EQ "name1")
+        ).first { Customer(str("name"), int("age")) }
+
+        assertThat(customer).isEqualTo(Customer("name1", 18))
+    }
+
+    @Test
+    fun `Cannot use RETURNING statement with MYSQL dialect`() {
+        val message = assertThrows<RuntimeException> {
+            mysql.execute(Insert()
+                .into("customers")
+                .set("name", "name2")
+                .set("age", 99)
+                .returning("name")
+            )
+        }.message
+
+        assertThat(message).isEqualTo("Cannot use RETURNING statement with MYSQL dialect")
     }
 }
 

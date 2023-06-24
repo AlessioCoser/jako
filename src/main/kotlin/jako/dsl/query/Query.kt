@@ -78,7 +78,7 @@ class Query: StatementBuilder() {
     }
 
     fun groupBy(vararg fields: String): Query {
-        groupBy = GroupBy(fields.toList())
+        groupBy = GroupBy(*fields)
         return this
     }
 

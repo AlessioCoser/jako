@@ -9,20 +9,20 @@ class MinFieldTest {
     @Test
     fun `MIN field with string`() {
         val field = MIN("table.value")
-        assertEquals("MIN(\"table\".\"value\")", field.toString())
+        assertEquals("MIN(\"table\".\"value\")", field.toSQL())
     }
 
     @Test
     fun `MIN field with column field`() {
         val field = MIN("column".col)
-        assertEquals("MIN(\"column\")", field.toString())
+        assertEquals("MIN(\"column\")", field.toSQL())
         assertEquals(emptyList<Any?>(), field.params())
     }
 
     @Test
     fun `MIN field with Value field`() {
         val field = MIN(1.value)
-        assertEquals("MIN(?)", field.toString())
+        assertEquals("MIN(?)", field.toSQL())
         assertEquals(listOf(1), field.params())
     }
 }

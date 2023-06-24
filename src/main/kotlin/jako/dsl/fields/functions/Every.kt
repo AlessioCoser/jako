@@ -1,10 +1,11 @@
 package jako.dsl.fields.functions
 
+import jako.dsl.Dialect
 import jako.dsl.fields.Column
 import jako.dsl.fields.Field
 
 class Every(private val value: Field): Field {
-    override fun toString() = "EVERY($value)"
+    override fun toSQL(dialect: Dialect) = "EVERY(${value.toSQL(dialect)})"
     override fun params() = value.params()
 }
 

@@ -1,11 +1,12 @@
 package jako.database
 
 import jako.dsl.RawStatement
+import jako.dsl.Dialect
 import jako.dsl.Statement
 import java.io.PrintStream
 
 
-class Database(private val connector: DatabaseConnector, printStream: PrintStream = System.out) {
+class Database(private val connector: DatabaseConnector, private val dialect: Dialect = Dialect.PSQL, printStream: PrintStream = System.out) {
     val transactionManager = TransactionManager { connector.connection() }
     private val statementPrinter = StatementPrinter(printStream)
 
@@ -22,30 +23,35 @@ class Database(private val connector: DatabaseConnector, printStream: PrintStrea
     }
 
     fun execute(statement: Statement) {
-        return Execute(transactionManager, statementPrinter, statement).execute()
+        return Execute(transactionManager, statementPrinter, statement).execute(dialect)
     }
 
     fun execute(statement: String, params: List<Any?> = emptyList()) {
-        return Execute(transactionManager, statementPrinter, RawStatement(statement, params)).execute()
+        return Execute(transactionManager, statementPrinter, RawStatement(statement, params)).execute(dialect)
     }
 
     fun select(statement: Statement): Select {
-        return Select(transactionManager, statementPrinter, statement)
+        return Select(transactionManager, statementPrinter, statement, dialect)
     }
 
     fun select(statement: String, params: List<Any?> = emptyList()): Select {
-        return Select(transactionManager, statementPrinter, RawStatement(statement, params))
+        return Select(transactionManager, statementPrinter, RawStatement(statement, params), dialect)
     }
 
     companion object {
         @JvmStatic
         fun connect(jdbcConnectionString: String, printStream: PrintStream = System.out): Database {
-            return connect(SimpleConnector(jdbcConnectionString), printStream)
+            return connect(SimpleConnector(jdbcConnectionString), Dialect.PSQL, printStream)
         }
 
         @JvmStatic
-        fun connect(connector: DatabaseConnector, printStream: PrintStream = System.out): Database {
-            return Database(connector, printStream)
+        fun connect(jdbcConnectionString: String, dialect: Dialect, printStream: PrintStream = System.out): Database {
+            return connect(SimpleConnector(jdbcConnectionString), dialect, printStream)
+        }
+
+        @JvmStatic
+        fun connect(connector: DatabaseConnector, dialect: Dialect = Dialect.PSQL, printStream: PrintStream = System.out): Database {
+            return Database(connector, dialect, printStream)
         }
     }
 }

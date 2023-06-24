@@ -8,20 +8,20 @@ class OnTest {
     fun `join on table and one field`() {
         val on = On("table", "field1")
 
-        assertEquals("\"table\" USING(\"field1\")", on.toString())
+        assertEquals("\"table\" USING(\"field1\")", on.toSQL())
     }
 
     @Test
     fun `join on table and two fields`() {
         val on = On("table", "field1", "field2")
 
-        assertEquals("\"table\" ON \"field1\" = \"field2\"", on.toString())
+        assertEquals("\"table\" ON \"field1\" = \"field2\"", on.toSQL())
     }
 
     @Test
     fun `joining on statements`() {
         val on = "table" ON "field1" EQ "field2"
 
-        assertEquals("\"table\" ON \"field1\" = \"field2\"", on.toString())
+        assertEquals("\"table\" ON \"field1\" = \"field2\"", on.toSQL())
     }
 }

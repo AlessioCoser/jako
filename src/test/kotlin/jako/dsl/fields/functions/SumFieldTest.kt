@@ -9,20 +9,20 @@ class SumFieldTest {
     @Test
     fun `SUM field with string`() {
         val field = SUM("table.value")
-        assertEquals("SUM(\"table\".\"value\")", field.toString())
+        assertEquals("SUM(\"table\".\"value\")", field.toSQL())
     }
 
     @Test
     fun `SUM field with column field`() {
         val field = SUM("column".col)
-        assertEquals("SUM(\"column\")", field.toString())
+        assertEquals("SUM(\"column\")", field.toSQL())
         assertEquals(emptyList<Any?>(), field.params())
     }
 
     @Test
     fun `SUM field with Value field`() {
         val field = SUM(1.value)
-        assertEquals("SUM(?)", field.toString())
+        assertEquals("SUM(?)", field.toSQL())
         assertEquals(listOf(1), field.params())
     }
 }

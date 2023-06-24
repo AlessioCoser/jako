@@ -1,13 +1,15 @@
 package jako.dsl.query.join
 
+import jako.dsl.Dialect
+
 internal class Joins: Join {
     private val joins: MutableList<Join> = mutableListOf()
 
-    override fun toString(): String {
+    override fun toSQL(dialect: Dialect): String {
         if(joins.isEmpty()) {
             return ""
         }
-        return joins.joinToString(separator = " ") { "$it" }
+        return joins.joinToString(separator = " ") { it.toSQL(dialect) }
     }
 
     override fun params(): List<Any?> {

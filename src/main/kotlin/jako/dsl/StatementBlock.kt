@@ -1,10 +1,10 @@
 package jako.dsl
 
 interface StatementBlock {
-    override fun toString(): String
+    fun toSQL(dialect: Dialect = Dialect.PSQL): String
     fun params(): List<Any?>
 
-    fun isPresent(): Boolean {
-        return toString().isNotEmpty()
+    fun isPresent(dialect: Dialect = Dialect.PSQL): Boolean {
+        return toSQL(dialect).isNotEmpty()
     }
 }

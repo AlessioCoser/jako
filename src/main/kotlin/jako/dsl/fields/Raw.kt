@@ -1,9 +1,11 @@
 package jako.dsl.fields
 
-class Raw(private val value: Any, private val params: List<Any?> = emptyList()): Field {
-    constructor(value: Field): this(value.toString(), value.params())
+import jako.dsl.Dialect
 
-    override fun toString() = value.toString()
+class Raw(private val value: Any, private val params: List<Any?> = emptyList()): Field {
+    constructor(value: Field): this(value.toSQL(), value.params())
+
+    override fun toSQL(dialect: Dialect) = value.toString()
     override fun params(): List<Any?> = params
 }
 

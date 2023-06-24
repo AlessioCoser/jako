@@ -1,5 +1,6 @@
 package jako.dsl.conditions
 
+import jako.dsl.Dialect.All.MYSQL
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -8,7 +9,8 @@ class AndConditionTest {
     fun `and`() {
         val condition = And(Eq("field", "value"), Eq("field2", "value2"))
 
-        assertEquals("(\"field\" = ? AND \"field2\" = ?)", condition.toString())
+        assertEquals("(\"field\" = ? AND \"field2\" = ?)", condition.toSQL())
+        assertEquals("(`field` = ? AND `field2` = ?)", condition.toSQL(MYSQL))
         assertEquals(listOf("value", "value2"), condition.params())
     }
 
@@ -16,7 +18,8 @@ class AndConditionTest {
     fun `and with different conditions`() {
         val condition = And(Eq("field", "value"), Gt("field2", 2))
 
-        assertEquals("(\"field\" = ? AND \"field2\" > ?)", condition.toString())
+        assertEquals("(\"field\" = ? AND \"field2\" > ?)", condition.toSQL())
+        assertEquals("(`field` = ? AND `field2` > ?)", condition.toSQL(MYSQL))
         assertEquals(listOf("value", 2), condition.params())
     }
 
@@ -24,7 +27,8 @@ class AndConditionTest {
     fun `and using dsl`() {
         val condition = ("field" EQ "value") AND ("field2" GT 2)
 
-        assertEquals("(\"field\" = ? AND \"field2\" > ?)", condition.toString())
+        assertEquals("(\"field\" = ? AND \"field2\" > ?)", condition.toSQL())
+        assertEquals("(`field` = ? AND `field2` > ?)", condition.toSQL(MYSQL))
         assertEquals(listOf("value", 2), condition.params())
     }
 }

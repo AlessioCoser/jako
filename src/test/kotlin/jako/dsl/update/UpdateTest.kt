@@ -17,7 +17,7 @@ class UpdateTest {
             .set("age", 31)
             .where("id" EQ 1)
 
-        println(insert.toString())
+        println(insert.toSQL())
         // UPDATE "users" SET "age" = ? WHERE "id" = ?
         println(insert.params())
         // [31, 1]
@@ -26,7 +26,7 @@ class UpdateTest {
     @Test
     fun `update without values`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Update().table("table").toString()
+            Update().table("table").toSQL()
         }.message
 
         assertThat(message).isEqualTo("Cannot generate update without values")
@@ -38,7 +38,7 @@ class UpdateTest {
             .table("table")
             .set("column1", LocalDate.of(2022, 4, 1))
 
-        assertEquals("""UPDATE "table" SET "column1" = ?""", insert.toString())
+        assertEquals("""UPDATE "table" SET "column1" = ?""", insert.toSQL())
         assertEquals(listOf(Date.valueOf("2022-04-01")), insert.params())
     }
 
@@ -49,7 +49,7 @@ class UpdateTest {
             .set("column1", 0)
             .where("column1" GT 10)
 
-        assertEquals("""UPDATE "table" SET "column1" = ? WHERE "column1" > ?""", insert.toString())
+        assertEquals("""UPDATE "table" SET "column1" = ? WHERE "column1" > ?""", insert.toSQL())
         assertEquals(listOf(0, 10), insert.params())
     }
 }

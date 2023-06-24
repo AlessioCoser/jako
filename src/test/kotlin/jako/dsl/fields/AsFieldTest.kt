@@ -8,19 +8,19 @@ class AsFieldTest {
     @Test
     fun `string AS field`() {
         val field = "column" AS "c"
-        assertEquals("\"column\" AS \"c\"", field.toString())
+        assertEquals("\"column\" AS \"c\"", field.toSQL())
     }
 
     @Test
     fun `field AS field`() {
         val field = COUNT("column") AS "c"
-        assertEquals("COUNT(\"column\") AS \"c\"", field.toString())
+        assertEquals("COUNT(\"column\") AS \"c\"", field.toSQL())
     }
 
     @Test
     fun `wrap table-column field with as`() {
         val field = "table.order_index" AS "ord"
 
-        assertEquals("\"table\".\"order_index\" AS \"ord\"", field.toString())
+        assertEquals("\"table\".\"order_index\" AS \"ord\"", field.toSQL())
     }
 }
