@@ -1,8 +1,8 @@
-# JAKO: Just Another Kotlin ORM (PostgreSQL)
+# JAKO: Just Another Kotlin ORM
 ![JAKO](./jako.png)
 
 JAKO is not actually a real ORM. it's a simple, minimal, no-dependency library to build and execute sql statements using a fluent syntax.
-I currently tested it only with postgresql. (others will come)
+I currently tested it with postgresql 11 and mysql 8.
 
 Main features:
 - No dependencies
@@ -32,6 +32,14 @@ dependencies {
 }
 ```
 
+- Or add the dependency along with mysql driver
+```groovy
+dependencies {
+    implementation 'mysql:mysql-connector-java:8.0.15'
+    implementation 'com.github.AlessioCoser:jako:0.0.14'
+}
+```
+
 ### Maven
 - Add the JitPack repository to your build file
 ```xml
@@ -47,7 +55,20 @@ dependencies {
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
+    <version>42.6.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.AlessioCoser</groupId>
+    <artifactId>jako</artifactId>
     <version>0.0.14</version>
+</dependency>
+```
+- Or add the dependency along with mysql driver
+```xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.15</version>
 </dependency>
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
@@ -64,7 +85,7 @@ val query = Query.from("users")
     .join("pets" ON "pets.owner" EQ "users.id")
     .where(("city" EQ "Milano") AND ("age" GT 3))
 
-println(query.toSQL(PSQL))
+println(query.toSQL(Dialect.All.PSQL))
 // SELECT * FROM "users" INNER JOIN "pets" ON "pets"."owner" = "users"."id" WHERE ("city" = ? AND "age" > ?)
 println(query.params())
 // [Milano, 3]
@@ -77,7 +98,7 @@ val insert = Insert.into("users")
     .set("city", "Milano")
     .set("age", 30)
 
-println(insert.toSQL(PSQL))
+println(insert.toSQL(Dialect.All.PSQL))
 // INSERT INTO "users" ("id", "name", "city", "age") VALUES (?, ?, ?, ?)
 println(insert.params())
 // [1, Mario, Milano, 30]
@@ -88,7 +109,7 @@ val update = Update.table("users")
     .set("age", 31)
     .where("id" EQ 1)
 
-println(update.toSQL(PSQL))
+println(update.toSQL(Dialect.All.PSQL))
 // UPDATE "users" SET "age" = ? WHERE "id" = ?
 println(update.params())
 // [31, 1]
@@ -98,7 +119,7 @@ println(update.params())
 val delete = Delete.from("users")
     .where("id" EQ 1)
 
-println(insert.toSQL(PSQL))
+println(insert.toSQL(Dialect.All.PSQL))
 // DELETE FROM "users" WHERE "id" = ?
 println(insert.params())
 // [1]
@@ -109,7 +130,7 @@ println(insert.params())
 Select **all** `id` fields from `users` as Ints.
 
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password", Dialect.All.PSQL)
 val query = Query.from("users")
 
 val tableIds: List<Int> = db.select(query).all { int("id") }
@@ -123,9 +144,18 @@ val query = Query.from("users")
 val tableIds: Int? = db.select(query).first { int("id") }
 ```
 
+Connect to **mysql**.
+
+```kotlin
+val db = Database.connect("jdbc:mysql://localhost:3306/database?user=user&password=password", Dialect.All.MYSQL)
+val query = Query.from("users")
+
+val tableIds: Int? = db.select(query).first { int("id") }
+```
+
 #### Another Statement
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password", Dialect.All.PSQL)
 val insert = Insert
     .into("customers")
     .set("name", "Carlo")
@@ -138,7 +168,7 @@ db.execute(insert)
 Use your custom SQL string for SQL syntax not yet supported by the query builder.
 
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password", Dialect.All.PSQL)
 
 val tableIds: Int? = db.select("""SELECT "id" FROM "users" WHERE "city" = ?""", listOf("Milano")).first { int("id") }
 ```
@@ -147,7 +177,7 @@ val tableIds: Int? = db.select("""SELECT "id" FROM "users" WHERE "city" = ?""", 
 Using `useTransaction` method you can run all db execute safely.
 When something goes wrong and an execution throws an exception the changes are automatically rollbacked.
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password", Dialect.All.PSQL)
 
 db.useTransaction {
     db.execute(Insert.into("users").set("name", "Mario"))
@@ -159,7 +189,7 @@ db.useTransaction {
 ## Print resulting query
 #### Enable statement printing
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/database?user=user&password=password", Dialect.All.PSQL)
 db.printStatements(true)
 db.select(Query().from("users")).all { strOrNull("city") }
 // prints to stdout:
@@ -169,7 +199,7 @@ db.select(Query().from("users")).all { strOrNull("city") }
 #### Change print destination
 ```kotlin
 val connectionString = "jdbc:postgresql://localhost:5432/database?user=user&password=password"
-val db = Database.connect(connectionString, System.out)
+val db = Database.connect(connectionString, Dialect.All.PSQL, System.out)
 // System.out is the default, you can provide another implementation of PrintStream
 ```
 
@@ -177,7 +207,7 @@ val db = Database.connect(connectionString, System.out)
 If you create a database instance without a custom connector the library use a SimpleConnector which adopt the standard `DriverManager.getConnection()` method to get a new database connection.
 
 ```kotlin
-val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password", Dialect.All.PSQL)
 ```
 
 If you want to use this library in production we recommend to use a CustomConnector so you can use your connection pool/cache library.
@@ -185,7 +215,7 @@ If you want to use this library in production we recommend to use a CustomConnec
 So you have to create a database instance in this way:
 ```kotlin
 val customConnector: DatabaseConnector = MyCustomConnector("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
-val db = Database.connect(customConnector)
+val db = Database.connect(customConnector, Dialect.All.PSQL)
 ```
 
 In the example below we will create a Connector for [HikariCP](https://github.com/brettwooldridge/HikariCP)
@@ -218,5 +248,5 @@ class HikariConnector(jdbcUrl: String, poolSize: Int = 10) : DatabaseConnector {
 #### 3. Use it
 ```kotlin
 val customConnector: DatabaseConnector = HikariConnector("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
-val db = Database.connect(customConnector)
+val db = Database.connect(customConnector, Dialect.All.PSQL)
 ```
