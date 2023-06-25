@@ -4,4 +4,5 @@ import jako.dsl.Dialect
 
 internal class NoGroup: Group {
     override fun toSQL(dialect: Dialect) = ""
+    override fun isPresent() = false
 }

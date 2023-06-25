@@ -8,4 +8,6 @@ internal class LimitTo(private val limit: Int, private val offset: Int = 0) : Li
     } else {
         "LIMIT $limit"
     }
+
+    override fun isPresent() = true
 }

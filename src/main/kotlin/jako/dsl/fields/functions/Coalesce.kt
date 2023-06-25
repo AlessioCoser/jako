@@ -8,6 +8,7 @@ import jako.dsl.fields.Value
 class Coalesce(private val value: Field, private val default: Field): Field {
     override fun toSQL(dialect: Dialect) = "COALESCE(${value.toSQL(dialect)}, ${default.toSQL(dialect)})"
     override fun params() = value.params() + default.params()
+    override fun isPresent() = value.isPresent() && default.isPresent()
 }
 
 fun COALESCE(fieldName: String, default: Any?) = Coalesce(Column(fieldName), Value(default))

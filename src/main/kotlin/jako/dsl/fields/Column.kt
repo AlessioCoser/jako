@@ -5,6 +5,7 @@ import jako.dsl.Dialect
 class Column(private val value: String): Field {
     override fun toSQL(dialect: Dialect) = wrap(dialect, value)
     override fun params(): List<Any?> = emptyList()
+    override fun isPresent() = value.isNotBlank()
 
     private fun wrap(dialect: Dialect, value: String): String {
         val sep = dialect.columnSeparator

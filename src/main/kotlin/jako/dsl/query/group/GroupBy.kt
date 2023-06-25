@@ -9,4 +9,5 @@ internal class GroupBy(private val fields: List<Field>): Group {
     constructor(vararg fields: String): this(fields.map { Column(it) })
 
     override fun toSQL(dialect: Dialect) = "GROUP BY ${fields.joinToString(", ") { it.toSQL(dialect) }}"
+    override fun isPresent() = fields.any { it.isPresent() }
 }

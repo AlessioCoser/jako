@@ -2,6 +2,8 @@ package jako.integration
 
 import jako.database.Database
 import jako.database.JdbcConnectionString.postgresql
+import jako.dsl.Dialect
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.query.Query
 import jako.dsl.update.Update
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +23,7 @@ class StatementPrinterTest {
 
     private val connectionString = postgresql("localhost:5432/tests", "user", "password")
     private val outputStream = ByteArrayOutputStream()
-    private val db = Database.connect(connectionString, PrintStream(outputStream))
+    private val db = Database.connect(connectionString, PSQL, PrintStream(outputStream))
 
     @BeforeEach
     fun setUp() {

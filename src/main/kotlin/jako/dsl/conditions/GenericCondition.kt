@@ -10,4 +10,5 @@ abstract class GenericCondition(
 ) : Condition {
     override fun toSQL(dialect: Dialect) =  "${left.toSQL(dialect)} $operator ?"
     override fun params() = left.params() + right
+    override fun isPresent() = left.isPresent()
 }

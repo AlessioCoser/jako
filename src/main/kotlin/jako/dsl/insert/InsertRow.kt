@@ -13,6 +13,7 @@ internal class InsertRow: StatementBlock {
 
     override fun toSQL(dialect: Dialect) = if(cols.isNotEmpty()) "(${columnNames(dialect)}) VALUES (${placeholders()})" else ""
     override fun params(): List<Any?> = cols.map { it.value }
+    override fun isPresent() = cols.any { it.isPresent() }
 
     private fun columnNames(dialect: Dialect) = cols.joinToString(prefix = "${dialect.columnSeparator}", separator = "${dialect.columnSeparator}, ${dialect.columnSeparator}", postfix = "${dialect.columnSeparator}") { it.name }
 

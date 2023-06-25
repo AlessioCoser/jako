@@ -7,6 +7,7 @@ import jako.dsl.RawStatement
 import jako.dsl.Row
 import jako.dsl.RowParser
 import jako.dsl.Dialect.All.MYSQL
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.*
 import jako.dsl.delete.Delete
 import jako.dsl.fields.ALL
@@ -37,12 +38,12 @@ class SelectTest {
         val mysqlDb = ContainerMysql()
     }
 
-    private val psql = Database.connect(postgresql("localhost:5432/tests", "user", "password"))
+    private val psql = Database.connect(postgresql("localhost:5432/tests", "user", "password"), PSQL)
     private val mysql = Database.connect(mysql("localhost:3306/tests", "root", "password"), MYSQL)
 
     @Test
     fun `select using a simple connection`() {
-        val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password")
+        val db = Database.connect("jdbc:postgresql://localhost:5432/tests?user=user&password=password", PSQL)
         val userNames = db.select(Query().from("users")).all { str("name") }
 
         assertThat(userNames).isEqualTo(listOf(

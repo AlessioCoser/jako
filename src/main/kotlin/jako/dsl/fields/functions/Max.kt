@@ -7,6 +7,7 @@ import jako.dsl.fields.Field
 class Max(private val value: Field): Field {
     override fun toSQL(dialect: Dialect) = "MAX(${value.toSQL(dialect)})"
     override fun params() = value.params()
+    override fun isPresent() = value.isPresent()
 }
 
 fun MAX(fieldName: String) = Max(Column(fieldName))

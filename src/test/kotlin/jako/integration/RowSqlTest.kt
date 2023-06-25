@@ -4,6 +4,7 @@ import jako.database.Database
 import jako.database.JdbcConnectionString.mysql
 import jako.database.JdbcConnectionString.postgresql
 import jako.dsl.Dialect.All.MYSQL
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.query.Query
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -29,7 +30,7 @@ class RowSqlTest {
         val mysqlDb = ContainerMysql()
     }
 
-    private val psql = Database.connect(postgresql("localhost:5432/tests", "user", "password"))
+    private val psql = Database.connect(postgresql("localhost:5432/tests", "user", "password"), PSQL)
     private val mysql = Database.connect(mysql("localhost:3306/tests", "root", "password"), MYSQL)
 
     private val ISODateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")

@@ -1,5 +1,6 @@
 package jako.dsl.query.join
 
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.fields.AS
 import jako.dsl.fields.Field
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -10,7 +11,7 @@ class JoinsTest {
     fun `empty joins`() {
         val joins = Joins()
 
-        assertEquals("", joins.toSQL())
+        assertEquals("", joins.toSQL(PSQL))
     }
 
     @Test
@@ -18,7 +19,7 @@ class JoinsTest {
         val joins = Joins()
         joins.join(On("table", "field1"))
 
-        assertEquals("INNER JOIN \"table\" USING(\"field1\")", joins.toSQL())
+        assertEquals("INNER JOIN \"table\" USING(\"field1\")", joins.toSQL(PSQL))
     }
 
     @Test
@@ -30,7 +31,7 @@ class JoinsTest {
         assertEquals(
             "INNER JOIN \"table\" USING(\"field1\") " +
             "INNER JOIN \"another\" USING(\"field2\")",
-            joins.toSQL()
+            joins.toSQL(PSQL)
         )
     }
 
@@ -39,7 +40,7 @@ class JoinsTest {
         val joins = Joins()
         joins.leftJoin(On("table", "field1"))
 
-        assertEquals("LEFT JOIN \"table\" USING(\"field1\")", joins.toSQL())
+        assertEquals("LEFT JOIN \"table\" USING(\"field1\")", joins.toSQL(PSQL))
     }
 
     @Test
@@ -47,7 +48,7 @@ class JoinsTest {
         val joins = Joins()
         joins.rightJoin(On("table", "field1"))
 
-        assertEquals("RIGHT JOIN \"table\" USING(\"field1\")", joins.toSQL())
+        assertEquals("RIGHT JOIN \"table\" USING(\"field1\")", joins.toSQL(PSQL))
     }
 
     @Test
@@ -55,6 +56,6 @@ class JoinsTest {
         val joins = Joins()
         joins.leftJoin("table" AS "t" ON "field1" EQ "field2")
 
-        assertEquals("LEFT JOIN \"table\" AS \"t\" ON \"field1\" = \"field2\"", joins.toSQL())
+        assertEquals("LEFT JOIN \"table\" AS \"t\" ON \"field1\" = \"field2\"", joins.toSQL(PSQL))
     }
 }

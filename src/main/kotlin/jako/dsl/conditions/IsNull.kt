@@ -9,6 +9,7 @@ class IsNull(private val column: Field): Condition {
 
     override fun toSQL(dialect: Dialect) = "${column.toSQL(dialect)} IS NULL"
     override fun params() = column.params()
+    override fun isPresent() = column.isPresent()
 }
 
 infix fun String.IS(nothing: Nothing?): Condition {

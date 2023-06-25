@@ -1,5 +1,6 @@
 package jako.dsl.insert
 
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.fields.col
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -13,14 +14,14 @@ class InsertTest {
     fun `insert into single param foreach column`() {
         val insert = Insert.into("table").set("col1", "1").set("col2", 2).set("col3", "3")
 
-        assertEquals("INSERT INTO \"table\" (\"col1\", \"col2\", \"col3\") VALUES (?, ?, ?)", insert.toSQL())
+        assertEquals("INSERT INTO \"table\" (\"col1\", \"col2\", \"col3\") VALUES (?, ?, ?)", insert.toSQL(PSQL))
         assertEquals(listOf("1", 2, "3"), insert.params())
     }
 
     @Test
     fun `insert without values`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Insert().into("table").toSQL()
+            Insert().into("table").toSQL(PSQL)
         }.message
 
         assertThat(message).isEqualTo("Cannot generate insert without values")
@@ -32,7 +33,7 @@ class InsertTest {
             .into("table")
             .set("column1", LocalDate.of(2022, 4, 1))
 
-        assertEquals("""INSERT INTO "table" ("column1") VALUES (?)""", insert.toSQL())
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?)""", insert.toSQL(PSQL))
         assertEquals(listOf(Date.valueOf("2022-04-01")), insert.params())
     }
 
@@ -43,7 +44,7 @@ class InsertTest {
             .set("column1", "value1")
             .returning("id".col, "name".col)
 
-        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toSQL())
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toSQL(PSQL))
         assertEquals(listOf("value1"), insert.params())
     }
 
@@ -54,7 +55,7 @@ class InsertTest {
             .set("column1", "value1")
             .returning("id", "name")
 
-        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toSQL())
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toSQL(PSQL))
         assertEquals(listOf("value1"), insert.params())
     }
 }

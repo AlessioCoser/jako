@@ -3,6 +3,8 @@ package jako.integration
 import jako.database.Database
 import jako.database.JdbcConnectionString
 import jako.database.SimpleConnector
+import jako.dsl.Dialect
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.EQ
 import jako.dsl.query.Query
 import jako.dsl.update.Update
@@ -20,7 +22,7 @@ class UpdateTest {
     }
 
     private val connectionConfig = JdbcConnectionString.postgresql("localhost:5432/tests", "user", "password")
-    private val db = Database.connect(SimpleConnector(connectionConfig))
+    private val db = Database.connect(SimpleConnector(connectionConfig), PSQL)
 
     @Test
     fun `update user age`() {

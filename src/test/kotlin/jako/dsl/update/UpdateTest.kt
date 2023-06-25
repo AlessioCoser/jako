@@ -1,5 +1,6 @@
 package jako.dsl.update
 
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.EQ
 import jako.dsl.conditions.GT
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +18,7 @@ class UpdateTest {
             .set("age", 31)
             .where("id" EQ 1)
 
-        println(insert.toSQL())
+        println(insert.toSQL(PSQL))
         // UPDATE "users" SET "age" = ? WHERE "id" = ?
         println(insert.params())
         // [31, 1]
@@ -26,7 +27,7 @@ class UpdateTest {
     @Test
     fun `update without values`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Update().table("table").toSQL()
+            Update().table("table").toSQL(PSQL)
         }.message
 
         assertThat(message).isEqualTo("Cannot generate update without values")
@@ -38,7 +39,7 @@ class UpdateTest {
             .table("table")
             .set("column1", LocalDate.of(2022, 4, 1))
 
-        assertEquals("""UPDATE "table" SET "column1" = ?""", insert.toSQL())
+        assertEquals("""UPDATE "table" SET "column1" = ?""", insert.toSQL(PSQL))
         assertEquals(listOf(Date.valueOf("2022-04-01")), insert.params())
     }
 
@@ -49,7 +50,7 @@ class UpdateTest {
             .set("column1", 0)
             .where("column1" GT 10)
 
-        assertEquals("""UPDATE "table" SET "column1" = ? WHERE "column1" > ?""", insert.toSQL())
+        assertEquals("""UPDATE "table" SET "column1" = ? WHERE "column1" > ?""", insert.toSQL(PSQL))
         assertEquals(listOf(0, 10), insert.params())
     }
 }

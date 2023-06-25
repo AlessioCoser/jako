@@ -13,4 +13,5 @@ internal class SetFields: StatementBlock {
 
     override fun toSQL(dialect: Dialect) = if (cols.isNotEmpty()) "SET " + cols.joinToString(", ") { it.toSQL(dialect)} else ""
     override fun params() = cols.flatMap { it.params() }
+    override fun isPresent() = cols.any { it.isPresent() }
 }

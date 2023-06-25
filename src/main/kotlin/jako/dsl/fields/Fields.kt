@@ -8,4 +8,5 @@ internal class Fields(private vararg val fields: Field): Field {
 
     override fun toSQL(dialect: Dialect) = fields.joinToString(separator = ", ") { it.toSQL(dialect) }
     override fun params(): List<Any?> = fields.flatMap { it.params() }
+    override fun isPresent() = fields.any { it.isPresent() }
 }

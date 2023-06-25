@@ -1,5 +1,6 @@
 package jako.dsl.query
 
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.Eq
 import jako.dsl.conditions.Gt
 import jako.dsl.fields.AS
@@ -17,7 +18,7 @@ class QueryTest {
     @Test
     fun `cannot build query without table name`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Query().toSQL()
+            Query().toSQL(PSQL)
         }.message
 
         assertEquals("Cannot generate query without table name", message)
@@ -27,7 +28,7 @@ class QueryTest {
     fun `build simple query`() {
         val query = Query.from("people")
 
-        assertEquals("SELECT * FROM \"people\"", query.toSQL())
+        assertEquals("SELECT * FROM \"people\"", query.toSQL(PSQL))
         assertEquals(emptyList<Any?>(), query.params())
     }
 
@@ -35,7 +36,7 @@ class QueryTest {
     fun `build single query`() {
         val query = Query().from("people").single()
 
-        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL())
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
         assertEquals(emptyList<Any?>(), query.params())
     }
 
@@ -62,7 +63,7 @@ class QueryTest {
                 """GROUP BY "name" """ +
                 """HAVING COUNT(*) > ? """ +
                 """ORDER BY "first" ASC, "second" ASC """ +
-                """LIMIT 34 OFFSET 6""", query.toSQL())
+                """LIMIT 34 OFFSET 6""", query.toSQL(PSQL))
         assertEquals(listOf(1, "Italian", 12), query.params())
     }
 }

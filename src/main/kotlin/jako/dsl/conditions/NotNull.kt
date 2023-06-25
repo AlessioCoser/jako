@@ -8,6 +8,7 @@ class NotNull(private val column: Field): Condition {
     constructor(column: String): this(Column(column))
     override fun toSQL(dialect: Dialect) = "${column.toSQL(dialect)} IS NOT NULL"
     override fun params() = column.params()
+    override fun isPresent() = column.isPresent()
 }
 
 infix fun String.NOT(nothing: Nothing?): Condition {

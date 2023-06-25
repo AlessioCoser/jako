@@ -20,4 +20,5 @@ internal class Returning(private vararg val fields: Field): StatementBlock {
     }
 
     override fun params(): List<Any?> = fields.flatMap { it.params() }
+    override fun isPresent() = fields.any { it.isPresent() }
 }

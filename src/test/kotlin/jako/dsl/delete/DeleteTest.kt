@@ -1,6 +1,7 @@
 package jako.dsl.delete
 
 import jako.dsl.Dialect.All.MYSQL
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.GT
 import jako.dsl.fields.col
 import org.assertj.core.api.Assertions.assertThat
@@ -12,7 +13,7 @@ class DeleteTest {
     @Test
     fun `update without from`() {
         val message = assertThrows(RuntimeException::class.java) {
-            Delete().toSQL()
+            Delete().toSQL(PSQL)
         }.message
 
         assertThat(message).isEqualTo("Cannot generate delete without table name")
@@ -24,7 +25,7 @@ class DeleteTest {
             .from("table")
             .where("column1" GT 10)
 
-        assertEquals("""DELETE FROM "table" WHERE "column1" > ?""", insert.toSQL())
+        assertEquals("""DELETE FROM "table" WHERE "column1" > ?""", insert.toSQL(PSQL))
         assertEquals("""DELETE FROM `table` WHERE `column1` > ?""", insert.toSQL(MYSQL))
         assertEquals(listOf(10), insert.params())
     }
@@ -34,7 +35,7 @@ class DeleteTest {
         val insert = Delete().from("table")
             .returning("id".col, "name".col)
 
-        assertEquals("""DELETE FROM "table" RETURNING "id", "name"""", insert.toSQL())
+        assertEquals("""DELETE FROM "table" RETURNING "id", "name"""", insert.toSQL(PSQL))
     }
 
     @Test
@@ -42,6 +43,6 @@ class DeleteTest {
         val insert = Delete().from("table")
             .returning("id", "name")
 
-        assertEquals("""DELETE FROM "table" RETURNING "id", "name"""", insert.toSQL())
+        assertEquals("""DELETE FROM "table" RETURNING "id", "name"""", insert.toSQL(PSQL))
     }
 }

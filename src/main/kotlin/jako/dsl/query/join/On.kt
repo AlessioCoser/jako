@@ -19,6 +19,8 @@ class On(private val table: Field, private val field1: String, private val field
     override fun params(): List<Any?> {
         return table.params()
     }
+
+    override fun isPresent() = table.isPresent() && field1.isNotBlank() && field2?.isNotBlank() ?: false
 }
 
 infix fun On.EQ(field2: String): On {

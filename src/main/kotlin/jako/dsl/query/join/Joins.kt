@@ -16,6 +16,8 @@ internal class Joins: Join {
         return joins.flatMap { it.params() }
     }
 
+    override fun isPresent() = joins.any { it.isPresent() }
+
     fun join(on: On) = join(InnerJoin(on))
     fun leftJoin(on: On) = join(LeftJoin(on))
     fun rightJoin(on: On) = join(RightJoin(on))

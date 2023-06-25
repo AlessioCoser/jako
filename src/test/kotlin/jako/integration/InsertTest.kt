@@ -5,6 +5,7 @@ import jako.database.JdbcConnectionString.mysql
 import jako.database.JdbcConnectionString.postgresql
 import jako.database.SimpleConnector
 import jako.dsl.Dialect.All.MYSQL
+import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.EQ
 import jako.dsl.insert.Insert
 import jako.dsl.query.Query
@@ -24,7 +25,7 @@ class InsertTest {
         val mysqlDb = ContainerMysql()
     }
 
-    private val psql = Database.connect(SimpleConnector(postgresql("localhost:5432/tests", "user", "password")))
+    private val psql = Database.connect(SimpleConnector(postgresql("localhost:5432/tests", "user", "password")), PSQL)
 
     private val mysql = Database.connect(SimpleConnector(mysql("localhost:3306/tests", "root", "password")), MYSQL)
 

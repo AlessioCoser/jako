@@ -6,7 +6,7 @@ import jako.dsl.Statement
 import java.io.PrintStream
 
 
-class Database(private val connector: DatabaseConnector, private val dialect: Dialect = Dialect.PSQL, printStream: PrintStream = System.out) {
+class Database(private val connector: DatabaseConnector, private val dialect: Dialect, printStream: PrintStream = System.out) {
     val transactionManager = TransactionManager { connector.connection() }
     private val statementPrinter = StatementPrinter(printStream)
 
@@ -40,17 +40,12 @@ class Database(private val connector: DatabaseConnector, private val dialect: Di
 
     companion object {
         @JvmStatic
-        fun connect(jdbcConnectionString: String, printStream: PrintStream = System.out): Database {
-            return connect(SimpleConnector(jdbcConnectionString), Dialect.PSQL, printStream)
-        }
-
-        @JvmStatic
         fun connect(jdbcConnectionString: String, dialect: Dialect, printStream: PrintStream = System.out): Database {
             return connect(SimpleConnector(jdbcConnectionString), dialect, printStream)
         }
 
         @JvmStatic
-        fun connect(connector: DatabaseConnector, dialect: Dialect = Dialect.PSQL, printStream: PrintStream = System.out): Database {
+        fun connect(connector: DatabaseConnector, dialect: Dialect, printStream: PrintStream = System.out): Database {
             return Database(connector, dialect, printStream)
         }
     }
