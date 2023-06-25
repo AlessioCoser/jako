@@ -60,7 +60,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.14</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 - Or add the dependency along with mysql driver
@@ -73,7 +73,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.0.14</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 

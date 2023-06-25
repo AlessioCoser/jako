@@ -61,7 +61,7 @@ tasks.register("release") {
         }
 
         exec("sed", "-i", "-e", "s|'com.github.AlessioCoser:jako:.*'|'com.github.AlessioCoser:jako:$next'|g", "README.md")
-        exec("sed", "-i", "-e", "s|<version>.*</version>\n</dependency>\n```|<version>$next</version>\n</dependency>\n```|g", "README.md")
+        exec("sed", "-i", "-e", "s|<version>$current</version>|<version>$next</version>|g", "README.md")
         exec("sed", "-i", "-e", "s|version = \"[0-9]*\\.[0-9]*\\.[0-9]*\"|version = \"$next\"|g", "build.gradle.kts")
         exec("git", "commit", "-am", "RELEASE $next")
         exec("git", "tag", next)
