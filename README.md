@@ -28,7 +28,7 @@ repositories {
 ```groovy
 dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
-    implementation 'com.github.AlessioCoser:jako:0.0.14'
+    implementation 'com.github.AlessioCoser:jako:0.1.0'
 }
 ```
 
@@ -36,7 +36,7 @@ dependencies {
 ```groovy
 dependencies {
     implementation 'mysql:mysql-connector-java:8.0.15'
-    implementation 'com.github.AlessioCoser:jako:0.0.14'
+    implementation 'com.github.AlessioCoser:jako:0.1.0'
 }
 ```
 
