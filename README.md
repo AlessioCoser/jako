@@ -1,7 +1,7 @@
 # JAKO: Just Another Kotlin ORM
 ![JAKO](./jako.png)
 
-JAKO is not actually a real ORM. it's a simple, minimal, no-dependency library to build and execute sql statements using a fluent syntax.
+JAKO is not actually a real ORM. It's a simple, minimal, no-dependency library to build and execute sql statements using a fluent syntax.
 I currently tested it with postgresql 11 and mysql 8.
 
 Main features:
