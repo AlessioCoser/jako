@@ -7,14 +7,14 @@ import java.sql.Date
 import java.time.LocalDate
 
 class Insert: StatementBuilder() {
-    private var insertInto: InsertInto? = null
+    private var insertInto: InsertInto = InsertInto("")
     private var insertRow: InsertRow = InsertRow()
     private var returning: Returning = Returning()
 
     override fun blocks() = listOf(insertIntoOrThrow(), rowOrThrow(), returning)
 
     fun into(table: String): Insert {
-        this.insertInto = InsertInto(table)
+        insertInto = InsertInto(table)
         return this
     }
 
@@ -39,7 +39,7 @@ class Insert: StatementBuilder() {
     }
 
     private fun rowOrThrow() = if (insertRow.isPresent()) insertRow else throw RuntimeException("Cannot generate insert without values")
-    private fun insertIntoOrThrow() = insertInto ?: throw RuntimeException("Cannot generate insert without table name")
+    private fun insertIntoOrThrow() = if (insertInto.isPresent()) insertInto else throw RuntimeException("Cannot generate insert without table name")
 
     companion object {
         fun into(table: String): Insert {

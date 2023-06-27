@@ -11,11 +11,13 @@ internal class InsertRow: StatementBlock {
         return this
     }
 
-    override fun toSQL(dialect: Dialect) = if(cols.isNotEmpty()) "(${columnNames(dialect)}) VALUES (${placeholders()})" else ""
-    override fun params(): List<Any?> = cols.map { it.value }
-    override fun isPresent() = cols.any { it.isPresent() }
+    override fun toSQL(dialect: Dialect) = "(${columnNames(dialect)}) VALUES (${placeholders()})"
+    override fun params(): List<Any?> = presentCols().map { it.value }
+    override fun isPresent() = presentCols().isNotEmpty()
 
-    private fun columnNames(dialect: Dialect) = cols.joinToString(prefix = "${dialect.columnSeparator}", separator = "${dialect.columnSeparator}, ${dialect.columnSeparator}", postfix = "${dialect.columnSeparator}") { it.name }
+    private fun columnNames(dialect: Dialect) = presentCols().joinToString(prefix = dialect.columnSeparator, separator = "${dialect.columnSeparator}, ${dialect.columnSeparator}", postfix = dialect.columnSeparator) { it.name }
 
-    private fun placeholders() = List(cols.size) { "?" }.joinToString(", ")
+    private fun placeholders() = List(presentCols().size) { "?" }.joinToString(", ")
+
+    private fun presentCols() = cols.filter { it.isPresent() }
 }

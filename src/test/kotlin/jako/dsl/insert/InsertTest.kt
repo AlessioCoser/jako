@@ -19,6 +19,23 @@ class InsertTest {
     }
 
     @Test
+    fun `insert into EMPTY param`() {
+        val insert = Insert.into("table").set("", "0").set("col1", "1")
+
+        assertEquals("INSERT INTO \"table\" (\"col1\") VALUES (?)", insert.toSQL(PSQL))
+        assertEquals(listOf("1"), insert.params())
+    }
+
+    @Test
+    fun `insert into with empty table`() {
+        val message = assertThrows(RuntimeException::class.java) {
+            Insert.into("").set("col1", "1").toSQL(PSQL)
+        }.message
+
+        assertThat(message).isEqualTo("Cannot generate insert without table name")
+    }
+
+    @Test
     fun `insert without values`() {
         val message = assertThrows(RuntimeException::class.java) {
             Insert().into("table").toSQL(PSQL)
