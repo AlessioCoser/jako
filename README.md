@@ -28,7 +28,7 @@ repositories {
 ```groovy
 dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
-    implementation 'com.github.AlessioCoser:jako:0.1.0'
+    implementation 'com.github.AlessioCoser:jako:0.2.0'
 }
 ```
 
@@ -36,7 +36,7 @@ dependencies {
 ```groovy
 dependencies {
     implementation 'mysql:mysql-connector-java:8.0.15'
-    implementation 'com.github.AlessioCoser:jako:0.1.0'
+    implementation 'com.github.AlessioCoser:jako:0.2.0'
 }
 ```
 
@@ -60,7 +60,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 - Or add the dependency along with mysql driver
@@ -73,7 +73,7 @@ dependencies {
 <dependency>
     <groupId>com.github.AlessioCoser</groupId>
     <artifactId>jako</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
