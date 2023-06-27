@@ -1,8 +1,10 @@
 package jako.integration
 
 import jako.database.Database
+import jako.database.JdbcConnectionString.mysql
 import jako.database.JdbcConnectionString.postgresql
 import jako.dsl.Dialect
+import jako.dsl.Dialect.All.MYSQL
 import jako.dsl.Dialect.All.PSQL
 import jako.dsl.query.Query
 import jako.dsl.update.Update
@@ -19,6 +21,8 @@ class StatementPrinterTest {
     companion object {
         @Container
         val postgres = ContainerPostgres()
+        @Container
+        val mysql = ContainerMysql()
     }
 
     private val connectionString = postgresql("localhost:5432/tests", "user", "password")
@@ -55,6 +59,16 @@ class StatementPrinterTest {
         db.select(Query().from("users")).all { strOrNull("city") }
 
         assertThat(outputStream.toString()).isEqualTo("SELECT * FROM \"users\"\n")
+    }
+
+    @Test
+    fun `mysql print statement on select all`() {
+        val db = Database.connect(mysql("localhost:3306/tests", "root", "password"), MYSQL, PrintStream(outputStream))
+        db.printStatements(true)
+
+        db.select(Query().from("users")).all { strOrNull("city") }
+
+        assertThat(outputStream.toString()).isEqualTo("SELECT * FROM `users`\n")
     }
 
     @Test
