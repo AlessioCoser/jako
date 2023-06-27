@@ -9,7 +9,7 @@ import java.sql.Date
 import java.time.LocalDate
 
 class Update: StatementBuilder() {
-    private var table: UpdateTable? = null
+    private var table: UpdateTable = UpdateTable("")
     private val fields: SetFields = SetFields()
     private var where: Where = NoWhere()
 
@@ -37,7 +37,7 @@ class Update: StatementBuilder() {
 
     private fun fieldsOrThrow() = if(fields.isPresent()) fields else throw RuntimeException("Cannot generate update without values")
 
-    private fun updateTableOrThrow() = table ?: throw RuntimeException("Cannot generate update without table name")
+    private fun updateTableOrThrow() = if(table.isPresent()) table else throw RuntimeException("Cannot generate update without table name")
 
     companion object {
         fun table(name: String): Update {
