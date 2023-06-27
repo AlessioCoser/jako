@@ -1,8 +1,7 @@
 package jako.dsl.query
 
 import jako.dsl.Dialect.All.PSQL
-import jako.dsl.conditions.Eq
-import jako.dsl.conditions.Gt
+import jako.dsl.conditions.*
 import jako.dsl.fields.AS
 import jako.dsl.fields.col
 import jako.dsl.fields.functions.COALESCE
@@ -38,6 +37,30 @@ class QueryTest {
 
         assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
         assertEquals(emptyList<Any?>(), query.params())
+    }
+
+    @Test
+    fun `build single query with empty where`() {
+        val query = Query().from("people").where("" EQ 1).single()
+
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
+        assertEquals(emptyList<Any?>(), query.params())
+    }
+
+    @Test
+    fun `build single query with partially AND in where`() {
+        val query = Query().from("people").where(And(Eq("", 1), Eq("test", 2))).single()
+
+        assertEquals("SELECT * FROM \"people\" WHERE (\"test\" = ?) LIMIT 1", query.toSQL(PSQL))
+        assertEquals(listOf<Any?>(2), query.params())
+    }
+
+    @Test
+    fun `build single query with partially OR in where`() {
+        val query = Query().from("people").where(("" EQ 1) OR ("test" EQ 2)).single()
+
+        assertEquals("SELECT * FROM \"people\" WHERE (\"test\" = ?) LIMIT 1", query.toSQL(PSQL))
+        assertEquals(listOf<Any?>(2), query.params())
     }
 
     @Test

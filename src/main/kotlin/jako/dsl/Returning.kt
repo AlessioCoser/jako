@@ -9,16 +9,14 @@ internal class Returning(private vararg val fields: Field): StatementBlock {
     constructor(vararg fields: String): this(*(fields.map { Column(it) }).toTypedArray())
 
     override fun toSQL(dialect: Dialect): String {
-        if (fields.isEmpty()) {
-            return ""
-        }
-
         if (dialect == Dialect.MYSQL) {
             throw RuntimeException("Cannot use RETURNING statement with MYSQL dialect")
         }
-        return "RETURNING ${fields.joinToString(", ") { it.toSQL(dialect) }}"
+        return "RETURNING ${presentFields().joinToString(", ") { it.toSQL(dialect) }}"
     }
 
-    override fun params(): List<Any?> = fields.flatMap { it.params() }
-    override fun isPresent() = fields.any { it.isPresent() }
+    override fun params(): List<Any?> = presentFields().flatMap { it.params() }
+    override fun isPresent() = presentFields().isNotEmpty()
+
+    private fun presentFields() = fields.filter { it.isPresent() }
 }

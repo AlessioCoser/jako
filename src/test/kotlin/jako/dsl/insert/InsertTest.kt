@@ -58,4 +58,26 @@ class InsertTest {
         assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "id", "name"""", insert.toSQL(PSQL))
         assertEquals(listOf("value1"), insert.params())
     }
+
+    @Test
+    fun `ignore not present fields`() {
+        val insert = Insert()
+            .into("table")
+            .set("column1", "value1")
+            .returning("", "name")
+
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?) RETURNING "name"""", insert.toSQL(PSQL))
+        assertEquals(listOf("value1"), insert.params())
+    }
+
+    @Test
+    fun `ignore returning without fields`() {
+        val insert = Insert()
+            .into("table")
+            .set("column1", "value1")
+            .returning("")
+
+        assertEquals("""INSERT INTO "table" ("column1") VALUES (?)""", insert.toSQL(PSQL))
+        assertEquals(listOf("value1"), insert.params())
+    }
 }

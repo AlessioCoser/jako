@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 
 @Testcontainers
-class TransactionMysqlTest {
+class TransactionTest {
 
     companion object {
         @Container
