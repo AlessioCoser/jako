@@ -3,11 +3,13 @@ package jako.dsl
 abstract class StatementBuilder internal constructor(): Statement {
     private val blocks: List<StatementBlock> by lazy { blocks() }
 
-    override fun toSQL(dialect: Dialect) = blocks.filter { it.isPresent() }.joinToString(" ") { it.toSQL(dialect) }
+    override fun toSQL(dialect: Dialect) = presentBlocks().joinToString(" ") { it.toSQL(dialect) }
 
-    override fun params(): List<Any?> = blocks.flatMap { it.params() }
+    override fun params(): List<Any?> = presentBlocks().flatMap { it.params() }
+
+    override fun isPresent() = presentBlocks().isNotEmpty()
 
     protected abstract fun blocks(): List<StatementBlock>
 
-    override fun isPresent() = blocks.any { it.isPresent() }
+    private fun presentBlocks() = blocks.filter { it.isPresent() }
 }

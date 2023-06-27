@@ -29,7 +29,6 @@ class InsertTest {
 
     private val mysql = Database.connect(SimpleConnector(mysql("localhost:3306/tests", "root", "password")), MYSQL)
 
-
     @Test
     fun `insert city and age`() {
         psql.execute(Insert()
@@ -44,6 +43,18 @@ class InsertTest {
         ).first { Customer(str("name"), int("age")) }
 
         assertThat(customer).isEqualTo(Customer("name1", 18))
+    }
+
+    @Test
+    fun `insert city and age with a raw statement`() {
+        psql.execute("""INSERT INTO "customers" ("name", "age") VALUES ('name2', 19)""")
+
+        val customer = psql.select(Query()
+            .from("customers")
+            .where("name" EQ "name2")
+        ).first { Customer(str("name"), int("age")) }
+
+        assertThat(customer).isEqualTo(Customer("name2", 19))
     }
 
     @Test
@@ -62,18 +73,18 @@ class InsertTest {
     fun `return inserted field`() {
         val insertedName = psql.select(Insert()
             .into("customers")
-            .set("name", "name2")
+            .set("name", "name3")
             .set("age", 99)
             .returning("name")
         ).first { str("name") }
 
         val customer = psql.select(Query()
             .from("customers")
-            .where("name" EQ "name2")
+            .where("name" EQ "name3")
         ).first { Customer(str("name"), int("age")) }
 
-        assertThat(insertedName).isEqualTo("name2")
-        assertThat(customer).isEqualTo(Customer("name2", 99))
+        assertThat(insertedName).isEqualTo("name3")
+        assertThat(customer).isEqualTo(Customer("name3", 99))
     }
 
 

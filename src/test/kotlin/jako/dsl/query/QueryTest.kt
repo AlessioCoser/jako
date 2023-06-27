@@ -4,9 +4,7 @@ import jako.dsl.Dialect.All.PSQL
 import jako.dsl.conditions.*
 import jako.dsl.fields.AS
 import jako.dsl.fields.col
-import jako.dsl.fields.functions.COALESCE
-import jako.dsl.fields.functions.COUNT
-import jako.dsl.fields.functions.MAX
+import jako.dsl.fields.functions.*
 import jako.dsl.query.join.On
 import jako.dsl.query.order.Asc
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -41,7 +39,7 @@ class QueryTest {
 
     @Test
     fun `build single query with empty where`() {
-        val query = Query().from("people").where("" EQ 1).single()
+        val query = Query().from("people").where(("" IS null) AND ("" NOT null)).single()
 
         assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
         assertEquals(emptyList<Any?>(), query.params())
@@ -61,6 +59,38 @@ class QueryTest {
 
         assertEquals("SELECT * FROM \"people\" WHERE (\"test\" = ?) LIMIT 1", query.toSQL(PSQL))
         assertEquals(listOf<Any?>(2), query.params())
+    }
+
+    @Test
+    fun `build single query with partially OR in having`() {
+        val query = Query().from("people").having("" EQ 1).single()
+
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
+        assertEquals(emptyList<Any?>(), query.params())
+    }
+
+    @Test
+    fun `build single query with empty Fields as string`() {
+        val query = Query().from("people").fields("").single()
+
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
+        assertEquals(emptyList<Any?>(), query.params())
+    }
+
+    @Test
+    fun `build single query with empty function Fields`() {
+        val query = Query().from("people").fields(AVG(""), EVERY(""), SUM(""), MIN("") + 1).single()
+
+        assertEquals("SELECT * FROM \"people\" LIMIT 1", query.toSQL(PSQL))
+        assertEquals(emptyList<Any?>(), query.params())
+    }
+
+    @Test
+    fun `build empty query`() {
+        val query = Query().from("people")
+
+        assertEquals("SELECT * FROM \"people\"", query.toSQL(PSQL))
+        assertEquals(emptyList<Any?>(), query.params())
     }
 
     @Test
